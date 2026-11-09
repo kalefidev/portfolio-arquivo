@@ -4,6 +4,7 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { cssVar } from '@/lib/cssVar'
 import { activePreset, usePreset } from '@/lib/viewport'
+import { disposeMaterials } from './archetypes/materials'
 import Lights from './Lights'
 import Spiral from './spiral/Spiral'
 
@@ -45,6 +46,7 @@ export default function Scene() {
     debug: new URLSearchParams(window.location.search).has('debug'),
   }))
   const { preset, paper, debug } = initial
+  useEffect(() => disposeMaterials, [])
 
   return (
     // 100lvh: does not resize when the mobile browser bar collapses

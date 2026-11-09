@@ -1,13 +1,14 @@
 import { useRef, useState, type RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
-import type { Group, Mesh } from 'three'
+import type { Group } from 'three'
 import { cssVar } from '@/lib/cssVar'
+import { useStore } from '@/lib/store'
 import type { Course } from '@/types'
+import ArchetypeObject from '../archetypes'
+import type { ArchetypeProps } from '../archetypes/types'
 import { getItemTransform, newItemTransform } from './math'
 import type { SpiralFrame } from './Spiral'
 
-const SPIN = 0.25 // rad/s — idle of the placeholder (DESIGN.md §5)
-const TILT = 0.35 // rad
 const HIDDEN_BELOW = 1e-3 // visibility under this → not drawn
 
 const target = newItemTransform() // scratch, shared by every piece
@@ -17,14 +18,15 @@ interface Props {
   course: Course
   frame: RefObject<SpiralFrame>
   reducedMotion: boolean
+  detail: ArchetypeProps['detail']
 }
 
-export default function SpiralItem({ index, course, frame, reducedMotion }: Props) {
+export default function SpiralItem({ index, course, frame, reducedMotion, detail }: Props) {
   const piece = useRef<Group>(null!)
-  const body = useRef<Mesh>(null!)
   const [tint] = useState(() => cssVar(`--color-cat-${course.category}`))
+  const active = useStore((s) => s.activeIndex === index)
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     const { cfg, p, extra } = frame.current
     const { position, scale, visibility } = getItemTransform(index, p, cfg, extra, target)
 
@@ -32,16 +34,20 @@ export default function SpiralItem({ index, course, frame, reducedMotion }: Prop
     if (!piece.current.visible) return
     piece.current.position.copy(position)
     piece.current.scale.setScalar(scale)
-    if (!reducedMotion) body.current.rotation.y += delta * SPIN
   })
 
   return (
     <group ref={piece} visible={false}>
-      {/* `placeholder` archetype (DESIGN.md §5) — the real objects come in etapa 03 */}
-      <mesh ref={body} rotation={[TILT, index, 0]}>
-        <icosahedronGeometry args={[1, 1]} />
-        <meshStandardMaterial color={tint} roughness={0.82} metalness={0} flatShading />
-      </mesh>
+      <ArchetypeObject
+        archetype={course.archetype}
+        tint={tint}
+        hovered={false} // real hover comes in etapa 05
+        active={active}
+        reducedMotion={reducedMotion}
+        detail={detail}
+        variant={course.variant}
+        icon={course.icon}
+      />
       {/* hit area: cheap raycast target for hover / click (etapa 05) */}
       <mesh visible={false}>
         <sphereGeometry args={[1, 12, 8]} />

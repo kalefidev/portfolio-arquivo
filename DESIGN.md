@@ -116,9 +116,9 @@ Catálogo — a chave vai no campo `archetype` de `courses.ts`:
 | `cloud` | nuvem | AWS, Azure, GCP | 6–8 esferas agrupadas e achatadas (Y × 0.75) | flutua | cubinhos "pacote" sobem e somem (upload) | gira lento + pacotes em loop |
 | `shield` | escudo | Cyber, segurança, LGPD | contorno de escudo → Extrude com chanfro + fechadura em relevo | balança ±8° | anel de varredura signal desce de cima a baixo | borda com emissivo signal leve |
 | `lock` | cadeado | criptografia, autenticação | RoundedBox + haste (Torus meio arco) | balança | haste sobe e gira (abre) | abre/fecha a cada 3s |
-| `brackets` | `</>` | lógica, JS, Python | 3 formas extrudadas com chanfro | gira lento | `<` e `>` se afastam, `/` gira, cursor piscando no meio | pulso |
+| `brackets` | `</>` | lógica, JS, Python | 3 formas extrudadas com chanfro | balança ±26° (giro completo mostraria `</>` espelhado e de perfil) | `<` e `>` se afastam, `/` gira, cursor piscando no meio | pulso |
 | `browser` | janela de navegador | HTML/CSS, React, front-end | tela fina + barra com 3 bolinhas + blocos de layout | parado | blocos se reorganizam (desktop → mobile) | reorganiza em loop lento |
-| `database` | banco de dados | SQL, Postgres, NoSQL | 3 cilindros empilhados com folga + aros | parado | discos se separam e giram em velocidades diferentes | gira suave |
+| `database` | banco de dados | SQL, Postgres, NoSQL | 3 discos (Lathe, borda arredondada) empilhados com folga + aro ink + luz signal em cada (é a luz que deixa o giro visível); inclinado 17° para a câmera | parado | discos se separam e giram em velocidades diferentes | gira suave |
 | `gears` | engrenagens | automação, n8n, RPA | 2 engrenagens (contorno dentado → Extrude) engrenadas | giram lento | aceleram 3× | velocidade média |
 | `neural` | rede neural | IA, LLM, agentes | 12–18 nós em 3 camadas + arestas | nós pulsam | pulsos signal correm pelas arestas | pulsos contínuos |
 | `terminal` | terminal | Linux, CLI, DevOps | monitor + tela `CanvasTexture` com `>_` | cursor pisca | digita `npm run dev` | digita em loop |
@@ -129,7 +129,7 @@ Catálogo — a chave vai no campo `archetype` de `courses.ts`:
 | `chip` | chip | eletrônica, IoT | placa + pinos + trilhas em relevo | parado | trilhas acendem em sequência | brilho lento |
 | `palette` | paleta | design, UX/UI, Figma | 5 amostras presas num pino, em leque | levemente aberta | leque abre ~120° | abre/fecha lento |
 | `bulb` | lâmpada | lógica, soft skills, carreira | Lathe (bulbo + rosca) | parado | acende (emissivo quente + halo) | acesa suave |
-| `icon` | ícone extrudado | qualquer outro tema | ícone Phosphor peso `fill` → SVGLoader → Extrude sobre placa chanfrada | gira lento | gira 360° com salto | gira lento |
+| `icon` | ícone extrudado | qualquer outro tema | ícone Phosphor peso `fill` → SVGLoader → Extrude nas duas faces de uma placa chanfrada (nome registrado em `archetypes/icons.ts`) | gira lento | gira 360° com salto | gira lento |
 | `placeholder` | poliedro facetado | provisório (etapa 02) | Icosahedron detail 1, flatShading | gira lento | escala 1.08 | — |
 
 Dois cursos da espiral no mesmo arquétipo → usar `variant` para não repetir igual (ex.: nuvem com raio, nuvem com servidor).

@@ -3,14 +3,14 @@
 > O Code lê isto no começo de toda sessão e atualiza no fim de toda etapa. Curto e factual.
 
 ## Estado atual
-- Etapa atual: 03 — Objetos 3D (parte 1) + /lab
-- Última tag: etapa-02
+- Etapa atual: 04 — Interface da espiral
+- Última tag: etapa-03
 - Bloqueios / pendências do Kaique: preencher `docs/CURSOS.md` (até a etapa 06), revisar `docs/CONTEUDO.md`
 
 ## Etapas
 - [x] 01 Fundação
 - [x] 02 Espiral 3D
-- [ ] 03 Objetos 3D (parte 1) + /lab
+- [x] 03 Objetos 3D (parte 1) + /lab
 - [ ] 04 Interface da espiral
 - [ ] 05 Interações, overlay e modos
 - [ ] 06 Objetos 3D (parte 2)
@@ -26,9 +26,9 @@
 | AWS Cloud | cloud | — |
 | Cyber / Segurança | shield | — |
 | Lógica de Programação (EXEMPLO) | brackets | — |
-| HTML e CSS (EXEMPLO) | browser | — |
+| HTML e CSS (EXEMPLO) | browser → `icon` (browser) até a etapa 06 | — |
 | SQL e Banco de Dados (EXEMPLO) | database | — |
-| Automação com n8n (EXEMPLO) | gears | — |
+| Automação com n8n (EXEMPLO) | gears → `icon` (gear) até a etapa 06 | — |
 
 ## Log
 ### Etapa 01 — 2026-11-09
@@ -60,6 +60,24 @@ Pendências:
 - Damping alto em reduced motion (DESIGN §7) fica para o passe de a11y; materiais em cache (`materials.ts`) na etapa 03.
 - Aviso `THREE.Clock deprecated` no console vem de dentro do R3F 9 com three 0.187 (não é do nosso código).
 Como testar: `npm run dev` → `http://localhost:3000/?debug`. Rolar nos dois sentidos (peça ativa à frente e maior; "Estado" no painel mostra `progress` / `activeIndex`); subir `radiusX` abre a espiral; baixar `scrollPerItem` encurta a seção; estreitar a janela até ficar retrato troca para o preset mobile; rolar até depois da seção → o FPS do Stats para de contar. `npm run test` roda a math. Screenshots em `artifacts/etapa-02-*.png` (não versionados).
+
+### Etapa 03 — 2026-11-09
+Feito: `src/three/archetypes/` — `types.ts` (`ArchetypeProps`), `materials.ts` (cache `clay(tint)` / `ink()` / `signal()` + `disposeMaterials()`, chamado quando `Scene` e `Lab` desmontam), `motion.ts` (`useDampedFlag`, `useIdleTime`, `step`), `normalize.ts` + teste, `icons.ts` (SVG cru do Phosphor), `index.ts` (registro + `<ArchetypeObject archetype=… />`), e os objetos `Cloud`, `Shield`, `Brackets`, `Database`, `Icon`. `SpiralItem` desenha o arquétipo do curso (`active` = `activeIndex === index`, `hovered = false`); `detail = 'low'` no preset mobile. `/lab` (`src/app/lab/page.tsx` + `src/three/lab/`): grade com drei `<View>` num canvas só, `OrbitControls` por célula, toggles hovered / active / reducedMotion / detail low, seletor de tom, seletor de ícone (só na célula `icon`), contagem de triângulos.
+Triângulos (high / low): cloud 8.548 / 2.052 · shield 4.352 / 1.120 · brackets 256 / 128 · database 5.508 / 2.196 · icon (certificate) 2.516 / 1.692.
+Decisões:
+- SVG do Phosphor entra como **texto** por uma regra no `next.config.ts` (`"*-fill.svg": { type: "raw" }`). O atributo de import `with { turbopackModuleType: 'text' }` (docs do Next 16) não funcionou em SVG: o import continuou devolvendo a URL. Consequência: **ícone novo = 1 linha de import em `archetypes/icons.ts`**; nome não registrado cai em `certificate` com aviso em dev. Não usei import dinâmico por nome porque empacotaria os ~1.500 ícones `fill`.
+- Registro é `Partial<Record<Archetype, …>>` e quem desenha é `<ArchetypeObject>`: chave sem objeto cai em `Icon` (aviso 1× por chave, só em dev). `browser` e `gears` ganharam `icon: 'browser' | 'gear'` em `courses.ts` para o fallback não ser genérico.
+- `normalize()` roda 1× por objeto (layout effect) na pose de repouso; partes que só aparecem animadas (pacotes da nuvem, anel do escudo, cursor) nascem com escala 0 dentro do corpo, então não entram na conta. Na animação elas passam um pouco de r = 1 (anel do escudo ≈ 1,15).
+- Só o corpo do escudo tem material próprio (o emissivo da borda anima por instância); todo o resto vem do cache. Sumir/aparecer é sempre por escala, nunca por opacidade (não exige material por instância).
+- `brackets` em idle **balança ±26°** em vez de girar: no giro completo o `</>` aparece espelhado e de perfil. `icon` tem o glifo nas duas faces por causa do giro. `database` ganhou luz signal + inclinação de 17° (sem a luz o giro dos discos não aparece). DESIGN §5 atualizado.
+- `useIdleTime` zera em reduced motion (pose de repouso = frente). Hover em reduced motion = só escala +6%.
+- Subi o `npm run dev` nesta sessão: o servidor que estava no ar caiu ao reiniciar pelo `next.config.ts`.
+Pendências:
+- O trilho pontilhado passa **na frente** de peças finas (escudo, colchetes) quando elas não são a ativa — antes o poliedro tapava. Ver na etapa 04/07 (encurtar o trilho perto da peça ou desenhar o trilho antes, sem depth).
+- Os dois `icon` giram em fase (mesmo ângulo) — dar um offset por índice quando houver mais de um na tela.
+- `fundamentals` (#d8cfbf) quase some no papel: o `</>` fica com pouco contraste. Decisão de token (DESIGN §2), não mexi.
+- Seguem da etapa 02: texto do hero por cima da peça ativa (etapa 04); calibrar `angleStep` no `/?debug`.
+Como testar: `npm run dev` → `http://localhost:3000/lab`: marcar `hovered` (nuvem solta pacotes, anel desce no escudo, `<` `>` abrem com cursor piscando, discos separam e giram, ícone dá um giro com salto) e `active` (nuvem gira + pacotes, borda do escudo acende, colchetes pulsam, banco gira); `detail low` derruba a contagem; arrastar gira a célula. Na home: AWS = nuvem, Cyber = escudo, HTML/CSS e n8n = ícone na placa. Em build de produção `/lab` é 404 (libera com `NEXT_PUBLIC_LAB=1`). Screenshots em `artifacts/etapa-03-*.png` (não versionados).
 
 <!-- modelo:
 ### Etapa NN — AAAA-MM-DD

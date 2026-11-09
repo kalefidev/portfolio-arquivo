@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { MathUtils, type Fog, type Group, type PerspectiveCamera } from 'three'
-import { AMBIENT_SWAY, PRESET_LAMBDA, type SpiralPreset } from '@/config/spiral'
+import { AMBIENT_SWAY, PRESET_LAMBDA, spiralPresets, type SpiralPreset } from '@/config/spiral'
 import { featuredCourses } from '@/content/courses'
 import { useStore } from '@/lib/store'
 import { prefersReducedMotion, usePreset } from '@/lib/viewport'
@@ -33,6 +33,7 @@ function easePreset(cur: SpiralPreset, to: SpiralPreset, dt: number) {
 export default function Spiral() {
   const preset = usePreset((p) => p) // changes identity only when the viewport crosses presets
   const [reducedMotion] = useState(prefersReducedMotion)
+  const detail = preset === spiralPresets.mobile ? 'low' : 'high' // fewer segments on mobile
   const pieces = useRef<Group>(null!)
   const swayGain = useRef(0)
   const frame = useRef<SpiralFrame>(null!)
@@ -92,6 +93,7 @@ export default function Spiral() {
             course={course}
             frame={frame}
             reducedMotion={reducedMotion}
+            detail={detail}
           />
         ))}
       </group>

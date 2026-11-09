@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },
+      // Phosphor `fill` icons are imported as SVG source text (src/three/archetypes/icons.ts).
+      "*-fill.svg": { type: "raw" },
     },
   },
 };

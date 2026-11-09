@@ -38,6 +38,7 @@ export const courses: Course[] = [
     institution: 'Alura',
     category: 'frontend',
     archetype: 'browser',
+    icon: 'browser', // drawn while the `browser` object does not exist (etapa 06)
     status: 'concluido',
     featured: true,
   },
@@ -58,6 +59,7 @@ export const courses: Course[] = [
     institution: 'RicNeves',
     category: 'automation',
     archetype: 'gears',
+    icon: 'gear', // drawn while the `gears` object does not exist (etapa 06)
     status: 'concluido',
     featured: true,
     projects: ['jarvis'],
