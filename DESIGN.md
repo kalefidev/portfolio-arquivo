@@ -71,7 +71,7 @@ focus = 1 - smoothstep(0, 1, |d|)      // 1 na ativa, 0 a partir de 1 peça de d
 scale = (baseScale + (activeScale - baseScale) * focus) * vis
 vis   = 1 - smoothstep(visibleRange - 1, visibleRange, |d|)   // vis ≈ 0 → visible = false
 ```
-- Posição e escala com damping (`THREE.MathUtils.damp`, lambda = `damping`).
+- Damping no **progresso** (um `THREE.MathUtils.damp` por frame, lambda = `damping`); posição e escala saem do progresso amortecido, então as peças nunca saem do trilho. Os parâmetros também são amortecidos em direção ao preset ativo (`PRESET_LAMBDA`) — é isso que suaviza a troca desktop ↔ mobile e os sliders do debug.
 - `ambientSway` é oscilação suave, **nunca rotação contínua** (tiraria a peça ativa da frente).
 - Unidades de mundo: câmera fov 35 em z = 10 vê ~6.3 unidades de altura.
 
@@ -89,6 +89,8 @@ vis   = 1 - smoothstep(visibleRange - 1, visibleRange, |d|)   // vis ≈ 0 → v
 | `damping` | 6 | 6 | |
 | `dragReturn` | 0.6 | — | giro do arraste volta devagar |
 | `exitZone` | 0.6 | 0.6 | scroll extra após a última peça (fração da viewport) |
+| `fogNear` / `fogFar` | 10 / 17 | 11 / 17 | profundidade (a partir da câmera) em que a peça começa a sumir / vira papel |
+| `dpr` | 1.75 | 1.5 | teto do device pixel ratio do canvas |
 | câmera | fov 35, z 10 | fov 40, z 11 | |
 
 - Altura da seção: `100svh + (N − 1) × scrollPerItem + 60svh` (os 60svh finais = zona de saída).
@@ -96,7 +98,7 @@ vis   = 1 - smoothstep(visibleRange - 1, visibleRange, |d|)   // vis ≈ 0 → v
 
 ### Desenho
 - **Eixo**: hairline vertical tracejada, tiques a cada `pitch` (cara de régua), ink 30%.
-- **Trilho**: a curva da hélice desenhada como linha pontilhada fina (ink 18%) passando pelas peças.
+- **Trilho**: a curva da hélice desenhada como linha pontilhada fina (ink 18%, pontos de 2px, 36 por peça) passando pelas peças, da primeira à última.
 - **Profundidade**: fog na cor do papel → peças distantes "somem no papel". `scene.background` = `--color-paper`; se o fundo e as peças distantes não casarem, ajuste a cor do fog.
 
 ## §5 Objetos 3D (arquétipos)
@@ -133,7 +135,7 @@ Catálogo — a chave vai no campo `archetype` de `courses.ts`:
 Dois cursos da espiral no mesmo arquétipo → usar `variant` para não repetir igual (ex.: nuvem com raio, nuvem com servidor).
 
 ## §6 Iluminação
-Environment só com `<Lightformer>` (sem HDR externo): softbox grande no topo, key quente `#FFF1E0` à esquerda, rim frio `#DCE8FF` atrás-direita + 1 directional fraca. Sem sombra em tempo real. Tone mapping padrão do R3F.
+Environment só com `<Lightformer>` (sem HDR externo): softbox grande no topo, key quente `#FFF1E0` (`--color-light-key`) à esquerda, rim frio `#DCE8FF` (`--color-light-rim`) atrás-direita, uma "sala" de papel bem fraca em volta (rebatida, para nenhuma face ficar preta) + 1 directional fraca. Sem sombra em tempo real. Tone mapping padrão do R3F.
 Meta: argila fosca com volume legível, nada estourado contra o papel claro.
 
 ## §7 Motion

@@ -25,6 +25,10 @@
   --color-cat-fundamentals: #d8cfbf;
   --color-cat-hardware: #b9a27e;
 
+  /* 3D lighting — DESIGN.md §6 */
+  --color-light-key: #fff1e0;
+  --color-light-rim: #dce8ff;
+
   /* type scale */
   --text-display: clamp(2.75rem, 6.2vw, 6.5rem);
   --text-display--line-height: 0.92;

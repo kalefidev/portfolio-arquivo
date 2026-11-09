@@ -12,9 +12,12 @@ export interface SpiralPreset {
   baseScale: number // scale of a piece away from focus
   activeScale: number // scale of the active piece
   visibleRange: number // |d| (in pieces) beyond which a piece is hidden
-  damping: number // lambda for THREE.MathUtils.damp on position/scale
+  damping: number // lambda for THREE.MathUtils.damp on the progress the pieces follow
   dragReturn: number // how fast the drag rotation returns to 0 (unused on mobile: drag off)
   exitZone: number // extra scroll after the last piece, as a fraction of viewport height
+  fogNear: number // view depth where pieces start fading into the paper
+  fogFar: number // view depth where they are fully paper
+  dpr: number // max device pixel ratio of the canvas
   camera: { fov: number; z: number } // fixed camera
 }
 
@@ -31,6 +34,9 @@ const desktop: SpiralPreset = {
   damping: 6,
   dragReturn: 0.6,
   exitZone: 0.6,
+  fogNear: 10,
+  fogFar: 17,
+  dpr: 1.75,
   camera: { fov: 35, z: 10 },
 }
 
@@ -47,6 +53,9 @@ const mobile: SpiralPreset = {
   damping: 6,
   dragReturn: 0.6,
   exitZone: 0.6,
+  fogNear: 11,
+  fogFar: 17,
+  dpr: 1.5,
   camera: { fov: 40, z: 11 },
 }
 
@@ -56,3 +65,9 @@ const MOBILE_MAX_ASPECT = 0.8 // width / height below this → mobile preset
 
 export const pickPreset = (aspect: number): SpiralPreset =>
   aspect < MOBILE_MAX_ASPECT ? mobile : desktop
+
+/** Ambient sway of the whole helix: a slow oscillation, never a continuous rotation. */
+export const AMBIENT_SWAY = { amplitude: 0.06, period: 10 } // rad, seconds
+
+/** Lambda (THREE.MathUtils.damp) for live parameters easing toward the active preset. */
+export const PRESET_LAMBDA = 4
