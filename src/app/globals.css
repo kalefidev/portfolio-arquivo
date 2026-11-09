@@ -1,0 +1,128 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* Design tokens — DESIGN.md §2. Single source: the 3D scene reads these via getComputedStyle,
+   so `static` keeps them in :root even when no utility uses them. */
+@theme static {
+  --color-paper: #ece9e2;
+  --color-paper-2: #e3dfd6;
+  --color-ink: #151515;
+  --color-ink-2: #5e5b55;
+  --color-ink-3: #8c8880;
+  --color-line: rgb(21 21 21 / 0.14);
+  --color-signal: #ff4d1a;
+
+  /* clay tint per category */
+  --color-cat-cloud: #a8c0da;
+  --color-cat-security: #d9a441;
+  --color-cat-frontend: #e2937f;
+  --color-cat-backend: #8db39a;
+  --color-cat-data: #a99bd0;
+  --color-cat-automation: #e7b27c;
+  --color-cat-ai: #9cc7c1;
+  --color-cat-devops: #9ba3ae;
+  --color-cat-design: #e3a9c0;
+  --color-cat-fundamentals: #d8cfbf;
+  --color-cat-hardware: #b9a27e;
+
+  /* type scale */
+  --text-display: clamp(2.75rem, 6.2vw, 6.5rem);
+  --text-display--line-height: 0.92;
+  --text-h2: clamp(2rem, 4vw, 3.75rem);
+  --text-h2--line-height: 0.95;
+  --text-h3: 1.5rem;
+  --text-h3--line-height: 1.1;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.55;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+
+  /* layout */
+  --spacing-gutter: clamp(16px, 4vw, 56px);
+  --spacing-section: clamp(96px, 14vh, 180px);
+
+  /* motion — DESIGN.md §7 */
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --duration-micro: 160ms;
+  --duration-ui: 320ms;
+  --duration-title: 640ms;
+  --duration-overlay: 520ms;
+}
+
+/* fonts come from next/font (layout.tsx) */
+@theme inline {
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+:root {
+  /* stacking: canvas < grain < UI */
+  --z-canvas: 0;
+  --z-grain: 10;
+  --z-ui: 20;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-stretch: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-stretch: 118%;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-signal);
+    color: var(--color-ink);
+  }
+}
+
+/* technical label: mono, caps, 11–13px */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Grain overlay: 64px hairline grid (~5%) + SVG noise (~4%). Fixed, click-through. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(21 21 21 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(21 21 21 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
