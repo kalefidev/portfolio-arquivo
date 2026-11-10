@@ -6,7 +6,7 @@ import { SplitText } from 'gsap/SplitText'
 import { categoryLabels, featuredCourses, pieceNo } from '@/content/courses'
 import { site } from '@/content/site'
 import { cssSeconds } from '@/lib/cssVar'
-import { pastHero, useStore } from '@/lib/store'
+import { useStore } from '@/lib/store'
 import { prefersReducedMotion } from '@/lib/viewport'
 
 const courses = featuredCourses()
@@ -23,7 +23,7 @@ const NONE = -1
  *  pieces but can never stack two titles. */
 export default function ActivePanel() {
   const activeIndex = useStore((s) => s.activeIndex)
-  const visible = useStore(pastHero)
+  const visible = useStore((s) => s.pastHero)
   const target = visible ? activeIndex : NONE
   const [shown, setShown] = useState(NONE) // piece whose title is in the DOM
   const leaving = shown !== target
@@ -41,7 +41,7 @@ export default function ActivePanel() {
     const timeline = gsap.timeline({
       onComplete: () => {
         const state = useStore.getState()
-        setShown(pastHero(state) ? state.activeIndex : NONE)
+        setShown(state.pastHero ? state.activeIndex : NONE)
       },
     })
     if (shown === NONE) {

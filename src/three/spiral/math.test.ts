@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { spiralPresets } from '../../config/spiral'
-import { getItemTransform, scrollToProgress, sectionHeight } from './math'
+import { courseScroll, getItemTransform, scrollToProgress, sectionHeight } from './math'
 
 const N = 6
 
@@ -48,21 +48,25 @@ describe.each(Object.entries(spiralPresets))('spiral math (%s)', (_name, cfg) =>
     expect(t.position.y).toBeCloseTo(0)
   })
 
-  it('maps scroll to progress, holding at N−1 while the exit runs 0 → 1', () => {
-    expect(sectionHeight(N, cfg)).toBeCloseTo(1 + (N - 1) * cfg.scrollPerItem + cfg.exitZone)
+  it('maps scroll to progress: still through the hero zone, holding at N−1 while the exit runs 0 → 1', () => {
+    expect(sectionHeight(N, cfg)).toBeCloseTo(1 + cfg.heroZone + (N - 1) * cfg.scrollPerItem + cfg.exitZone)
 
     const total = sectionHeight(N, cfg) - 1
     const at = (viewportHeights: number) => scrollToProgress(viewportHeights / total, N, cfg)
 
-    expect(at(0)).toEqual({ progress: 0, exitProgress: 0 })
-    expect(at(cfg.scrollPerItem).progress).toBeCloseTo(1)
-    expect(at(cfg.scrollPerItem).exitProgress).toBe(0)
+    expect(at(0)).toEqual({ heroProgress: 0, progress: 0, exitProgress: 0 })
+    expect(at(cfg.heroZone / 2).heroProgress).toBeCloseTo(0.5)
+    expect(at(cfg.heroZone / 2).progress).toBe(0) // the spiral waits for the hero
+    expect(at(courseScroll(0, cfg)).heroProgress).toBeCloseTo(1)
+    expect(at(courseScroll(0, cfg)).progress).toBeCloseTo(0)
+    expect(at(courseScroll(1, cfg)).progress).toBeCloseTo(1)
+    expect(at(courseScroll(1, cfg)).exitProgress).toBe(0)
 
-    const exitStart = (N - 1) * cfg.scrollPerItem
+    const exitStart = courseScroll(N - 1, cfg)
     expect(at(exitStart).progress).toBeCloseTo(N - 1)
     expect(at(exitStart).exitProgress).toBeCloseTo(0)
     expect(at(exitStart + cfg.exitZone / 2).progress).toBe(N - 1)
     expect(at(exitStart + cfg.exitZone / 2).exitProgress).toBeCloseTo(0.5)
-    expect(scrollToProgress(1, N, cfg)).toEqual({ progress: N - 1, exitProgress: 1 })
+    expect(scrollToProgress(1, N, cfg)).toEqual({ heroProgress: 1, progress: N - 1, exitProgress: 1 })
   })
 })

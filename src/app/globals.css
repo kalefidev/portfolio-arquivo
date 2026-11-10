@@ -5,6 +5,9 @@
    (MOBILE_MAX_ASPECT = 0.8), so the UI and the 3D always switch together. */
 @custom-variant wide (@media (min-aspect-ratio: 4/5));
 
+/* `short:` = landscape phones and very low windows: the stage has to fit in little height. */
+@custom-variant short (@media (max-height: 560px));
+
 /* Design tokens — DESIGN.md §2. Single source: the 3D scene reads these via getComputedStyle,
    so `static` keeps them in :root even when no utility uses them. */
 @theme static {
@@ -34,7 +37,7 @@
   --color-light-rim: #dce8ff;
 
   /* type scale */
-  --text-display: clamp(2.75rem, 6.2vw, 6.5rem);
+  --text-display: clamp(2.75rem, min(6.2vw, 12vh), 6.5rem);
   --text-display--line-height: 0.92;
   --text-h2: clamp(2rem, 4vw, 3.75rem);
   --text-h2--line-height: 0.95;
@@ -133,6 +136,26 @@
   inset: 0;
   opacity: 0.08;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Readability over the canvas (DESIGN.md §3), under the grain. Paper comes in from the top and
+   bottom edges, so a piece passing there never sits behind the header or the bottom bar, and from
+   behind the text: the lower strip on portrait, the left column on `wide`. */
+.spiral-fade {
+  --veil: color-mix(in srgb, var(--color-paper) 85%, transparent);
+  --edge: 6rem;
+  background:
+    linear-gradient(to bottom, var(--color-paper), transparent var(--edge)),
+    linear-gradient(to top, var(--veil) 20%, transparent 50%);
+}
+
+@media (min-aspect-ratio: 4/5) {
+  .spiral-fade {
+    background:
+      linear-gradient(to bottom, var(--color-paper), transparent var(--edge)),
+      linear-gradient(to top, var(--color-paper), transparent var(--edge)),
+      linear-gradient(to right, var(--veil) 25%, transparent 50%);
+  }
 }
 
 /* Full-screen mobile menu (Header) */

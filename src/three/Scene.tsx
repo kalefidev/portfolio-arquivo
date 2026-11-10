@@ -70,9 +70,9 @@ export default function Scene() {
           </Suspense>
         )}
       </Canvas>
-      {/* Readability (DESIGN.md §3): paper behind the left column; behind the lower strip on portrait.
-          Lives here, not in the UI, so the technical grid of the grain stays on top of it. */}
-      <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-t from-paper/85 from-20% to-transparent to-50% wide:bg-linear-to-r wide:from-25% wide:to-50%" />
+      {/* Readability gradients (`.spiral-fade`, globals.css). Here, not in the UI, so the technical
+          grid of the grain stays on top of them. */}
+      <div className="spiral-fade pointer-events-none absolute inset-0 z-10" />
     </div>
   )
 }

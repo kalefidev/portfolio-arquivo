@@ -55,16 +55,21 @@ export function getItemTransform(
 
 const steps = (n: number) => Math.max(n - 1, 0)
 
-/** Height of the spiral section, in viewport heights: 1 + (N − 1) × scrollPerItem + exitZone. */
+/** Height of the spiral section, in viewport heights: 1 + heroZone + (N − 1) × scrollPerItem + exitZone. */
 export const sectionHeight = (n: number, cfg: SpiralPreset) =>
-  1 + steps(n) * cfg.scrollPerItem + cfg.exitZone
+  1 + cfg.heroZone + steps(n) * cfg.scrollPerItem + cfg.exitZone
 
-/** Scroll through the section (0 … 1) → progress (holds at N−1 in the exit zone) + exitProgress (0 … 1). */
+/** Scroll from the top of the section (in viewport heights) at which piece `i` is the centred one. */
+export const courseScroll = (i: number, cfg: SpiralPreset) => cfg.heroZone + i * cfg.scrollPerItem
+
+/** Scroll through the section (0 … 1) → heroProgress (0 … 1 through the hero zone, the spiral still
+ *  at piece 0) + progress (holds at N−1 in the exit zone) + exitProgress (0 … 1). */
 export function scrollToProgress(t01: number, n: number, cfg: SpiralPreset) {
   const total = sectionHeight(n, cfg) - 1 // viewport heights
   const scrolled = t01 * total
   return {
-    progress: Math.min(scrolled / cfg.scrollPerItem, steps(n)),
+    heroProgress: cfg.heroZone > 0 ? clamp01(scrolled / cfg.heroZone) : 1,
+    progress: Math.min(Math.max(scrolled - cfg.heroZone, 0) / cfg.scrollPerItem, steps(n)),
     // measured from the end, so it lands on exactly 1 at the bottom
     exitProgress: 1 - clamp01((total - scrolled) / cfg.exitZone),
   }

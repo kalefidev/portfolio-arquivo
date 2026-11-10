@@ -33,6 +33,7 @@ export default function DebugPanel() {
     gui.add(preset, 'visibleRange', 1.5, 6, 0.1)
     gui.add(preset, 'damping', 1, 20, 0.5)
     gui.add(preset, 'dragReturn', 0.1, 5, 0.1)
+    gui.add(preset, 'heroZone', 0, 1, 0.05).onChange(relayout)
     gui.add(preset, 'exitZone', 0.1, 1.5, 0.05).onChange(relayout)
     gui.add(preset, 'fogNear', 4, 20, 0.1)
     gui.add(preset, 'fogFar', 8, 40, 0.1)

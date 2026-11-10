@@ -21,8 +21,8 @@ export default function SpiralSection({ children }: { children?: React.ReactNode
     gsap.registerPlugin(ScrollTrigger) // SmoothScroll skips this with reduced motion
 
     const write = (self: ScrollTrigger) => {
-      const { progress, exitProgress } = scrollToProgress(self.progress, count, activePreset())
-      useStore.getState().setScroll(progress, exitProgress)
+      const { progress, exitProgress, heroProgress } = scrollToProgress(self.progress, count, activePreset())
+      useStore.getState().setScroll(progress, exitProgress, heroProgress)
     }
     const trigger = ScrollTrigger.create({
       trigger: section.current,

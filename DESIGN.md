@@ -28,7 +28,7 @@ cloud `#A8C0DA` · security `#D9A441` · frontend `#E2937F` · backend `#8DB39A`
 - **Archivo** (variável, eixos `wght` + `wdth`) — títulos com `wdth` 112–125, peso 600–750, tracking −0.02em, entrelinha 0.92; texto corrido com `wdth` 100, peso 400.
 - **IBM Plex Mono** 400/500 — rótulos técnicos em CAIXA ALTA, tracking 0.08em, 11–13px.
 
-Escala: display `clamp(2.75rem, 6.2vw, 6.5rem)` · h2 `clamp(2rem, 4vw, 3.75rem)` · h3 `1.5rem` · corpo `1.0625rem/1.55` · pequeno `0.875rem` · rótulo `0.75rem` mono.
+Escala: display `clamp(2.75rem, min(6.2vw, 12vh), 6.5rem)` (o `12vh` só pesa em janela baixa) · h2 `clamp(2rem, 4vw, 3.75rem)` · h3 `1.5rem` · corpo `1.0625rem/1.55` · pequeno `0.875rem` · rótulo `0.75rem` mono.
 
 ### Forma, linha, espaço
 - Raio 0–2px (nada de pílula). Bordas 1px `--color-line`. Nenhuma sombra na UI.
@@ -39,11 +39,11 @@ Escala: display `clamp(2.75rem, 6.2vw, 6.5rem)` · h2 `clamp(2rem, 4vw, 3.75rem)
 ## §3 Layout da seção da espiral (tela fixa enquanto rola)
 Desktop:
 - **Header**: wordmark `kaique calefi■` (■ em signal) à esquerda · nav em mono separada por hairlines (CURSOS · PROJETOS · SOBRE · CONTATO) · CTA retangular signal "VAMOS CONVERSAR ↗".
-- **Coluna esquerda** (cols 1–5): no começo, o hero (eyebrow + H1 + sub + "Explorar o arquivo ↓"). Quando `progress > 0.35`, troca pelo **painel da peça ativa** (e volta ao subir).
+- **Coluna esquerda** (cols 1–5): no começo, o hero (eyebrow + H1 + sub + "Explorar o arquivo ↓"). O hero tem uma **zona de entrada** (`heroZone`, 25% da tela de rolagem) em que a espiral fica parada na peça 01; a 40% dela (`HERO_UNTIL`) ele troca pelo **painel da peça ativa** (e volta ao subir). Assim a peça 01 ganha o painel ainda centralizada.
 - **Espiral**: eixo em ~62% da largura; a peça ativa fica à frente, no centro-direita.
-- **Borda direita — régua**: linha vertical com 1 tique por peça; ativa = tique longo em signal + "Nº 03"; clique no tique leva à peça. Rótulo vertical "ARQUIVO DE ESTUDOS".
+- **Borda direita — régua**: linha vertical com 1 tique por peça (tiques para o lado da espiral); ativa = tique longo em signal + "Nº 03" do lado de fora da linha (onde nenhum callout alcança); clique no tique leva à peça. Rótulo vertical "ARQUIVO DE ESTUDOS" embaixo da régua. Os tiques se apertam se a tela for baixa demais para todos.
 - **Barra inferior**: dicas em mono à esquerda · controle segmentado central "☰ ÍNDICE | ⚙ AJUSTES" · contador "03 / 12" com barrinha de progresso à direita.
-- Gradiente de papel atrás da coluna esquerda (paper 85% → 0) para o texto continuar legível quando um objeto passar atrás. Fica na camada do canvas (abaixo do grão), para o grid técnico continuar por cima; no mobile o gradiente sobe de baixo, atrás da faixa do painel.
+- Gradiente de papel atrás da coluna esquerda (paper 85% → 0) para o texto continuar legível quando um objeto passar atrás. Fica na camada do canvas (abaixo do grão), para o grid técnico continuar por cima; no mobile o gradiente sobe de baixo, atrás da faixa do painel. Mais um fade de papel de 6rem no topo e na base: peça que passa ali some no papel em vez de ficar atrás do header ou da barra (`.spiral-fade`).
 
 Mobile (tela em pé, proporção < 4:5 — a mesma regra do preset mobile da espiral, variante `wide:` no CSS; só o header troca por largura, em 768px): eixo centralizado; hero dividido (título acima da peça, texto + botão abaixo); o painel da peça vira faixa logo acima da barra inferior; régua some (o contador basta); dicas: "Deslize para navegar · Toque numa peça".
 
@@ -55,7 +55,7 @@ Practitioner
 AWS Skill Builder · 2026 · 20h
 ● CLOUD
 ```
-- **Callout** de cada objeto (drei `<Html>`): "Nº 03 — AWS CLOUD" no estilo rótulo (mono 12px) + linha-guia (diagonal curta + horizontal). Sai para cima-direita; nas peças do lado direito da hélice vira para baixo-esquerda (não sai da tela nem bate nas cantoneiras), com fade na virada. Some quando |d| > 2. Não capta ponteiro. No mobile mostra só "Nº 03".
+- **Callout** de cada objeto (drei `<Html>`): "Nº 03 — AWS CLOUD" no estilo rótulo (mono 12px) + linha-guia (diagonal curta + horizontal). Sai para cima-direita; nas peças do lado direito da hélice vira para baixo-esquerda (não sai da tela nem bate nas cantoneiras), com fade na virada. Some quando |d| > 2. Não capta ponteiro. Abaixo de 1280px de largura (e no mobile) mostra só "Nº 03"; o título tem largura máxima e reticências para nunca chegar na régua.
 - **Peça ativa**: 4 cantoneiras (marcas de registro) em signal em volta + anel fino em signal embaixo do objeto.
 
 ## §4 Espiral
@@ -88,17 +88,18 @@ vis   = 1 - smoothstep(visibleRange - 1, visibleRange, |d|)   // vis ≈ 0 → v
 | `visibleRange` | 3.5 | 2.5 | |
 | `damping` | 6 | 6 | |
 | `dragReturn` | 0.6 | — | giro do arraste volta devagar |
+| `heroZone` | 0.25 | 0.25 | scroll antes de a espiral começar a girar: hero → painel da peça 01 (fração da viewport) |
 | `exitZone` | 0.6 | 0.6 | scroll extra após a última peça (fração da viewport) |
 | `fogNear` / `fogFar` | 10 / 17 | 11 / 17 | profundidade (a partir da câmera) em que a peça começa a sumir / vira papel |
 | `dpr` | 1.75 | 1.5 | teto do device pixel ratio do canvas |
 | câmera | fov 35, z 10 | fov 40, z 11 | |
 
-- Altura da seção: `100svh + (N − 1) × scrollPerItem + 60svh` (os 60svh finais = zona de saída).
+- Altura da seção: `100svh + heroZone + (N − 1) × scrollPerItem + exitZone` (25svh de entrada do hero; 60svh finais = zona de saída).
 - Preset: `aspect < 0.8` → mobile (transição suave no resize).
 
 ### Desenho
 - **Eixo**: hairline vertical tracejada, tiques a cada `pitch` (cara de régua), ink 30%.
-- **Trilho**: a curva da hélice desenhada como linha pontilhada fina (ink 18%, pontos de 2px, 36 por peça) passando pelas peças, da primeira à última.
+- **Trilho**: a curva da hélice desenhada como linha pontilhada fina (ink 18%, pontos de 2px, 36 por peça) passando pelas peças, da primeira à última, com uma folga de 30% do passo de cada lado de cada peça (o trilho nunca cruza um objeto).
 - **Profundidade**: fog na cor do papel → peças distantes "somem no papel". `scene.background` = `--color-paper`; se o fundo e as peças distantes não casarem, ajuste a cor do fog.
 
 ## §5 Objetos 3D (arquétipos)

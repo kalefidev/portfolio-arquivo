@@ -14,6 +14,7 @@ export interface SpiralPreset {
   visibleRange: number // |d| (in pieces) beyond which a piece is hidden
   damping: number // lambda for THREE.MathUtils.damp on the progress the pieces follow
   dragReturn: number // how fast the drag rotation returns to 0 (unused on mobile: drag off)
+  heroZone: number // scroll before the spiral starts turning (hero → panel of piece 01), as a fraction of viewport height
   exitZone: number // extra scroll after the last piece, as a fraction of viewport height
   fogNear: number // view depth where pieces start fading into the paper
   fogFar: number // view depth where they are fully paper
@@ -33,6 +34,7 @@ const desktop: SpiralPreset = {
   visibleRange: 3.5,
   damping: 6,
   dragReturn: 0.6,
+  heroZone: 0.25,
   exitZone: 0.6,
   fogNear: 10,
   fogFar: 17,
@@ -52,6 +54,7 @@ const mobile: SpiralPreset = {
   visibleRange: 2.5,
   damping: 6,
   dragReturn: 0.6,
+  heroZone: 0.25,
   exitZone: 0.6,
   fogNear: 11,
   fogFar: 17,
@@ -66,8 +69,9 @@ const MOBILE_MAX_ASPECT = 0.8 // width / height below this → mobile preset
 export const pickPreset = (aspect: number): SpiralPreset =>
   aspect < MOBILE_MAX_ASPECT ? mobile : desktop
 
-/** Progress up to which the hero is on screen; past it the active-piece panel takes its place. */
-export const HERO_UNTIL = 0.35
+/** Fraction of the hero zone after which the hero gives way to the active-piece panel. Piece 01
+ *  is still centred then: its panel gets the rest of the zone plus its own half step. */
+export const HERO_UNTIL = 0.4
 
 /** Label of each piece (DESIGN.md §3). */
 export const CALLOUT = {

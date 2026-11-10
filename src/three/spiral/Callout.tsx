@@ -31,9 +31,10 @@ export default function Callout({ ref, no, title, active }: Props) {
           <path d="M0 20 20 0" stroke="currentColor" fill="none" />
         </svg>
         <span className="h-px w-6 shrink-0 bg-current" />
-        <span className="-translate-y-1/2 px-2 whitespace-nowrap group-data-[side=left]:translate-y-1/2">
+        {/* the title only where there is room for it, and never as far as the ruler on the right */}
+        <span className="-translate-y-1/2 truncate px-2 group-data-[side=left]:translate-y-1/2 xl:max-w-[calc(38vw-18rem)]">
           Nº {no}
-          <span className="hidden wide:inline"> — {title}</span>
+          <span className="hidden wide:xl:inline"> — {title}</span>
         </span>
       </div>
     </Html>

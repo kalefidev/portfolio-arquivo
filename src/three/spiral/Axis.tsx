@@ -13,6 +13,7 @@ const DASHES_PER_PITCH = 8
 const TICK = 0.18 // world units
 const RAIL_OPACITY = 0.18
 const RAIL_DOTS_PER_PIECE = 36
+const RAIL_GAP = 0.3 // fraction of a step left empty on each side of a piece: the rail never crosses an object
 const RAIL_DOT = 2 // px
 
 const target = newItemTransform() // scratch
@@ -39,10 +40,14 @@ export default function Axis({ frame, count }: { frame: RefObject<SpiralFrame>; 
   const line = useRef<ComponentRef<typeof Line>>(null!)
   const rail = useRef<Points>(null!)
   const [ink] = useState(() => cssVar('--color-ink'))
-  const dots = useMemo(
-    () => new Float32Array((Math.max(count - 1, 0) * RAIL_DOTS_PER_PIECE + 1) * 3),
-    [count],
-  )
+  // where each dot sits along the helix, in pieces (0 … N−1), skipping the gap around every piece
+  const stops = useMemo(() => {
+    const total = Math.max(count - 1, 0) * RAIL_DOTS_PER_PIECE + 1
+    return Array.from({ length: total }, (_, k) => k / RAIL_DOTS_PER_PIECE).filter(
+      (t) => Math.abs(t - Math.round(t)) >= RAIL_GAP,
+    )
+  }, [count])
+  const dots = useMemo(() => new Float32Array(stops.length * 3), [stops])
 
   useFrame(() => {
     const { cfg, p, exit, lift, extra } = frame.current
@@ -54,8 +59,8 @@ export default function Axis({ frame, count }: { frame: RefObject<SpiralFrame>; 
     line.current.material.opacity = AXIS_OPACITY * (1 - exit)
 
     const position = rail.current.geometry.attributes.position as BufferAttribute
-    for (let k = 0; k < position.count; k++) {
-      const { x, y, z } = getItemTransform(k / RAIL_DOTS_PER_PIECE, p, cfg, extra, target).position
+    for (let k = 0; k < stops.length; k++) {
+      const { x, y, z } = getItemTransform(stops[k], p, cfg, extra, target).position
       position.setXYZ(k, x, y, z)
     }
     position.needsUpdate = true
