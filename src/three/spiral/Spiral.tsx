@@ -6,6 +6,7 @@ import { featuredCourses } from '@/content/courses'
 import { useStore } from '@/lib/store'
 import { prefersReducedMotion, usePreset } from '@/lib/viewport'
 import Axis from './Axis'
+import FocusMarks from './FocusMarks'
 import SpiralItem from './SpiralItem'
 
 const { damp, degToRad } = MathUtils
@@ -48,7 +49,7 @@ export default function Spiral() {
     }
   }
 
-  // Priority −1: runs before the pieces and the axis, and (unlike a positive one) keeps R3F rendering.
+  // Priority −2: runs before the pieces (−1) and everything else, and (unlike a positive one) keeps R3F rendering.
   useFrame((state, delta) => {
     const f = frame.current
     const { progress, exitProgress, dragOffset, ambientMotion } = useStore.getState()
@@ -81,7 +82,7 @@ export default function Spiral() {
     const viewHeight = 2 * Math.tan(degToRad(f.cfg.camera.fov) / 2) * f.cfg.camera.z
     f.lift = f.exit * f.exit * viewHeight
     pieces.current.position.y = f.lift
-  }, -1)
+  }, -2)
 
   return (
     <>
@@ -96,6 +97,7 @@ export default function Spiral() {
             detail={detail}
           />
         ))}
+        <FocusMarks frame={frame} count={courses.length} />
       </group>
       <Axis frame={frame} count={courses.length} />
     </>

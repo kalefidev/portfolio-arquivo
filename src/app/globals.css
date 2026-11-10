@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
+/* `wide:` = the desktop layout of the spiral UI. Same rule as pickPreset() in config/spiral.ts
+   (MOBILE_MAX_ASPECT = 0.8), so the UI and the 3D always switch together. */
+@custom-variant wide (@media (min-aspect-ratio: 4/5));
+
 /* Design tokens — DESIGN.md §2. Single source: the 3D scene reads these via getComputedStyle,
    so `static` keeps them in :root even when no utility uses them. */
 @theme static {
@@ -129,4 +133,22 @@
   inset: 0;
   opacity: 0.08;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Full-screen mobile menu (Header) */
+dialog.menu[open] {
+  animation: menu-in var(--duration-ui) var(--ease-enter);
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.menu[open] {
+    animation: none;
+  }
 }

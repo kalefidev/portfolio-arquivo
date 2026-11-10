@@ -11,7 +11,8 @@ import { scrollToProgress, sectionHeight } from '@/three/spiral/math'
 const count = featuredCourses().length
 
 /** `#cursos`: tall section that turns scroll into spiral progress. The 3D lives in the fixed
- *  canvas behind the page; the sticky stage is where the spiral UI goes (etapa 04). */
+ *  canvas behind the page; `children` are the spiral UI, on a sticky stage that lets the pointer
+ *  through (each control turns `pointer-events` back on for itself). */
 export default function SpiralSection({ children }: { children?: React.ReactNode }) {
   const section = useRef<HTMLElement>(null)
   const height = usePreset((preset) => sectionHeight(count, preset)) // in viewport heights
@@ -35,8 +36,7 @@ export default function SpiralSection({ children }: { children?: React.ReactNode
 
   return (
     <section id="cursos" ref={section} className="relative" style={{ height: `${height * 100}svh` }}>
-      <div className="sticky top-0 h-svh" />
-      {children}
+      <div className="pointer-events-none sticky top-0 h-svh">{children}</div>
     </section>
   )
 }

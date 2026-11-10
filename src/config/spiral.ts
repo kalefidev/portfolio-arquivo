@@ -66,6 +66,29 @@ const MOBILE_MAX_ASPECT = 0.8 // width / height below this → mobile preset
 export const pickPreset = (aspect: number): SpiralPreset =>
   aspect < MOBILE_MAX_ASPECT ? mobile : desktop
 
+/** Progress up to which the hero is on screen; past it the active-piece panel takes its place. */
+export const HERO_UNTIL = 0.35
+
+/** Label of each piece (DESIGN.md §3). */
+export const CALLOUT = {
+  anchor: 0.62, // local x / y where the leader line starts: just off the object, up and to the side
+  fadeFrom: 1, // |d| where the label starts fading…
+  hideAt: 2, // …and where it is gone
+  flipAt: 0.45, // side of the helix (sin θ) past which the label goes to the bottom left, away from the right edge
+  flipFade: 0.15, // the label fades out around the flip instead of jumping
+}
+
+/** Registration marks + ring around the active piece (DESIGN.md §3). Local units: a piece fits a sphere of radius 1. */
+export const FOCUS_MARKS = {
+  half: 1.12, // half-side of the square the four corners sit on
+  arm: 0.2, // length of each corner stroke
+  lineWidth: 1.5, // px
+  ringRadius: 0.85,
+  ringY: -1.08,
+  fadeFrom: 0.15, // |d| where the marks start fading; they are gone at 0.5, when the next piece takes over
+  spread: 0.15, // extra scale of the corners while faded: they close in on the piece
+}
+
 /** Ambient sway of the whole helix: a slow oscillation, never a continuous rotation. */
 export const AMBIENT_SWAY = { amplitude: 0.06, period: 10 } // rad, seconds
 

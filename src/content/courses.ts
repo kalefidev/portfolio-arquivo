@@ -1,4 +1,4 @@
-import type { Course } from '@/types'
+import type { Category, Course } from '@/types'
 
 // Source: docs/CURSOS.md (only 2 draft rows so far). Order = order in the spiral.
 // Rows marked EXEMPLO are placeholders — replace with the real list before etapa 06.
@@ -65,6 +65,23 @@ export const courses: Course[] = [
     projects: ['jarvis'],
   },
 ]
+
+export const categoryLabels: Record<Category, string> = {
+  cloud: 'Cloud',
+  security: 'Segurança',
+  frontend: 'Front-end',
+  backend: 'Back-end',
+  data: 'Dados',
+  automation: 'Automação',
+  ai: 'IA',
+  devops: 'DevOps',
+  design: 'Design',
+  fundamentals: 'Fundamentos',
+  hardware: 'Hardware',
+}
+
+/** Catalogue number of a piece, from its index in the spiral: 2 → "03". */
+export const pieceNo = (index: number) => String(index + 1).padStart(2, '0')
 
 export const featuredCourses = () => courses.filter((c) => c.featured)
 

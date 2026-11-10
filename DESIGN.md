@@ -43,9 +43,9 @@ Desktop:
 - **Espiral**: eixo em ~62% da largura; a peça ativa fica à frente, no centro-direita.
 - **Borda direita — régua**: linha vertical com 1 tique por peça; ativa = tique longo em signal + "Nº 03"; clique no tique leva à peça. Rótulo vertical "ARQUIVO DE ESTUDOS".
 - **Barra inferior**: dicas em mono à esquerda · controle segmentado central "☰ ÍNDICE | ⚙ AJUSTES" · contador "03 / 12" com barrinha de progresso à direita.
-- Gradiente de papel atrás da coluna esquerda (paper 85% → 0) para o texto continuar legível quando um objeto passar atrás.
+- Gradiente de papel atrás da coluna esquerda (paper 85% → 0) para o texto continuar legível quando um objeto passar atrás. Fica na camada do canvas (abaixo do grão), para o grid técnico continuar por cima; no mobile o gradiente sobe de baixo, atrás da faixa do painel.
 
-Mobile (< 768px): eixo centralizado; o painel da peça vira faixa logo acima da barra inferior; régua some (o contador basta); dicas: "Deslize para navegar · Toque numa peça".
+Mobile (tela em pé, proporção < 4:5 — a mesma regra do preset mobile da espiral, variante `wide:` no CSS; só o header troca por largura, em 768px): eixo centralizado; hero dividido (título acima da peça, texto + botão abaixo); o painel da peça vira faixa logo acima da barra inferior; régua some (o contador basta); dicas: "Deslize para navegar · Toque numa peça".
 
 Painel da peça ativa:
 ```
@@ -55,7 +55,7 @@ Practitioner
 AWS Skill Builder · 2026 · 20h
 ● CLOUD
 ```
-- **Callout** de cada objeto (drei `<Html>`): "Nº 03 — AWS CLOUD" em mono 11px + linha-guia (diagonal curta + horizontal). Some quando |d| > 2. Não capta ponteiro.
+- **Callout** de cada objeto (drei `<Html>`): "Nº 03 — AWS CLOUD" no estilo rótulo (mono 12px) + linha-guia (diagonal curta + horizontal). Sai para cima-direita; nas peças do lado direito da hélice vira para baixo-esquerda (não sai da tela nem bate nas cantoneiras), com fade na virada. Some quando |d| > 2. Não capta ponteiro. No mobile mostra só "Nº 03".
 - **Peça ativa**: 4 cantoneiras (marcas de registro) em signal em volta + anel fino em signal embaixo do objeto.
 
 ## §4 Espiral

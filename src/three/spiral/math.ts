@@ -5,7 +5,7 @@ import type { SpiralPreset } from '../../config/spiral'
 
 const clamp01 = (x: number) => Math.min(Math.max(x, 0), 1)
 
-const smoothstep = (edge0: number, edge1: number, x: number) => {
+export const smoothstep = (edge0: number, edge1: number, x: number) => {
   const t = clamp01((x - edge0) / (edge1 - edge0))
   return t * t * (3 - 2 * t)
 }

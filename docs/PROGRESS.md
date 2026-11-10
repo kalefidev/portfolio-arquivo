@@ -3,15 +3,15 @@
 > O Code lê isto no começo de toda sessão e atualiza no fim de toda etapa. Curto e factual.
 
 ## Estado atual
-- Etapa atual: 04 — Interface da espiral
-- Última tag: etapa-03
+- Etapa atual: 05 — Interações, overlay e modos
+- Última tag: etapa-04
 - Bloqueios / pendências do Kaique: preencher `docs/CURSOS.md` (até a etapa 06), revisar `docs/CONTEUDO.md`
 
 ## Etapas
 - [x] 01 Fundação
 - [x] 02 Espiral 3D
 - [x] 03 Objetos 3D (parte 1) + /lab
-- [ ] 04 Interface da espiral
+- [x] 04 Interface da espiral
 - [ ] 05 Interações, overlay e modos
 - [ ] 06 Objetos 3D (parte 2)
 - [ ] 07 Seções + saída da espiral
@@ -78,6 +78,27 @@ Pendências:
 - `fundamentals` (#d8cfbf) quase some no papel: o `</>` fica com pouco contraste. Decisão de token (DESIGN §2), não mexi.
 - Seguem da etapa 02: texto do hero por cima da peça ativa (etapa 04); calibrar `angleStep` no `/?debug`.
 Como testar: `npm run dev` → `http://localhost:3000/lab`: marcar `hovered` (nuvem solta pacotes, anel desce no escudo, `<` `>` abrem com cursor piscando, discos separam e giram, ícone dá um giro com salto) e `active` (nuvem gira + pacotes, borda do escudo acende, colchetes pulsam, banco gira); `detail low` derruba a contagem; arrastar gira a célula. Na home: AWS = nuvem, Cyber = escudo, HTML/CSS e n8n = ícone na placa. Em build de produção `/lab` é 404 (libera com `NEXT_PUBLIC_LAB=1`). Screenshots em `artifacts/etapa-03-*.png` (não versionados).
+
+### Etapa 04 — 2026-11-10
+Feito: `Header` (wordmark, nav em caixa com hairlines, CTA signal; abaixo de 768px um `<dialog>` em tela cheia), `ui/PrimaryCta`, `lib/whatsapp.ts`; no palco sticky de `#cursos`: `HeroIntro`, `ActivePanel` (SplitText com máscara por linha), `RightRail`, `BottomBar` (ícones Phosphor `regular` inline); no 3D: `Callout` (drei `<Html>`) em cada peça e `FocusMarks` (cantoneiras + anel) na ativa; gradiente de legibilidade; `scrollToCourse(i)` em `lib/scroll.ts`; `pastHero` (seletor booleano) em `store.ts`; `HERO_UNTIL`, `CALLOUT`, `FOCUS_MARKS` em `config/spiral.ts`; `categoryLabels` + `pieceNo()` em `courses.ts`; `site.header` + rótulos de a11y em `site.ts`.
+Decisões:
+- **Layout mobile troca por proporção (< 4:5), não por 768px**: variante `wide:` no `globals.css`, a mesma regra do `pickPreset()`. Com 768px um iPad em pé ficava com espiral mobile (eixo no centro) + painel desktop por cima dela. Só o header troca por largura (`md`). DESIGN §3 atualizado.
+- **Painel**: só existe um título no DOM. O antigo sai (320ms), e entra a peça que estiver ativa *naquele momento* — rolando rápido ele pula peças, mas nunca empilha dois títulos. O número "PEÇA Nº 03 / 06" troca na hora (sem animação). O bloco do título tem `key` por peça porque o SplitText reescreve os filhos do `<h2>`.
+- **Âncoras**: `anchors: true` do Lenis (nenhum JS no header); sem Lenis (reduced motion) é o pulo nativo. `#topo` é o wrapper da página.
+- **Callouts**: o `<Html>` do drei ia parar no `<body>` (é o `eventSource` do canvas) e rolaria com a página → `portal` na caixa do canvas. `Spiral` passou para prioridade −2 e `SpiralItem` para −1, senão o `<Html>` (prioridade 0, registrado antes do pai) projetava a posição do frame anterior e o rótulo "arrastava". Nas peças do lado direito o rótulo vira para baixo-esquerda (para cima-esquerda batia nas cantoneiras).
+- **Gradiente** fica dentro do `Scene` (acima do canvas e dos callouts, abaixo do grão), não na UI: assim o grid de 64px não some atrás do texto.
+- `--z-*` continuam 0 / 10 / 20 (a ordem canvas < grão < UI é a mesma do prompt).
+- CTA do WhatsApp: enquanto `site.whatsapp` for TODO, o link aponta para `#contato` em vez de um `wa.me` quebrado.
+- Durações do GSAP vêm dos tokens (`cssSeconds`); o build minifica `640ms` → `.64s`, o helper trata os dois. `expo.out` / `expo.in` são as curvas de `--ease-enter` / `--ease-exit`.
+- Callout usa o rótulo de 12px (token) em vez dos 11px do DESIGN; ⚙ / ☰ viraram ícones Phosphor (⚙ vira emoji em alguns celulares — DESIGN §10).
+Pendências:
+- **A peça Nº 01 quase não tem painel**: o hero some em `progress` 0,35 e a peça 02 assume em 0,5 — sobram ~100px de rolagem. Por isso "Explorar o arquivo ↓" leva direto à peça 02. Se incomodar: dar uma zona de entrada ao hero antes da peça 0 (muda `math.ts`).
+- Header é transparente: na espiral funciona; nas seções da etapa 07 vai precisar de fundo paper + hairline ao rolar. `#projetos`, `#sobre`, `#contato` ainda não existem (os links só mudam o hash).
+- ÍNDICE / AJUSTES sem ação e ↗ só grava `focusSlug` (etapa 05). Na etapa 05: o canvas escuta o `<body>`, então passar o mouse num botão da UI também atinge a peça que está atrás — filtrar por `event.target`.
+- Peças ±2 passam atrás do nav e do contador "03 / 06" — resolve calibrando `angleStep` / `pitch` no `/?debug` (segue da etapa 02).
+- Celular deitado (ex.: 844×390) cai no layout desktop e o hero não cabe na altura.
+- Seguem da etapa 03: trilho na frente de peças finas; `icon` girando em fase; contraste do tom `fundamentals`.
+Como testar: `npm run dev` → `http://localhost:3000`. Rolar devagar e rápido (título troca com máscara, nunca dois ao mesmo tempo; contador e régua acompanham); voltar ao topo (hero volta); clicar num tique da régua e em "Explorar o arquivo ↓"; CURSOS no header rola suave até o topo; estreitar a janela até ficar em pé → layout mobile + MENU (Esc fecha). Screenshots em `artifacts/etapa-04-*.png` (não versionados).
 
 <!-- modelo:
 ### Etapa NN — AAAA-MM-DD

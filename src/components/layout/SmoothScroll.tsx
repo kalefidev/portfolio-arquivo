@@ -12,7 +12,7 @@ export default function SmoothScroll() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     gsap.registerPlugin(ScrollTrigger)
-    const lenis = new Lenis({ autoRaf: false, lerp: 0.1, syncTouch: false })
+    const lenis = new Lenis({ autoRaf: false, lerp: 0.1, syncTouch: false, anchors: true }) // anchors: #links scroll smoothly
     setLenis(lenis)
     lenis.on('scroll', ScrollTrigger.update)
 

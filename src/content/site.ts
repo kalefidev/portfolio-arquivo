@@ -13,6 +13,18 @@ export const site = {
   instagram: 'TODO: Instagram',
   photo: 'TODO: /images/kaique.webp',
 
+  header: {
+    nav: [
+      { label: 'Cursos', href: '#cursos' },
+      { label: 'Projetos', href: '#projetos' },
+      { label: 'Sobre', href: '#sobre' },
+      { label: 'Contato', href: '#contato' },
+    ],
+    navLabel: 'Principal',
+    cta: 'Vamos conversar', // the ↗ comes from <PrimaryCta>
+    menu: { open: 'Menu', close: 'Fechar' },
+  },
+
   hero: {
     eyebrow: 'DESENVOLVEDOR · SITES, AUTOMAÇÕES E SISTEMAS',
     h1: 'Estudo, construo e entrego.',
@@ -23,6 +35,9 @@ export const site = {
   spiral: {
     verticalLabel: 'ARQUIVO DE ESTUDOS',
     panelLabel: 'PEÇA Nº {n} / {total}',
+    railLabel: 'Peças do arquivo',
+    goTo: 'Ir para a peça {n}: {title}',
+    open: 'Abrir a peça {n}: {title}',
     hintsDesktop: 'Role para explorar · Arraste para girar · Clique para abrir',
     hintsMobile: 'Deslize para navegar · Toque numa peça',
     buttons: { index: 'ÍNDICE', settings: 'AJUSTES' },

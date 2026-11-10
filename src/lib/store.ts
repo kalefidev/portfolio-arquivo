@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { HERO_UNTIL } from '@/config/spiral'
 
 interface SpiralState {
   /** Continuous position in the spiral (0 … N−1). Written on every scroll frame:
@@ -44,3 +45,7 @@ export const useStore = create<SpiralState>((set, get) => ({
   setAmbientMotion: (ambientMotion) => set({ ambientMotion }),
   setStaticMode: (staticMode) => set({ staticMode }),
 }))
+
+/** Selector: the hero has given way to the active-piece panel. A boolean, so subscribing to it
+ *  re-renders only when it flips (never subscribe to `progress` itself). */
+export const pastHero = (s: SpiralState) => s.progress > HERO_UNTIL
