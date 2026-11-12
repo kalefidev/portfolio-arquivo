@@ -19,6 +19,9 @@ export interface SpiralPreset {
   fogNear: number // view depth where pieces start fading into the paper
   fogFar: number // view depth where they are fully paper
   dpr: number // max device pixel ratio of the canvas
+  stageX: number // where the open piece goes (focus mode): fraction of the screen width, from the left
+  stageY: number // …and of the screen height, from the top
+  stageScale: number // scale of the piece on the stage
   camera: { fov: number; z: number } // fixed camera
 }
 
@@ -39,6 +42,9 @@ const desktop: SpiralPreset = {
   fogNear: 10,
   fogFar: 17,
   dpr: 1.75,
+  stageX: 0.28, // middle of what the 44vw overlay leaves free
+  stageY: 0.5,
+  stageScale: 1.7,
   camera: { fov: 35, z: 10 },
 }
 
@@ -59,6 +65,9 @@ const mobile: SpiralPreset = {
   fogNear: 11,
   fogFar: 17,
   dpr: 1.5,
+  stageX: 0.5,
+  stageY: 0.2, // middle of what the bottom sheet leaves free
+  stageScale: 1.1,
   camera: { fov: 40, z: 11 },
 }
 
@@ -92,6 +101,27 @@ export const FOCUS_MARKS = {
   fadeFrom: 0.15, // |d| where the marks start fading; they are gone at 0.5, when the next piece takes over
   spread: 0.15, // extra scale of the corners while faded: they close in on the piece
 }
+
+/** Focus mode (a piece open in the overlay): the piece travels to the stage, the others sink into the fog. */
+export const FOCUS_MODE = {
+  recede: 8, // world units the other pieces go back: past `fogFar`, so they are paper
+  lambda: 5, // damping of the trip to the stage and back
+}
+
+/** Mouse drag: on empty space it turns the helix, on a piece it turns the piece. */
+export const DRAG = {
+  spiral: 0.002, // rad per px — the piece in front follows the pointer about 1:1
+  object: 0.01, // rad per px
+  friction: 3, // 1/s — how fast the spin left by a throw dies out
+  maxTilt: 1.2, // rad — a piece never tips further than this toward or away from the camera
+  stillMs: 80, // pointer held still this long before release: no throw
+  clickSlop: 5, // px — the pointer moved less than this between down and up: a click, not a drag
+  resetLambda: 6, // damping of "Resetar posições"
+}
+
+/** Lambda that replaces `damping` and `FOCUS_MODE.lambda` with prefers-reduced-motion: things
+ *  land almost at once instead of gliding (DESIGN.md §7). */
+export const REDUCED_DAMPING = 30
 
 /** Ambient sway of the whole helix: a slow oscillation, never a continuous rotation. */
 export const AMBIENT_SWAY = { amplitude: 0.06, period: 10 } // rad, seconds

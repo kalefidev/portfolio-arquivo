@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { MathUtils } from 'three'
+import { useStore } from '@/lib/store'
 
 export const FLAG_LAMBDA = 7 // hover / active settle in ~0.5 s
 export const REDUCED_HOVER_SCALE = 0.06 // reduced motion: hover is only this much extra scale
@@ -15,10 +16,12 @@ export function useDampedFlag(flag: boolean, lambda = FLAG_LAMBDA) {
   return value
 }
 
-/** Seconds of idle animation. Stays at 0 under reduced motion, so the idle pose is the rest pose. */
+/** Seconds of idle animation. Stays at 0 under reduced motion, so the idle pose is the rest pose.
+ *  "Movimento ambiente" off (Ajustes) freezes it where it is; hover and active still animate. */
 export function useIdleTime(reducedMotion: boolean) {
   const time = useRef(0)
   useFrame((_, delta) => {
+    if (!useStore.getState().ambientMotion) return
     time.current = reducedMotion ? 0 : time.current + Math.min(delta, MAX_STEP)
   })
   return time

@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState, type ComponentRef, type RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
-import type { BufferAttribute, Group, Points } from 'three'
+import type { BufferAttribute, BufferGeometry, Group, Points, PointsMaterial } from 'three'
 import { cssVar } from '@/lib/cssVar'
 import { getItemTransform, newItemTransform } from './math'
 import type { SpiralFrame } from './Spiral'
@@ -38,7 +38,7 @@ const AXIS_SEGMENTS = (() => {
 export default function Axis({ frame, count }: { frame: RefObject<SpiralFrame>; count: number }) {
   const axis = useRef<Group>(null!)
   const line = useRef<ComponentRef<typeof Line>>(null!)
-  const rail = useRef<Points>(null!)
+  const rail = useRef<Points<BufferGeometry, PointsMaterial>>(null!)
   const [ink] = useState(() => cssVar('--color-ink'))
   // where each dot sits along the helix, in pieces (0 … N−1), skipping the gap around every piece
   const stops = useMemo(() => {
@@ -50,13 +50,14 @@ export default function Axis({ frame, count }: { frame: RefObject<SpiralFrame>; 
   const dots = useMemo(() => new Float32Array(stops.length * 3), [stops])
 
   useFrame(() => {
-    const { cfg, p, exit, lift, extra } = frame.current
+    const { cfg, p, exit, lift, focus, extra } = frame.current
 
     // Ticks sit at the height of the pieces: the pattern repeats every pitch, so it only
     // has to slide by the fractional part of the progress.
     axis.current.position.set(cfg.axisX, (p % 1) * cfg.pitch, -cfg.radiusZ)
     axis.current.scale.y = cfg.pitch
-    line.current.material.opacity = AXIS_OPACITY * (1 - exit)
+    line.current.material.opacity = AXIS_OPACITY * (1 - exit) * (1 - focus)
+    rail.current.material.opacity = RAIL_OPACITY * (1 - focus) // a piece is open: only the stage is left
 
     const position = rail.current.geometry.attributes.position as BufferAttribute
     for (let k = 0; k < stops.length; k++) {

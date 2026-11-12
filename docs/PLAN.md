@@ -33,17 +33,17 @@ src/
   components/
     layout/              Header, Footer, SmoothScroll, Grain, Loader
     spiral/              SpiralSection, HeroIntro, ActivePanel, RightRail, BottomBar,
-                         IndexMenu, SettingsPanel, CourseOverlay, StaticCourses
+                         IndexMenu, SettingsPanel, CourseOverlay, StaticCourses, archetypeIcons.ts
     sections/            Reach, CourseIndex, Projects, Services, About, Process, Contact, ContactDialog
-    ui/                  Button, Eyebrow, Hairline…
+    ui/                  PrimaryCta, Icon…
   three/
-    Scene.tsx  Lights.tsx
-    spiral/              Spiral, SpiralItem, Axis, Callout, FocusMarks, math.ts, math.test.ts
+    Scene.tsx  SceneLoader.tsx  Lights.tsx
+    spiral/              Spiral, SpiralItem, Axis, Callout, FocusMarks, math.ts, drag.ts (+ testes)
     archetypes/          index.ts, types.ts, materials.ts, normalize.ts, useDampedFlag.ts, Cloud.tsx, Shield.tsx…
     debug/               DebugPanel.ts (lil-gui, só com ?debug)
   content/               courses.ts, projects.ts, site.ts
   config/                spiral.ts
-  lib/                   store.ts, scroll.ts, cssVar.ts, whatsapp.ts, useReducedMotion.ts
+  lib/                   store.ts, scroll.ts, viewport.ts, cssVar.ts, whatsapp.ts
   types.ts
 public/images/           foto, prévias de projetos
 ```

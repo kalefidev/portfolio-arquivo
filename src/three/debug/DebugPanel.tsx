@@ -38,6 +38,9 @@ export default function DebugPanel() {
     gui.add(preset, 'fogNear', 4, 20, 0.1)
     gui.add(preset, 'fogFar', 8, 40, 0.1)
     gui.add(preset, 'dpr', 1, 2, 0.25).onChange(relayout)
+    gui.add(preset, 'stageX', 0, 1, 0.01)
+    gui.add(preset, 'stageY', 0, 1, 0.01)
+    gui.add(preset, 'stageScale', 0.5, 3, 0.05)
     gui.add(preset.camera, 'fov', 20, 60, 1).name('camera fov')
     gui.add(preset.camera, 'z', 6, 18, 0.1).name('camera z')
 

@@ -136,7 +136,7 @@ export default function ActivePanel() {
             type="button"
             aria-label={fill(open)}
             className="pointer-events-auto flex size-10 shrink-0 items-center justify-center border border-ink text-h3 transition-colors duration-(--duration-micro) hover:bg-ink hover:text-paper"
-            onClick={() => useStore.getState().setFocus(active.slug)} // the overlay comes in etapa 05
+            onClick={() => useStore.getState().setFocus(active.slug)}
           >
             ↗
           </button>

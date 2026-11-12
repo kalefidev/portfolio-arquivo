@@ -32,6 +32,8 @@ export const site = {
     cta: 'Explorar o arquivo ↓',
   },
 
+  skipLink: 'Pular para o índice',
+
   spiral: {
     verticalLabel: 'ARQUIVO DE ESTUDOS',
     panelLabel: 'PEÇA Nº {n} / {total}',
@@ -41,7 +43,10 @@ export const site = {
     hintsDesktop: 'Role para explorar · Arraste para girar · Clique para abrir',
     hintsMobile: 'Deslize para navegar · Toque numa peça',
     buttons: { index: 'ÍNDICE', settings: 'AJUSTES' },
-    settings: ['Movimento ambiente', 'Resetar posições', 'Ver sem 3D'],
+    indexLabel: 'Índice das peças',
+    settingsLabel: 'Ajustes',
+    settings: { ambient: 'Movimento ambiente', reset: 'Resetar posições', static: 'Ver sem 3D' },
+    static: { eyebrow: 'O ARQUIVO · {N} PEÇAS', back: 'Ver em 3D' },
     loader: 'CATALOGANDO O ARQUIVO',
     overlay: {
       learned: 'O que aprendi',
@@ -50,6 +55,7 @@ export const site = {
       previous: 'Anterior',
       next: 'Próxima',
       close: 'Fechar',
+      stage: 'Arraste para girar',
     },
   },
 

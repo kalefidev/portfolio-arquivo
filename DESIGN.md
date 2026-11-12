@@ -73,6 +73,8 @@ vis   = 1 - smoothstep(visibleRange - 1, visibleRange, |d|)   // vis ≈ 0 → v
 ```
 - Damping no **progresso** (um `THREE.MathUtils.damp` por frame, lambda = `damping`); posição e escala saem do progresso amortecido, então as peças nunca saem do trilho. Os parâmetros também são amortecidos em direção ao preset ativo (`PRESET_LAMBDA`) — é isso que suaviza a troca desktop ↔ mobile e os sliders do debug.
 - `ambientSway` é oscilação suave, **nunca rotação contínua** (tiraria a peça ativa da frente).
+- `dragOffset` (arraste do mouse no vazio) e o giro de cada peça (arraste sobre ela) vivem em `src/three/spiral/drag.ts` — módulo mutável lido no `useFrame`, fora do store. Inércia com atrito; a espiral volta a 0 por `dragReturn`, o giro da peça fica até "Resetar posições". Sensibilidades e limites em `DRAG` (`config/spiral.ts`). Toque não arrasta a espiral (rola a página).
+- **Modo foco** (peça aberta no overlay): a peça interpola até o **palco** (`stageX` / `stageY` = fração da tela, `stageScale`); as outras recuam `FOCUS_MODE.recede` em z, para dentro do fog (os materiais são compartilhados: não existe opacidade por peça); eixo, trilho, cantoneiras e callouts somem por opacidade. A peça aberta é sempre a ativa: abrir / anterior / próxima salta o scroll até ela e o damping do progresso suaviza.
 - Unidades de mundo: câmera fov 35 em z = 10 vê ~6.3 unidades de altura.
 
 ### Parâmetros — `src/config/spiral.ts` (valores iniciais; calibrar em `/?debug`)
@@ -92,6 +94,8 @@ vis   = 1 - smoothstep(visibleRange - 1, visibleRange, |d|)   // vis ≈ 0 → v
 | `exitZone` | 0.6 | 0.6 | scroll extra após a última peça (fração da viewport) |
 | `fogNear` / `fogFar` | 10 / 17 | 11 / 17 | profundidade (a partir da câmera) em que a peça começa a sumir / vira papel |
 | `dpr` | 1.75 | 1.5 | teto do device pixel ratio do canvas |
+| `stageX` / `stageY` | 0.28 / 0.5 | 0.5 / 0.2 | centro do palco do modo foco (fração da largura / altura da tela): o meio do que o overlay deixa livre |
+| `stageScale` | 1.7 | 1.1 | escala da peça no palco |
 | câmera | fov 35, z 10 | fov 40, z 11 | |
 
 - Altura da seção: `100svh + heroZone + (N − 1) × scrollPerItem + exitZone` (25svh de entrada do hero; 60svh finais = zona de saída).
@@ -146,19 +150,20 @@ Meta: argila fosca com volume legível, nada estourado contra o papel claro.
 - Scroll: Lenis (lerp ~0.1) no ticker do GSAP; touch nativo (`syncTouch: false`).
 - Hover em objeto: cursor vira mira (crosshair) + callout destacado + animação do arquétipo.
 - Saída da espiral: peças sobem com stagger e somem; o eixo vertical "deita" e vira a linha horizontal da seção seguinte (se ficar frágil, fade simples).
-- `prefers-reduced-motion`: sem sway, SplitText vira fade, damping alto, sem saída coreografada, Lenis desligado.
+- `prefers-reduced-motion`: sem sway, SplitText vira fade, damping alto (`REDUCED_DAMPING`: progresso e modo foco chegam quase na hora), arraste sem inércia, overlay e menus sem slide, sem saída coreografada, Lenis desligado.
 
 ## §8 Componentes
 - **CTA primário**: retângulo signal, texto ink em mono caixa alta + ↗; hover: seta anda 2px e fundo escurece 6%.
 - **CTA secundário**: texto + sublinhado hairline que cresce no hover.
 - **Linha de índice** (cursos e projetos): `Nº | nome (display 1.5rem) | instituição ou tipo | ano | ● status | ↗`, hairlines entre linhas; hover: fundo paper-2 e nome anda 8px. Numeração: destaques primeiro, na mesma ordem e número da espiral; depois os demais.
-- **Overlay da peça** (clique): painel à direita (desktop, ~44vw) ou bottom sheet (mobile). A peça vai para o "palco" à esquerda, maior, e gira no arraste; as demais recuam e desbotam. Conteúdo: Nº, título, instituição · ano · horas · status, resumo, "O que aprendi" (3–5 itens), "Projetos com isso" (chips), "Ver certificado ↗", anterior / próxima, fechar (Esc).
-- **Ajustes**: Movimento ambiente · Resetar posições · Ver sem 3D.
-- **Índice (menu)**: lista Nº + nome; clique rola até a peça.
+- **Overlay da peça** (clique, Enter ou ↗): `<dialog>` modal em tela cheia e transparente — painel paper-2 à direita (desktop, 44vw) ou bottom sheet (mobile, 62svh). A peça vai para o "palco" (a parte livre), maior, e gira no arraste (mouse e toque); as demais recuam e somem no papel; header e UI da espiral somem junto. Conteúdo: Nº, título, instituição · ano · horas · status, resumo, "O que aprendi" (3–5 itens), "Projetos com isso" (chips), "Ver certificado ↗", anterior / próxima, fechar (Esc). Campo vazio não aparece. A URL ganha `#peca-<slug>` (abre direto ao carregar). Entra em 520ms, sai em 320ms.
+- **Ajustes** (popover acima da barra): Movimento ambiente (sway da espiral + idle dos objetos; hover e ativo continuam) · Resetar posições (espiral e giros voltam a 0, animado) · Ver sem 3D. Lembrados em localStorage.
+- **Índice (menu)** (popover acima da barra): lista Nº + nome, atual marcada com ■ signal; clique rola até a peça; ↑/↓/Home/End.
+- **Sem 3D** (Ajustes, ou automático sem WebGL): o canvas é desmontado e `#cursos` vira hero + grade de cartões (Nº, ícone Phosphor do arquétipo, nome, instituição · ano, categoria) que abrem o mesmo overlay, com véu de papel no lugar do palco. "Ver em 3D →" no topo da grade.
 - **Loader**: "CATALOGANDO O ARQUIVO 064" (contador mono). Some quando fontes + primeiro frame estiverem prontos — sem tempo fake.
 
 ## §9 Acessibilidade
-Canvas `aria-hidden`; tudo que o 3D mostra existe em HTML (índice + modo sem 3D). Foco: outline 2px signal, offset 3px. Teclado: ↑/↓ ou ←/→ navegam peças (com a seção na tela), Enter abre, Esc fecha. Skip link "Pular para o índice". Contraste AA em todo texto.
+Canvas `aria-hidden`; tudo que o 3D mostra existe em HTML (índice + modo sem 3D). Foco: outline 2px signal, offset 3px. Teclado: ↑/↓ ou ←/→ navegam peças (com o palco fixo na tela e o foco fora de campo, menu ou diálogo; nas pontas o scroll nativo sai da seção), Enter abre a ativa, Esc fecha. Skip link "Pular para o índice". Contraste AA em todo texto.
 
 ## §10 Não fazer
 Fundo escuro/espacial, vidro, neon, gradiente roxo "de IA", pílulas, emoji na UI, texto em signal, qualquer código/texto/imagem/logo da referência.

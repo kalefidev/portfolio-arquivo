@@ -80,6 +80,9 @@
   html {
     background: var(--color-paper);
     color: var(--color-ink);
+    /* the page stops scrolling while a piece is open: keep the room of the scrollbar, or
+       everything (the canvas included) would shift and resize */
+    scrollbar-gutter: stable;
   }
 
   body {
@@ -158,6 +161,141 @@
   }
 }
 
+/* Pointer over the spiral (classes set on <body> by the 3D): a crosshair over a piece, a closed
+   hand while dragging — the helix or a piece — and no text selected along the way. */
+body.piece-hover {
+  cursor: crosshair;
+}
+
+body.dragging,
+body.dragging * {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* Overlay of the open piece (CourseOverlay, DESIGN.md §8): a full-screen modal with nothing painted
+   on the stage, where the 3D piece shows through, and the panel beside it — a bottom sheet on
+   portrait, 44vw on the right on `wide`. */
+dialog.piece {
+  --stage: 0 0 62svh 0; /* inset of the stage = what the panel leaves free */
+  --panel: 38svh 0 0 0;
+  --panel-off: 0 100%; /* where the panel comes from */
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  color: var(--color-ink);
+  /* stays rendered (and in the top layer) until the panel is out */
+  transition:
+    display var(--duration-ui) allow-discrete,
+    overlay var(--duration-ui) allow-discrete;
+}
+
+dialog.piece::backdrop {
+  background: transparent;
+}
+
+.piece-stage,
+.piece-panel {
+  position: absolute;
+}
+
+/* closed = on the way out: quicker than the way in */
+.piece-stage {
+  inset: var(--stage);
+  opacity: 0;
+  transition: opacity var(--duration-ui);
+}
+
+.piece-panel {
+  inset: var(--panel);
+  border-top-width: 1px;
+  translate: var(--panel-off);
+  transition: translate var(--duration-ui) var(--ease-exit);
+}
+
+dialog.piece[open] .piece-stage {
+  opacity: 1;
+}
+
+dialog.piece[open] .piece-panel {
+  translate: 0 0;
+  transition: translate var(--duration-overlay) var(--ease-enter);
+}
+
+@starting-style {
+  dialog.piece[open] .piece-stage {
+    opacity: 0;
+  }
+
+  dialog.piece[open] .piece-panel {
+    translate: var(--panel-off);
+  }
+}
+
+@media (min-aspect-ratio: 4/5) {
+  dialog.piece {
+    --stage: 0 44vw 0 0;
+    --panel: 0 0 0 56vw;
+    --panel-off: 100% 0;
+  }
+
+  .piece-panel {
+    border-top-width: 0;
+    border-left-width: 1px;
+  }
+}
+
+/* While a piece is open the page behind steps back (header, spiral UI, readability veil): only
+   the stage and the panel are left. And it does not scroll — Lenis is stopped; this covers
+   reduced motion, where there is no Lenis. */
+.fades-in-focus {
+  transition: opacity var(--duration-ui);
+}
+
+html:has(dialog.piece[open]) .fades-in-focus {
+  opacity: 0;
+}
+
+html:has(dialog.piece[open]) {
+  overflow: hidden;
+}
+
+/* ÍNDICE / AJUSTES (IndexMenu, SettingsPanel): native popovers, sitting just above the bottom bar. */
+.bar-popover {
+  position: fixed;
+  inset: auto var(--spacing-gutter) 5.5rem;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+  transition:
+    opacity var(--duration-micro),
+    translate var(--duration-micro) var(--ease-enter);
+}
+
+@starting-style {
+  .bar-popover:popover-open {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+@media (min-aspect-ratio: 4/5) {
+  .bar-popover {
+    inset: auto auto 4rem 50%;
+    width: 20rem;
+    margin-left: -10rem;
+  }
+}
+
 /* Full-screen mobile menu (Header) */
 dialog.menu[open] {
   animation: menu-in var(--duration-ui) var(--ease-enter);
@@ -173,5 +311,13 @@ dialog.menu[open] {
 @media (prefers-reduced-motion: reduce) {
   dialog.menu[open] {
     animation: none;
+  }
+
+  dialog.piece,
+  dialog.piece .piece-stage,
+  dialog.piece .piece-panel,
+  .bar-popover,
+  .fades-in-focus {
+    transition: none;
   }
 }

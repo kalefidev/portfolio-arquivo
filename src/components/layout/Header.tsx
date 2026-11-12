@@ -20,12 +20,13 @@ function Wordmark() {
 }
 
 /** Fixed header (DESIGN.md §3). The #anchors scroll through Lenis (`anchors` in SmoothScroll).
- *  Below `md` the nav and the CTA live in a full-screen <dialog>: focus trap and Esc come free. */
+ *  Below `md` the nav and the CTA live in a full-screen <dialog>: focus trap and Esc come free.
+ *  Fades out while a piece is open (`.fades-in-focus`): the overlay would cut the nav in half. */
 export default function Header() {
   const dialog = useRef<HTMLDialogElement>(null)
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-10 flex h-16 items-center justify-between px-gutter md:grid md:grid-cols-[1fr_auto_1fr]">
+    <header className="fades-in-focus pointer-events-none fixed inset-x-0 top-0 z-10 flex h-16 items-center justify-between px-gutter md:grid md:grid-cols-[1fr_auto_1fr]">
       <Wordmark />
 
       <nav aria-label={navLabel} className="pointer-events-auto hidden divide-x divide-line border border-line md:flex">

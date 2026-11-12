@@ -46,10 +46,10 @@ export default function FocusMarks({ frame, count }: { frame: RefObject<SpiralFr
   const [signal] = useState(() => cssVar('--color-signal'))
 
   useFrame(() => {
-    const { cfg, p, exit, extra } = frame.current
+    const { cfg, p, exit, focus, extra } = frame.current
     const index = Math.min(Math.max(Math.round(p), 0), count - 1)
     const { position, scale, d } = getItemTransform(index, p, cfg, extra, target)
-    const on = (1 - smoothstep(fadeFrom, 0.5, Math.abs(d))) * (1 - exit)
+    const on = (1 - smoothstep(fadeFrom, 0.5, Math.abs(d))) * (1 - exit) * (1 - focus)
 
     marks.current.visible = on > 0
     marks.current.position.copy(position)

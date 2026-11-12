@@ -3,8 +3,8 @@
 > O Code lê isto no começo de toda sessão e atualiza no fim de toda etapa. Curto e factual.
 
 ## Estado atual
-- Etapa atual: 05 — Interações, overlay e modos
-- Última tag: etapa-04
+- Etapa atual: 06 — Objetos 3D (parte 2)
+- Última tag: etapa-05
 - Bloqueios / pendências do Kaique: preencher `docs/CURSOS.md` (até a etapa 06), revisar `docs/CONTEUDO.md`
 
 ## Etapas
@@ -12,7 +12,7 @@
 - [x] 02 Espiral 3D
 - [x] 03 Objetos 3D (parte 1) + /lab
 - [x] 04 Interface da espiral
-- [ ] 05 Interações, overlay e modos
+- [x] 05 Interações, overlay e modos
 - [ ] 06 Objetos 3D (parte 2)
 - [ ] 07 Seções + saída da espiral
 - [ ] 08 Lançamento
@@ -101,6 +101,28 @@ Pendências (nenhuma desta etapa; tudo abaixo tem dono):
 - Kaique: WhatsApp e demais TODOs do `site.ts`; calibrar `angleStep` / `pitch` no `/?debug` (vizinhas ±1 e ±2 ainda caem quase no mesmo x); contraste do tom `fundamentals` (token).
 - Dev: ao editar `globals.css` com o `next dev` no ar, uma regra CSS nova pode não chegar ao navegador até a próxima edição do arquivo (cache do Turbopack) — se "a classe não pegou", salve o arquivo de novo antes de investigar.
 Como testar: `npm run dev` → `http://localhost:3000`. Primeira rolada: o hero troca pelo painel da peça 01 com a nuvem ainda no centro; continuar rolando devagar e rápido (título troca com máscara, nunca dois ao mesmo tempo; contador e régua acompanham); voltar ao topo (hero volta); clicar num tique da régua e em "Explorar o arquivo ↓"; CURSOS no header rola suave até o topo; estreitar a janela até ficar em pé → layout mobile + MENU (Esc fecha); janela baixa e larga (ex.: 844×390) → hero cabe entre header e barra. Screenshots em `artifacts/etapa-04-*.png` (não versionados).
+
+### Etapa 05 — 2026-11-12
+Feito: hover real (crosshair, callout destacado, `hovered` no arquétipo) e clique nas peças; **modo foco** + `CourseOverlay` (`<dialog>` modal: palco + painel 44vw / bottom sheet 62svh, anterior / próxima, hash `#peca-<slug>`); arraste com inércia (`three/spiral/drag.ts` + 5 testes): vazio gira a espiral e ela volta, sobre a peça gira a peça, no palco gira a peça aberta (mouse e toque); teclado (↑↓←→, Enter) + skip link; `IndexMenu` e `SettingsPanel` (popovers nativos); modo sem 3D (`StaticCourses`, `archetypeIcons.ts`, `SceneLoader` desmonta o canvas; automático sem WebGL); preferências em localStorage (`arquivo:prefs`); reduced motion (`REDUCED_DAMPING`, sem inércia, sem slide). Novos: `ui/Icon.tsx`; `hasWebGL()` / `reaches3d()` em `viewport.ts`; `scrollToCourse(i, { immediate })`, `scrollToTop()`, `pieceId()` em `scroll.ts`; `stageX/Y/Scale` no preset + `FOCUS_MODE`, `DRAG`, `REDUCED_DAMPING` em `config/spiral.ts`; `statusLabels` em `courses.ts`.
+Decisões:
+- **Overlay = `<dialog>` + `showModal()`**: foco preso, Esc, `aria-modal` e "foco volta para quem abriu" são do navegador. Entrada / saída só com CSS (`@starting-style` + `transition-behavior: allow-discrete`). ÍNDICE / AJUSTES = Popover API (Esc, clique fora, um fecha o outro); só as setas da lista são JS.
+- **A peça aberta é sempre a ativa**: abrir (ou anterior / próxima) salta o scroll (`immediate`) e o damping do progresso suaviza. Cada peça tem o próprio caminho até o palco (`frame.staged[i]`), então "próxima" troca duas peças em voo.
+- **"Desbotar" = recuar em z para dentro do fog** (`FOCUS_MODE.recede`): os materiais são cache compartilhado, não existe opacidade por peça. Header, UI da espiral e véu de legibilidade somem por CSS (`.fades-in-focus`, ligado em `html:has(dialog.piece[open])`) — nenhum componente assina `focusSlug` para isso.
+- **`dragOffset` saiu do store** → `drag.ts` (módulo mutável, sem `three`), junto com o giro de cada peça. O alvo do arraste é o `hoveredSlug` (sem raycast extra).
+- **Eventos do R3F**: `events={…}` com `compute` próprio no lugar de `eventPrefix="client"`: ponteiro sobre controle HTML ou fora de `#cursos` (`reaches3d`) conta como fora da tela, e o R3F dispara o `pointerout` sozinho. Peça escondida fica com escala 0 — antes a hit area de uma peça nunca desenhada ficava na origem, clicável.
+- **"Movimento ambiente" desligado** = sem sway **e** idle dos objetos congelado (hover e ativo continuam). Só o sway (0,06 rad) seria um botão que não parece fazer nada. É 1 linha em `archetypes/motion.ts`.
+- **Sem 3D desmonta o `<Canvas>`** (não esconde); a página que já abre nesse modo não baixa o chunk do three (`prefsLoaded` no store segura o `<Scene>` até ler o localStorage). "Ver sem 3D" virou botão (não checkbox): o painel de Ajustes só existe com o 3D ligado; a volta é "Ver em 3D →" no topo da grade.
+- Trava de scroll: `lenis.stop()`; sem Lenis (reduced motion) `html:has(dialog.piece[open]) { overflow: hidden }`. `scrollbar-gutter: stable` no `html` para o layout e o canvas não mudarem de largura.
+- "Anterior" / "Próxima" nas pontas usam `aria-disabled` (com `disabled` o botão em foco perdia o foco do teclado). Enter no `keydown` global dá `preventDefault` (sem isso a mesma tecla "clicava" no Fechar que o overlay acabou de focar).
+- Saída do overlay em 320ms (entrada 520ms). `DRAG.spiral` = 0,002 rad/px: a peça da frente acompanha o ponteiro ~1:1.
+- Skip link → `#indice`, que por enquanto é a seção provisória (a `CourseIndex` real herda o id na etapa 07).
+Pendências:
+- Kaique: os cursos de exemplo não têm `summary` / `learned` / `certificateUrl` — o overlay fica quase vazio até o `CURSOS.md` ser preenchido. Calibrar `stageX/Y/Scale` no `/?debug` e as sensibilidades em `DRAG`.
+- Windows (barra de rolagem clássica): com o overlay aberto sobra uma faixa de ~15px de papel à direita do painel — é o espaço reservado da barra (`scrollbar-gutter`), o preço de nada se deslocar.
+- Etapa 07: chips "Projetos com isso" fecham o overlay e apontam para `#projetos` (a seção ainda não existe — conferir a rolagem); `#indice` provisório; no modo sem 3D o header transparente passa por cima do texto ao rolar.
+- Etapa 08: navegador sem Popover API / `@starting-style` (anterior a 2024) não abre ÍNDICE / AJUSTES e não anima o painel; Firefox fecha o overlay sem slide (não tem `overlay`). Decidir se vale fallback.
+- O anel de foco aparece no "Fechar" sempre que o overlay abre (comportamento nativo do `<dialog>`).
+Como testar: `npm run dev` → `http://localhost:3000`. **Teclado**: Tab (skip link) → ↓/↑ → Enter → Tab dentro do overlay → Próxima / Anterior → Esc. **Mouse**: passar numa peça (mira + animação), clicar (abre), arrastar > 5px na peça (gira, não abre), arrastar no vazio (espiral gira e volta), arrastar no palco. **URL**: `/#peca-sql-e-banco-de-dados` abre direto. **AJUSTES**: Movimento ambiente, Resetar posições, Ver sem 3D → grade → recarregar (continua) → "Ver em 3D". **Mobile** (390×844): tocar abre o bottom sheet, deslizar rola. Reduced motion: tudo funciona, sem deslizar. `npm run test` (18 testes). Screenshots em `artifacts/etapa-05-*.png` (não versionados).
 
 <!-- modelo:
 ### Etapa NN — AAAA-MM-DD

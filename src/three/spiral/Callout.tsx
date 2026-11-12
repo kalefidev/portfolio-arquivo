@@ -6,13 +6,13 @@ interface Props {
   ref: Ref<HTMLDivElement> // the owner sets `style.opacity` and `data-side` on it every frame
   no: string
   title: string
-  active: boolean
+  highlighted: boolean // the active piece, or the one under the pointer
 }
 
 /** "Nº 03 — AWS CLOUD" + leader line (short diagonal, then a shelf) — DESIGN.md §3.
  *  The point it is placed at is where the leader starts: it goes up and to the right, or — with
  *  `data-side="left"` — down and to the left (the same "/" diagonal). Never takes the pointer. */
-export default function Callout({ ref, no, title, active }: Props) {
+export default function Callout({ ref, no, title, highlighted }: Props) {
   // drei appends to the canvas' event source, which here is <body> (see Scene) — the labels would
   // scroll away with the page. Keep them in the fixed box of the canvas.
   const box = useThree((state) => state.gl.domElement.parentElement!)
@@ -24,7 +24,7 @@ export default function Callout({ ref, no, title, active }: Props) {
       portal={portal}
       zIndexRange={[1, 0]} // stay under the readability gradient (Scene)
       wrapperClass="pointer-events-none"
-      className={`label group opacity-0 ${active ? 'text-ink' : 'text-ink-2'}`}
+      className={`label group opacity-0 ${highlighted ? 'font-medium text-ink' : 'text-ink-2'}`}
     >
       <div className="absolute bottom-0 left-0 flex items-start group-data-[side=left]:top-0 group-data-[side=left]:right-0 group-data-[side=left]:bottom-auto group-data-[side=left]:left-auto group-data-[side=left]:flex-row-reverse group-data-[side=left]:items-end">
         <svg viewBox="0 0 20 20" className="size-5 shrink-0 overflow-visible">

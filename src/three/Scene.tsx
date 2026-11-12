@@ -1,14 +1,34 @@
 'use client'
 
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, events as createPointerEvents, type CanvasProps } from '@react-three/fiber'
 import { cssVar } from '@/lib/cssVar'
-import { activePreset, usePreset } from '@/lib/viewport'
+import { activePreset, reaches3d, usePreset } from '@/lib/viewport'
 import { disposeMaterials } from './archetypes/materials'
 import Lights from './Lights'
 import Spiral from './spiral/Spiral'
 
 const DebugPanel = lazy(() => import('./debug/DebugPanel'))
+
+const OFF_SCREEN = 5 // in NDC (the screen is −1 … 1): a ray from there hits nothing
+
+/** R3F's pointer events, with our own `compute`. The canvas listens on <body> (the page sits on
+ *  top of it), so: client coordinates, and a pointer that is over a control or outside `#cursos`
+ *  counts as off screen — R3F then fires the `pointerout` of whatever was hovered by itself. */
+const pointerEvents: CanvasProps['events'] = (store) => ({
+  ...createPointerEvents(store),
+  compute: (event, state) => {
+    if (reaches3d(event.target)) {
+      state.pointer.set(
+        (event.clientX / state.size.width) * 2 - 1,
+        -(event.clientY / state.size.height) * 2 + 1,
+      )
+    } else {
+      state.pointer.set(OFF_SCREEN, OFF_SCREEN)
+    }
+    state.raycaster.setFromCamera(state.pointer, state.camera)
+  },
+})
 
 /** True while `#cursos` is on screen and the tab is visible. */
 function useSpiralOnScreen() {
@@ -58,7 +78,7 @@ export default function Scene() {
         frameloop={onScreen ? 'always' : 'demand'}
         // the page sits on top of the canvas: listen on <body> so the 3D still gets the pointer
         eventSource={document.body}
-        eventPrefix="client"
+        events={pointerEvents}
       >
         <color attach="background" args={[paper]} />
         <fog attach="fog" args={[paper, preset.fogNear, preset.fogFar]} />
@@ -71,8 +91,8 @@ export default function Scene() {
         )}
       </Canvas>
       {/* Readability gradients (`.spiral-fade`, globals.css). Here, not in the UI, so the technical
-          grid of the grain stays on top of them. */}
-      <div className="spiral-fade pointer-events-none absolute inset-0 z-10" />
+          grid of the grain stays on top of them. Gone while a piece is open: the stage is right there. */}
+      <div className="spiral-fade fades-in-focus pointer-events-none absolute inset-0 z-10" />
     </div>
   )
 }

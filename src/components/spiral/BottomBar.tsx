@@ -1,22 +1,17 @@
 'use client'
 
-import gear from '@phosphor-icons/core/assets/regular/gear.svg'
-import list from '@phosphor-icons/core/assets/regular/list.svg'
 import { featuredCourses, pieceNo } from '@/content/courses'
 import { site } from '@/content/site'
 import { useStore } from '@/lib/store'
+import IndexMenu from './IndexMenu'
+import SettingsPanel from './SettingsPanel'
 
 const count = featuredCourses().length
-const { hintsDesktop, hintsMobile, buttons } = site.spiral
+const { hintsDesktop, hintsMobile } = site.spiral
 
 const segment = 'label flex h-10 items-center gap-2 px-3 wide:px-4 transition-colors duration-(--duration-micro) hover:bg-paper-2'
 
-/** Phosphor SVG source, inlined (`regular` rule in next.config.ts) so it takes `currentColor`. */
-const Icon = ({ svg }: { svg: string }) => (
-  <span aria-hidden className="size-4 [&>svg]:size-full" dangerouslySetInnerHTML={{ __html: svg }} />
-)
-
-/** Bottom bar (DESIGN.md §3): hints · ÍNDICE | AJUSTES · counter. The two panels come in etapa 05. */
+/** Bottom bar (DESIGN.md §3): hints · ÍNDICE | AJUSTES · counter. */
 export default function BottomBar() {
   const activeIndex = useStore((s) => s.activeIndex)
 
@@ -27,15 +22,10 @@ export default function BottomBar() {
         <span className="hidden wide:inline">{hintsDesktop}</span>
       </p>
 
-      <div className="pointer-events-auto flex divide-x divide-line justify-self-start border border-line">
-        <button type="button" className={segment}>
-          <Icon svg={list} />
-          {buttons.index}
-        </button>
-        <button type="button" className={segment}>
-          <Icon svg={gear} />
-          {buttons.settings}
-        </button>
+      {/* each one brings its popover along */}
+      <div className="pointer-events-auto flex justify-self-start border border-line">
+        <IndexMenu className={segment} />
+        <SettingsPanel className={`${segment} border-l border-line`} />
       </div>
 
       <div className="flex items-center gap-3 justify-self-end">

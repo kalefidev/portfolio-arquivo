@@ -80,6 +80,11 @@ export const categoryLabels: Record<Category, string> = {
   hardware: 'Hardware',
 }
 
+export const statusLabels: Record<Course['status'], string> = {
+  concluido: 'Concluído',
+  'em-andamento': 'Em andamento',
+}
+
 /** Catalogue number of a piece, from its index in the spiral: 2 → "03". */
 export const pieceNo = (index: number) => String(index + 1).padStart(2, '0')
 

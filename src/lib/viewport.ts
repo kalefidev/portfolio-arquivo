@@ -20,3 +20,24 @@ export const usePreset = <T>(select: (preset: SpiralPreset) => T): T =>
 
 export const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+let webgl: boolean | undefined
+
+/** Whether the browser can draw the 3D scene (three needs WebGL 2). Checked once. Client only. */
+export function hasWebGL() {
+  if (webgl === undefined) {
+    try {
+      webgl = !!document.createElement('canvas').getContext('webgl2')
+    } catch {
+      webgl = false
+    }
+  }
+  return webgl
+}
+
+/** The canvas listens on <body> (the page sits on top of it), so every pointer event gets there.
+ *  Only the ones on the spiral itself are meant for the 3D: inside `#cursos`, not on a control. */
+export const reaches3d = (target: EventTarget | null) =>
+  target instanceof Element &&
+  target.closest('#cursos') !== null &&
+  target.closest('a, button, input, label, dialog, [popover]') === null
