@@ -29,7 +29,9 @@ const CATEGORIES: Category[] = [
 const DEFAULT_TONE: Partial<Record<Archetype, Category>> = {
   shield: 'security',
   brackets: 'fundamentals',
+  browser: 'frontend',
   database: 'data',
+  gears: 'automation',
   icon: 'devops',
 }
 

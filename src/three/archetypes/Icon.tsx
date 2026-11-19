@@ -1,10 +1,11 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { ExtrudeGeometry, Shape, type Group } from 'three'
+import { ExtrudeGeometry, type Group } from 'three'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js'
 import { clay, ink } from './materials'
 import { REDUCED_HOVER_SCALE, useDampedFlag, useIdleTime } from './motion'
 import { normalize } from './normalize'
+import { roundedRect } from './shapes'
 import { DEFAULT_ICON, icons } from './icons'
 import type { ArchetypeProps } from './types'
 
@@ -16,17 +17,7 @@ const VIEWBOX = 256 // Phosphor icons are drawn on a 256 × 256 grid
 const SPIN = 0.35 // rad/s
 const JUMP = 0.22
 
-const half = PLATE.size / 2
-const plate = new Shape()
-  .moveTo(-half + PLATE.corner, -half)
-  .lineTo(half - PLATE.corner, -half)
-  .quadraticCurveTo(half, -half, half, -half + PLATE.corner)
-  .lineTo(half, half - PLATE.corner)
-  .quadraticCurveTo(half, half, half - PLATE.corner, half)
-  .lineTo(-half + PLATE.corner, half)
-  .quadraticCurveTo(-half, half, -half, half - PLATE.corner)
-  .lineTo(-half, -half + PLATE.corner)
-  .quadraticCurveTo(-half, -half, -half + PLATE.corner, -half)
+const plate = roundedRect(PLATE.size, PLATE.size, PLATE.corner)
 
 /** Icon centred on the origin, facing +z, with its back on z = 0. */
 function iconGeometry(svg: string, curveSegments: number) {

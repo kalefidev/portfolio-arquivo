@@ -1,7 +1,8 @@
 import type { Category, Course } from '@/types'
 
 // Source: docs/CURSOS.md (only 2 draft rows so far). Order = order in the spiral.
-// Rows marked EXEMPLO are placeholders — replace with the real list before etapa 06.
+// Rows marked EXEMPLO are placeholders — the real list comes in an /ajuste (archetypes it needs
+// that don't exist yet get built then).
 export const courses: Course[] = [
   {
     slug: 'aws-cloud',
@@ -38,7 +39,6 @@ export const courses: Course[] = [
     institution: 'Alura',
     category: 'frontend',
     archetype: 'browser',
-    icon: 'browser', // drawn while the `browser` object does not exist (etapa 06)
     status: 'concluido',
     featured: true,
   },
@@ -59,7 +59,6 @@ export const courses: Course[] = [
     institution: 'RicNeves',
     category: 'automation',
     archetype: 'gears',
-    icon: 'gear', // drawn while the `gears` object does not exist (etapa 06)
     status: 'concluido',
     featured: true,
     projects: ['jarvis'],

@@ -1,18 +1,22 @@
 import { createElement, type ComponentType } from 'react'
 import type { Archetype } from '@/types'
 import Brackets from './Brackets'
+import Browser from './Browser'
 import Cloud from './Cloud'
 import Database from './Database'
+import Gears from './Gears'
 import Icon from './Icon'
 import Shield from './Shield'
 import type { ArchetypeProps } from './types'
 
-// The rest of the DESIGN.md §5 catalogue arrives in etapa 06; until then those keys draw as `icon`.
+// Only the DESIGN.md §5 objects some course uses get built; any other key draws as `icon`.
 const registry: Partial<Record<Archetype, ComponentType<ArchetypeProps>>> = {
   cloud: Cloud,
   shield: Shield,
   brackets: Brackets,
+  browser: Browser,
   database: Database,
+  gears: Gears,
   icon: Icon,
 }
 

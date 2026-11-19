@@ -3,9 +3,9 @@
 > O Code lê isto no começo de toda sessão e atualiza no fim de toda etapa. Curto e factual.
 
 ## Estado atual
-- Etapa atual: 06 — Objetos 3D (parte 2)
-- Última tag: etapa-05
-- Bloqueios / pendências do Kaique: preencher `docs/CURSOS.md` (até a etapa 06), revisar `docs/CONTEUDO.md`
+- Etapa atual: 07 — Seções + saída da espiral
+- Última tag: etapa-06
+- Bloqueios / pendências do Kaique: lista real do `docs/CURSOS.md` → `/ajuste` (courses.ts + arquétipos que faltarem); revisar `docs/CONTEUDO.md`
 
 ## Etapas
 - [x] 01 Fundação
@@ -13,7 +13,7 @@
 - [x] 03 Objetos 3D (parte 1) + /lab
 - [x] 04 Interface da espiral
 - [x] 05 Interações, overlay e modos
-- [ ] 06 Objetos 3D (parte 2)
+- [x] 06 Objetos 3D (parte 2) (parcial: lista real pendente)
 - [ ] 07 Seções + saída da espiral
 - [ ] 08 Lançamento
 
@@ -26,9 +26,9 @@
 | AWS Cloud | cloud | — |
 | Cyber / Segurança | shield | — |
 | Lógica de Programação (EXEMPLO) | brackets | — |
-| HTML e CSS (EXEMPLO) | browser → `icon` (browser) até a etapa 06 | — |
+| HTML e CSS (EXEMPLO) | browser | — |
 | SQL e Banco de Dados (EXEMPLO) | database | — |
-| Automação com n8n (EXEMPLO) | gears → `icon` (gear) até a etapa 06 | — |
+| Automação com n8n (EXEMPLO) | gears | — |
 
 ## Log
 ### Etapa 01 — 2026-11-09
@@ -96,7 +96,6 @@ Decisões:
 - Callout usa o rótulo de 12px (token) em vez dos 11px do DESIGN; ⚙ / ☰ viraram ícones Phosphor (⚙ vira emoji em alguns celulares — DESIGN §10).
 Pendências (nenhuma desta etapa; tudo abaixo tem dono):
 - Etapa 05: ÍNDICE / AJUSTES sem ação e ↗ só grava `focusSlug`. O canvas escuta o `<body>`, então passar o mouse num botão da UI também atinge a peça que está atrás — filtrar por `event.target`.
-- Etapa 06: os dois `icon` giram em fase (somem quando `browser` e `gears` ganharem objeto próprio).
 - Etapa 07: header é transparente (vai precisar de fundo paper + hairline quando as seções passarem por baixo); `#projetos`, `#sobre`, `#contato` ainda não existem (os links só mudam o hash).
 - Kaique: WhatsApp e demais TODOs do `site.ts`; calibrar `angleStep` / `pitch` no `/?debug` (vizinhas ±1 e ±2 ainda caem quase no mesmo x); contraste do tom `fundamentals` (token).
 - Dev: ao editar `globals.css` com o `next dev` no ar, uma regra CSS nova pode não chegar ao navegador até a próxima edição do arquivo (cache do Turbopack) — se "a classe não pegou", salve o arquivo de novo antes de investigar.
@@ -123,6 +122,22 @@ Pendências:
 - Etapa 08: navegador sem Popover API / `@starting-style` (anterior a 2024) não abre ÍNDICE / AJUSTES e não anima o painel; Firefox fecha o overlay sem slide (não tem `overlay`). Decidir se vale fallback.
 - O anel de foco aparece no "Fechar" sempre que o overlay abre (comportamento nativo do `<dialog>`).
 Como testar: `npm run dev` → `http://localhost:3000`. **Teclado**: Tab (skip link) → ↓/↑ → Enter → Tab dentro do overlay → Próxima / Anterior → Esc. **Mouse**: passar numa peça (mira + animação), clicar (abre), arrastar > 5px na peça (gira, não abre), arrastar no vazio (espiral gira e volta), arrastar no palco. **URL**: `/#peca-sql-e-banco-de-dados` abre direto. **AJUSTES**: Movimento ambiente, Resetar posições, Ver sem 3D → grade → recarregar (continua) → "Ver em 3D". **Mobile** (390×844): tocar abre o bottom sheet, deslizar rola. Reduced motion: tudo funciona, sem deslizar. `npm run test` (18 testes). Screenshots em `artifacts/etapa-05-*.png` (não versionados).
+
+### Etapa 06 — 2026-11-19 (parcial: sem a lista real de cursos)
+Feito: o `CURSOS.md` ainda não tem a lista real e o Kaique pediu para seguir sem ela. Entraram só os 2 arquétipos que os cursos atuais usavam e que caíam no fallback `icon`: `Browser.tsx` (janela + barra com 3 bolinhas + 6 blocos de layout que vão da grade desktop para uma coluna mobile) e `Gears.tsx` (2 engrenagens engrenadas, 12 e 8 dentes). `archetypes/shapes.ts` (`roundedRect`, usado também pelo `Icon`), `paleClay(tint)` em `materials.ts`, registro + `/lab` (`DEFAULT_TONE`) atualizados, linhas `icon:` de fallback removidas de `courses.ts` e os SVGs `browser` / `gear` (fill) removidos de `icons.ts`, porque nenhum conteúdo usa mais.
+Triângulos (high / low): browser 1.104 / 336 · gears 2.240 / 848.
+Decisões:
+- **Blocos do browser em `paleClay`** (tom 45% em direção ao papel), não em `clay(tint)`: na mesma argila o relevo só aparecia como linhas de sombra. O CTA em `signal` aparece bem sobre o salmão do `frontend`, então ficou signal. DESIGN §5 atualizado (regra dos materiais + linha `browser`).
+- **Morph do browser**: `morph = max(hover, loop·on)`, com `loop = 0,5 − 0,5·cos(t·0,9)` (~7 s por ciclo) e `t` acumulado por `dt·on`. Cada bloco anda numa janela própria do morph (`STAGGER` 0,08), então eles não se movem juntos. O flag de hover usa `lambda` 4, mais lento que os outros, para a reorganização ser visível. Os blocos só mudam posição e escala, nunca a janela, então o `normalize` continua valendo.
+- **Engrenagens**: mesmo módulo (0,1); distância entre centros = soma dos raios primitivos; a pequena começa defasada meio dente e gira a `−ω·12/8`. O chanfro é para dentro (`bevelOffset = −bevel`): sem isso os dentes engordam e se atravessam. Velocidade = `IDLE·(idle + extra)`, com o extra acumulando `dt·max(2·hover, active)`. Resultado: hover 3×, ativo 2×. Com "Movimento ambiente" desligado só a parte idle congela.
+- Inclinações fixas: browser (−0,15 / 0,35 rad) e gears (0,35 / −0,3 rad), para a espessura aparecer. Ajustar no `/lab` se precisar.
+- Não construí outros arquétipos "por garantia". Eles entram quando a lista real pedir.
+- Resolvida a pendência dos dois `icon` girando em fase: não existe mais `icon` na espiral.
+- Revisão na espiral (1440 e 390): os tamanhos aparentes de janela e engrenagens ficam próximos dos da nuvem e do banco. `frontend` e `automation` são tons parecidos, mas estão nas peças 04 e 06, sem ser vizinhos. A 1440×900 deu 60 fps (`/?debug`, GTX 1060).
+Pendências:
+- Kaique: lista real do `CURSOS.md` → `/ajuste` (troca `courses.ts`, faz os arquétipos que faltarem e preenche a tabela Curso → objeto). Medir FPS de novo com a espiral cheia (estimativa: ≤ 14 peças × 8,5k ≈ 120k triângulos, abaixo de 200k).
+- Durante o morph do browser, blocos em trânsito se sobrepõem por um instante (mesmo plano z, mesmo material, então não aparece cintilação).
+Como testar: `npm run dev` → `/lab`. Na célula `browser`, marcar `hovered` (os blocos viram coluna, um atrás do outro) e `active` (vai e volta em loop lento). Na célula `gears`, `hovered` acelera e `active` deixa em velocidade média. `reducedMotion` deixa só a escala no hover; `detail low` derruba a contagem de triângulos. Na home, a peça 04 é a janela e a 06 as engrenagens (hover, clique abre o overlay); com AJUSTES → Movimento ambiente desligado, as engrenagens fora de foco param. Screenshots em `artifacts/etapa-06-*.png` (não versionados).
 
 <!-- modelo:
 ### Etapa NN — AAAA-MM-DD

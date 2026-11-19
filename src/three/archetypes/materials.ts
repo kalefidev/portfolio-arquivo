@@ -1,4 +1,4 @@
-import { MeshStandardMaterial } from 'three'
+import { Color, MeshStandardMaterial } from 'three'
 import { cssVar } from '@/lib/cssVar'
 
 // DESIGN.md §5 — every object is matte clay in its category colour, with ink / signal details.
@@ -18,6 +18,19 @@ function cached(key: string, make: () => MeshStandardMaterial) {
 
 export const clay = (tint: string) =>
   cached(`clay:${tint}`, () => new MeshStandardMaterial({ ...CLAY, color: tint }))
+
+const PALE = 0.45 // how far `paleClay` moves the tone toward paper
+
+/** The category clay, lighter — for relief that must read on a face of the same tone. */
+export const paleClay = (tint: string) =>
+  cached(
+    `pale:${tint}`,
+    () =>
+      new MeshStandardMaterial({
+        ...CLAY,
+        color: new Color(tint).lerp(new Color(cssVar('--color-paper')), PALE),
+      }),
+  )
 
 export const ink = () =>
   cached(

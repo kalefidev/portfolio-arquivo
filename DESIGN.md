@@ -110,7 +110,7 @@ vis   = 1 - smoothstep(visibleRange - 1, visibleRange, |d|)   // vis ≈ 0 → v
 Regras:
 - Procedurais: primitivas, `ExtrudeGeometry`, `LatheGeometry`, `TubeGeometry`, `SVGLoader`. Sem GLB, sem HDR externo, sem textura baixada (`CanvasTexture` gerada em código pode).
 - Normalizados: centrados na origem, cabem numa esfera de raio 1.
-- Material argila: `MeshStandardMaterial` roughness 0.82, metalness 0, cor = tom da categoria. Detalhes em `ink` (roughness 0.6) ou `signal` (emissivo baixo). Materiais em cache compartilhado.
+- Material argila: `MeshStandardMaterial` roughness 0.82, metalness 0, cor = tom da categoria. Detalhes em `ink` (roughness 0.6) ou `signal` (emissivo baixo); relevo sobre uma face do mesmo tom usa `paleClay` (tom 45% em direção ao papel — no mesmo tom o relevo some). Materiais em cache compartilhado.
 - ≤ 15k triângulos por objeto. Hit area = esfera invisível r = 1 (raycast barato).
 - Props: `{ tint, hovered, active, reducedMotion, detail: 'low' | 'high', variant?, icon? }`. Cada arquétipo anima a si mesmo (idle / hover / ativo) com progresso amortecido (`useDampedFlag`).
 - `reducedMotion`: sem idle; hover vira só escala leve.
@@ -122,9 +122,9 @@ Catálogo — a chave vai no campo `archetype` de `courses.ts`:
 | `shield` | escudo | Cyber, segurança, LGPD | contorno de escudo → Extrude com chanfro + fechadura em relevo | balança ±8° | anel de varredura signal desce de cima a baixo | borda com emissivo signal leve |
 | `lock` | cadeado | criptografia, autenticação | RoundedBox + haste (Torus meio arco) | balança | haste sobe e gira (abre) | abre/fecha a cada 3s |
 | `brackets` | `</>` | lógica, JS, Python | 3 formas extrudadas com chanfro | balança ±26° (giro completo mostraria `</>` espelhado e de perfil) | `<` e `>` se afastam, `/` gira, cursor piscando no meio | pulso |
-| `browser` | janela de navegador | HTML/CSS, React, front-end | tela fina + barra com 3 bolinhas + blocos de layout | parado | blocos se reorganizam (desktop → mobile) | reorganiza em loop lento |
+| `browser` | janela de navegador | HTML/CSS, React, front-end | janela (retângulo arredondado → Extrude com chanfro) + barra com 3 bolinhas ink + 6 blocos de layout em relevo `paleClay`, um deles o CTA em signal; inclinada para a espessura aparecer | parado | blocos se reorganizam, um atrás do outro (grade desktop → coluna mobile) | reorganiza em loop lento (~7 s) |
 | `database` | banco de dados | SQL, Postgres, NoSQL | 3 discos (Lathe, borda arredondada) empilhados com folga + aro ink + luz signal em cada (é a luz que deixa o giro visível); inclinado 17° para a câmera | parado | discos se separam e giram em velocidades diferentes | gira suave |
-| `gears` | engrenagens | automação, n8n, RPA | 2 engrenagens (contorno dentado → Extrude) engrenadas | giram lento | aceleram 3× | velocidade média |
+| `gears` | engrenagens | automação, n8n, RPA | 2 engrenagens engrenadas (contorno com dentes trapezoidais + furo → Extrude, chanfro para dentro), mesmo módulo, 12 e 8 dentes, eixo ink em cada; inclinadas para a espessura aparecer | giram lento | aceleram 3× | velocidade média (2×) |
 | `neural` | rede neural | IA, LLM, agentes | 12–18 nós em 3 camadas + arestas | nós pulsam | pulsos signal correm pelas arestas | pulsos contínuos |
 | `terminal` | terminal | Linux, CLI, DevOps | monitor + tela `CanvasTexture` com `>_` | cursor pisca | digita `npm run dev` | digita em loop |
 | `containers` | contêineres | Docker, Kubernetes | 3–4 caixas com frisos, empilhadas | parado | trocam de lugar com saltinho | flutuação alternada |
