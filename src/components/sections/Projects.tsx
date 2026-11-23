@@ -8,7 +8,6 @@ import {
   projectId,
   projects,
   projectStatusLabels,
-  projectTone,
 } from '@/content/projects'
 import { site } from '@/content/site'
 import { useStore } from '@/lib/store'
@@ -18,15 +17,7 @@ const { eyebrow, h2, sub, visit, openCourse } = site.projects
 
 const statusTone = { 'no-ar': 'var(--color-signal)', 'em-desenvolvimento': 'var(--color-ink)', conceito: 'transparent' }
 
-/** "JA" for J.A.R.V.I.S, "BD" for Bot de ofertas: what the preview shows until there is an image. */
-const initials = (title: string) => {
-  const words = title.match(/\p{L}+/gu) ?? [title]
-  return (words.length > 1 ? words.slice(0, 2).map((w) => w[0]).join('') : words[0].slice(0, 2)).toUpperCase()
-}
-
-/** Projects in lines (DESIGN.md §8). Hover / focus on a line shows a CSS-only preview (tone of the
- *  category + initials + Nº — a placeholder until there is an image); not on screens without hover.
- *  The related courses are buttons that take you back to the piece. */
+/** Projects in lines (DESIGN.md §8). The related courses are buttons that take you back to the piece. */
 export default function Projects() {
   return (
     <section id="projetos" className="scroll-mt-16 px-gutter py-section">
@@ -37,7 +28,7 @@ export default function Projects() {
           <li
             key={project.slug}
             id={projectId(project.slug)}
-            className="group relative scroll-mt-20 border-b border-line transition-colors duration-(--duration-micro) focus-within:bg-paper-2 hover:bg-paper-2"
+            className="group scroll-mt-20 border-b border-line transition-colors duration-(--duration-micro) focus-within:bg-paper-2 hover:bg-paper-2"
           >
             <div className="grid grid-cols-[3rem_minmax(0,1fr)_1.5rem] items-center gap-x-4 gap-y-3 px-2 py-5 md:grid-cols-[4rem_minmax(0,1fr)_13rem_11rem_minmax(0,1fr)_1.5rem]">
               <span className="label text-ink-2 tabular-nums">Nº {pieceNo(index)}</span>
@@ -80,15 +71,6 @@ export default function Projects() {
               ) : (
                 <span aria-hidden className="col-start-3 row-start-1 md:col-start-auto md:row-start-auto" />
               )}
-            </div>
-
-            <div
-              aria-hidden
-              className="pointer-events-none absolute top-1/2 right-12 z-10 hidden h-28 w-40 -translate-y-1/2 flex-col justify-between border border-line p-3 opacity-0 transition-opacity duration-(--duration-ui) group-focus-within:opacity-100 group-hover:opacity-100 md:flex [@media(hover:none)]:hidden"
-              style={{ background: projectTone(project.slug) }}
-            >
-              <span className="label tabular-nums">Nº {pieceNo(index)}</span>
-              <span className="text-h2 leading-none font-bold">{initials(project.title)}</span>
             </div>
           </li>
         ))}
