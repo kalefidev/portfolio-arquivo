@@ -3,6 +3,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Canvas, events as createPointerEvents, type CanvasProps } from '@react-three/fiber'
 import { cssVar } from '@/lib/cssVar'
+import { useStore } from '@/lib/store'
 import { activePreset, reaches3d, usePreset } from '@/lib/viewport'
 import { disposeMaterials } from './archetypes/materials'
 import Lights from './Lights'
@@ -59,6 +60,7 @@ function useSpiralOnScreen() {
 export default function Scene() {
   const dpr = usePreset((preset) => preset.dpr)
   const onScreen = useSpiralOnScreen()
+  const pastSpiral = useStore((s) => s.pastSpiral)
   // read once: the camera and fog are eased toward the active preset every frame by <Spiral>
   const [initial] = useState(() => ({
     preset: activePreset(),
@@ -91,8 +93,11 @@ export default function Scene() {
         )}
       </Canvas>
       {/* Readability gradients (`.spiral-fade`, globals.css). Here, not in the UI, so the technical
-          grid of the grain stays on top of them. Gone while a piece is open: the stage is right there. */}
-      <div className="spiral-fade fades-in-focus pointer-events-none absolute inset-0 z-10" />
+          grid of the grain stays on top of them. Gone while a piece is open (the stage is right there) and
+          past the spiral (the left veil would hide half of the line on its way to the next section). */}
+      <div
+        className={`spiral-fade fades-in-focus pointer-events-none absolute inset-0 z-10 ${pastSpiral ? 'opacity-0' : ''}`}
+      />
     </div>
   )
 }

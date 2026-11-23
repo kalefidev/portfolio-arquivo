@@ -8,10 +8,6 @@ export const site = {
   domain: 'TODO: domínio (usar site.kaiquecalefi.online ou outro?)',
   email: 'kaiquecalefi.dev@gmail.com', // confirmar
   whatsapp: 'TODO: WhatsApp (55 + DDD + número, só dígitos)',
-  github: 'TODO: GitHub',
-  linkedin: 'TODO: LinkedIn',
-  instagram: 'TODO: Instagram',
-  photo: 'TODO: /images/kaique.webp',
 
   header: {
     nav: [
@@ -64,13 +60,26 @@ export const site = {
     h2: 'Feito em Brasília. Entregue em qualquer lugar.',
     points: ['Águas Claras', 'Brasília', 'Brasil', 'Remoto'],
     text: 'Atendo negócios daqui olho no olho e projetos remotos com o mesmo cuidado. Tem uma ideia? A gente tira do papel.',
-    ctas: { primary: 'Começar um projeto ↗', secondary: 'Ver projetos →' },
+    here: 'você está aqui', // under the first point
+    ctas: { primary: 'Começar um projeto', secondary: 'Ver projetos →' }, // the ↗ of the primary comes from <PrimaryCta>
   },
 
   index: {
     eyebrow: 'O ARQUIVO · {N} PEÇAS',
     h2: 'Tudo o que já estudei.',
     sub: 'Os destaques estão na espiral. Aqui está a lista inteira.',
+    all: 'Todos',
+    filterLabel: 'Filtrar por categoria',
+    open: 'Abrir {title}',
+  },
+
+  projects: {
+    eyebrow: 'PROJETOS · 01',
+    h2: 'O que saiu do papel.', // TODO: revisar o título
+    sub: 'Cada projeto aponta de volta para os cursos que o tornaram possível.',
+    courses: 'Cursos',
+    visit: 'Ver {title}',
+    openCourse: 'Abrir a peça {n}: {title}',
   },
 
   services: {
@@ -87,9 +96,23 @@ export const site = {
 
   about: {
     eyebrow: 'QUEM CONSTRÓI · 03',
-    nameRole: 'Kaique Calefi · Desenvolvedor · Sites, automações e sistemas',
-    bullets: ['Sites e landing pages', 'Automação de atendimento (WhatsApp)', 'Sistemas sob medida'],
-    bio: 'TODO: bio — 3 a 5 linhas suas. Ponto de partida: "Aprendo rápido e vou atrás do que não sei. Hoje construo sites, automações e sistemas para negócios do DF e para projetos remotos — e cada curso desta página virou parte disso."',
+    photoPlaceholder: 'FOTO',
+    figure: 'FIG. {n}',
+    // one entry per person; a link whose href starts with "TODO" is shown as plain text
+    people: [
+      {
+        name: 'Kaique Calefi',
+        role: 'Desenvolvedor · Sites, automações e sistemas',
+        photo: 'TODO: /images/kaique.webp',
+        bullets: ['Sites e landing pages', 'Automação de atendimento (WhatsApp)', 'Sistemas sob medida'],
+        bio: 'TODO: bio — 3 a 5 linhas suas. Ponto de partida: "Aprendo rápido e vou atrás do que não sei. Hoje construo sites, automações e sistemas para negócios do DF e para projetos remotos — e cada curso desta página virou parte disso."',
+        links: [
+          { label: 'GitHub', href: 'TODO: GitHub' },
+          { label: 'LinkedIn', href: 'TODO: LinkedIn' },
+          { label: 'Instagram', href: 'TODO: Instagram' },
+        ],
+      },
+    ],
   },
 
   process: {
@@ -106,12 +129,14 @@ export const site = {
     eyebrow: 'VAMOS CONVERSAR · 05',
     h2: 'Tem uma ideia ou um problema pra resolver?',
     sub: 'Me conta. Eu respondo rápido.',
-    ctas: { whatsapp: 'Chamar no WhatsApp ↗', email: 'e-mail' },
+    ctas: { whatsapp: 'Chamar no WhatsApp', email: 'e-mail' }, // the ↗ comes from <PrimaryCta>
     dialog: {
       title: 'Me conta o que você precisa.',
       fields: { name: 'Nome', type: 'Tipo', message: 'Mensagem' },
       types: ['Site', 'Automação', 'Sistema', 'Outro'],
-      submit: 'Enviar pelo WhatsApp ↗',
+      submit: 'Enviar pelo WhatsApp',
+      close: 'Fechar',
+      notReady: 'WhatsApp ainda não configurado',
       template: 'Olá, Kaique! Sou {nome}. Quero um(a) {tipo}: {mensagem}',
     },
   },

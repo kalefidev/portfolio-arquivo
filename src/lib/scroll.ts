@@ -37,3 +37,14 @@ export const scrollToTop = () => scrollToY(0, true)
 
 /** `peca-<slug>`: the URL hash of an open piece, and the id of its card in the grid without 3D. */
 export const pieceId = (slug: string) => `peca-${slug}`
+
+/** Scrolls to the element `id`, restarting Lenis first: the click that gets here may come from the
+ *  overlay or the dialog, while Lenis is still stopped. Honours the element's `scroll-margin-top`
+ *  (the header covers the top of the screen). */
+export function scrollToId(id: string) {
+  const element = document.getElementById(id)
+  if (!element) return
+  instance?.start()
+  if (instance) instance.scrollTo(element, { offset: -parseFloat(getComputedStyle(element).scrollMarginTop), force: true })
+  else element.scrollIntoView() // reduced motion: jump
+}

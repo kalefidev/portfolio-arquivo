@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState, type ComponentRef, type RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
-import type { BufferAttribute, BufferGeometry, Group, Points, PointsMaterial } from 'three'
+import { MathUtils, type BufferAttribute, type BufferGeometry, type Group, type Points, type PointsMaterial } from 'three'
+import { EXIT } from '@/config/spiral'
 import { cssVar } from '@/lib/cssVar'
-import { getItemTransform, newItemTransform } from './math'
+import { getItemTransform, newItemTransform, smoothstep } from './math'
 import type { SpiralFrame } from './Spiral'
 
 // DESIGN.md §4 › Desenho
@@ -16,6 +17,7 @@ const RAIL_DOTS_PER_PIECE = 36
 const RAIL_GAP = 0.3 // fraction of a step left empty on each side of a piece: the rail never crosses an object
 const RAIL_DOT = 2 // px
 
+const { clamp, degToRad, lerp } = MathUtils
 const target = newItemTransform() // scratch
 
 /** The axis in "pitch units": dashes along y and a ruler tick on every integer. Periodic in 1. */
@@ -34,8 +36,20 @@ const AXIS_SEGMENTS = (() => {
   return points
 })()
 
-/** Dashed vertical axis with a tick per piece + the dotted rail of the helix through the pieces. */
-export default function Axis({ frame, count }: { frame: RefObject<SpiralFrame>; count: number }) {
+/** Dashed vertical axis with a tick per piece + the dotted rail of the helix through the pieces.
+ *  On the way out the axis lies down and becomes the line of the next section (DESIGN.md §7): it
+ *  waits at `EXIT.restY` of the screen until the HTML line (`#linha`) gets there, follows it, and
+ *  hands over to it. Both sides read the real position of the DOM line, so nothing is hard-coded.
+ *  Reduced motion: the axis just fades. */
+export default function Axis({
+  frame,
+  count,
+  reducedMotion,
+}: {
+  frame: RefObject<SpiralFrame>
+  count: number
+  reducedMotion: boolean
+}) {
   const axis = useRef<Group>(null!)
   const line = useRef<ComponentRef<typeof Line>>(null!)
   const rail = useRef<Points<BufferGeometry, PointsMaterial>>(null!)
@@ -49,15 +63,30 @@ export default function Axis({ frame, count }: { frame: RefObject<SpiralFrame>; 
   }, [count])
   const dots = useMemo(() => new Float32Array(stops.length * 3), [stops])
 
-  useFrame(() => {
-    const { cfg, p, exit, lift, focus, extra } = frame.current
+  useFrame((state) => {
+    const { cfg, p, exit, focus, extra } = frame.current
 
-    // Ticks sit at the height of the pieces: the pattern repeats every pitch, so it only
-    // has to slide by the fractional part of the progress.
-    axis.current.position.set(cfg.axisX, (p % 1) * cfg.pitch, -cfg.radiusZ)
+    // Ticks sit at the height of the pieces: the pattern repeats every pitch, so it only has to
+    // slide by the distance to the nearest piece (0 at the end, where the pivot is the screen centre).
+    const phase = (p - Math.round(p)) * cfg.pitch
+    const lie = reducedMotion ? 0 : smoothstep(EXIT.lieFrom, 1, exit)
+    let y = phase
+    let visible = reducedMotion ? 1 - exit : 1
+    if (lie > 0) {
+      // where the HTML line is (it is below the screen until the exit is over)
+      const top = document.getElementById(EXIT.lineId)?.getBoundingClientRect().top ?? Infinity
+      const rest = EXIT.restY * window.innerHeight
+      const depth = cfg.camera.z + cfg.radiusZ // the axis sits at z = −radiusZ
+      const worldHeight = 2 * Math.tan(degToRad(cfg.camera.fov) / 2) * depth
+      y = lerp(phase, (0.5 - Math.min(rest, top) / state.size.height) * worldHeight, lie)
+      visible = 1 - clamp((rest - top) / (EXIT.handoff * window.innerHeight), 0, 1) // the HTML line fades in as this fades out
+    }
+    axis.current.position.set(cfg.axisX, y, -cfg.radiusZ)
+    axis.current.rotation.z = lie * (Math.PI / 2)
     axis.current.scale.y = cfg.pitch
-    line.current.material.opacity = AXIS_OPACITY * (1 - exit) * (1 - focus)
-    rail.current.material.opacity = RAIL_OPACITY * (1 - focus) // a piece is open: only the stage is left
+    line.current.material.opacity = AXIS_OPACITY * visible * (1 - focus)
+    // the rail stays where it is and fades before the active piece leaves
+    rail.current.material.opacity = RAIL_OPACITY * (1 - focus) * (1 - smoothstep(0, EXIT.stagger, exit))
 
     const position = rail.current.geometry.attributes.position as BufferAttribute
     for (let k = 0; k < stops.length; k++) {
@@ -65,7 +94,6 @@ export default function Axis({ frame, count }: { frame: RefObject<SpiralFrame>; 
       position.setXYZ(k, x, y, z)
     }
     position.needsUpdate = true
-    rail.current.position.y = lift
   })
 
   return (

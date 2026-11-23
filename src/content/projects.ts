@@ -70,6 +70,21 @@ export const projects: Project[] = [
   },
 ]
 
+export const projectStatusLabels: Record<Project['status'], string> = {
+  'no-ar': 'No ar',
+  'em-desenvolvimento': 'Em desenvolvimento',
+  conceito: 'Conceito',
+}
+
+/** `projeto-<slug>`: id of the row in the projects list (the chips of the piece overlay point to it). */
+export const projectId = (slug: string) => `projeto-${slug}`
+
+/** Clay tone of a project's preview: the category of its first course, paper-2 if it has none. */
+export const projectTone = (slug: string) => {
+  const course = coursesForProject(slug)[0]
+  return course ? `var(--color-cat-${course.category})` : 'var(--color-paper-2)'
+}
+
 // The link can be declared on either side (Course.projects or Project.courses).
 export const projectsForCourse = (courseSlug: string): Project[] => {
   const fromCourse = courseBySlug(courseSlug)?.projects ?? []

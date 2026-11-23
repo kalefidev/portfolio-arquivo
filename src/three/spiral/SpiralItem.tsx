@@ -1,7 +1,7 @@
 import { useRef, useState, type RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { MathUtils, type Group } from 'three'
-import { CALLOUT, DRAG, FOCUS_MODE } from '@/config/spiral'
+import { CALLOUT, DRAG, EXIT, FOCUS_MODE } from '@/config/spiral'
 import { pieceNo } from '@/content/courses'
 import { cssVar } from '@/lib/cssVar'
 import { useStore } from '@/lib/store'
@@ -10,7 +10,7 @@ import ArchetypeObject from '../archetypes'
 import type { ArchetypeProps } from '../archetypes/types'
 import Callout from './Callout'
 import { spinOf } from './drag'
-import { getItemTransform, newItemTransform, smoothstep } from './math'
+import { exitStagger, getItemTransform, newItemTransform, smoothstep } from './math'
 import type { SpiralFrame } from './Spiral'
 
 const HIDDEN_BELOW = 1e-3 // visibility under this → not drawn
@@ -38,7 +38,7 @@ export default function SpiralItem({ index, course, frame, reducedMotion, detail
   // Priority −1: after <Spiral> (−2) wrote the frame, before drei's <Html> (0) projects the callout
   // to the screen — at the same priority the label would trail the piece by one frame.
   useFrame(() => {
-    const { cfg, p, exit, lift, focus, staged, stage, extra } = frame.current
+    const { cfg, p, exit, viewHeight, focus, staged, stage, extra } = frame.current
     const { position, scale, visibility, d } = getItemTransform(index, p, cfg, extra, target)
     const onStage = staged[index]
 
@@ -57,19 +57,24 @@ export default function SpiralItem({ index, course, frame, reducedMotion, detail
       )
     }
 
-    piece.current.visible = visibility > HIDDEN_BELOW || onStage > HIDDEN_BELOW
+    // Exit: the pieces rise one after the other (no stagger with reduced motion: all together) and
+    // shrink away — by scale, never opacity (shared materials).
+    const exiting = exitStagger(exit, d, cfg.visibleRange, reducedMotion ? 0 : EXIT.stagger)
+    const rise = exiting * exiting * viewHeight
+    const vanish = reducedMotion ? 1 : 1 - smoothstep(EXIT.vanishFrom, 1, exiting)
+
+    piece.current.visible = visibility * vanish > HIDDEN_BELOW || onStage > HIDDEN_BELOW
     if (!piece.current.visible) {
       piece.current.scale.setScalar(0) // …which also takes the hit area out of the raycast
       return
     }
-    // Focus mode: the open piece goes to the stage (the group it is in rises by `lift` on the way
-    // out of the section — the stage does not); the others sink into the fog.
+    // Focus mode: the open piece goes to the stage; the others sink into the fog.
     piece.current.position.set(
       lerp(position.x, stage.x, onStage),
-      lerp(position.y, stage.y - lift, onStage),
+      lerp(position.y + rise, stage.y, onStage),
       lerp(position.z - FOCUS_MODE.recede * focus, 0, onStage),
     )
-    piece.current.scale.setScalar(lerp(scale, cfg.stageScale, onStage))
+    piece.current.scale.setScalar(lerp(scale * vanish, cfg.stageScale, onStage))
     const spin = spinOf(course.slug)
     spun.current.rotation.set(spin.x, spin.y, 0)
     anchor.current.position.setScalar(left ? -CALLOUT.anchor : CALLOUT.anchor).setZ(0)

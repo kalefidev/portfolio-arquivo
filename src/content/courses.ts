@@ -89,4 +89,7 @@ export const pieceNo = (index: number) => String(index + 1).padStart(2, '0')
 
 export const featuredCourses = () => courses.filter((c) => c.featured)
 
+/** The whole archive: the spiral's pieces first (same order and Nº as in the spiral), then the rest. */
+export const archiveCourses = () => [...featuredCourses(), ...courses.filter((c) => !c.featured)]
+
 export const courseBySlug = (slug: string) => courses.find((c) => c.slug === slug)

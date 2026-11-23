@@ -128,3 +128,14 @@ export const AMBIENT_SWAY = { amplitude: 0.06, period: 10 } // rad, seconds
 
 /** Lambda (THREE.MathUtils.damp) for live parameters easing toward the active preset. */
 export const PRESET_LAMBDA = 4
+
+/** Exit of the spiral through the exit zone (DESIGN.md §7). `exit` = exitProgress, 0 … 1. */
+export const EXIT = {
+  stagger: 0.5, // share of the exit the pieces are spread over: the highest one leaves first, the active one last
+  vanishFrom: 0.4, // a piece's own exit progress where it starts to shrink away (never by opacity: shared materials)
+  lieFrom: 0.3, // exit progress where the axis starts to lie down
+  uiOut: 0.5, // exit progress from which the spiral UI is gone (discrete: `pastSpiral` in the store)
+  restY: 0.5, // fraction of the screen height where the lying axis waits for the line of the next section
+  handoff: 0.08, // fraction of the screen height over which the 3D line hands over to the HTML one
+  lineId: 'linha', // id of the HTML line (Reach)
+}

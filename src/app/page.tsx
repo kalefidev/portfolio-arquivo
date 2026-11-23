@@ -1,4 +1,13 @@
+import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import Reveals from "@/components/layout/Reveals";
+import About from "@/components/sections/About";
+import Contact from "@/components/sections/Contact";
+import CourseIndex from "@/components/sections/CourseIndex";
+import Process from "@/components/sections/Process";
+import Projects from "@/components/sections/Projects";
+import Reach from "@/components/sections/Reach";
+import Services from "@/components/sections/Services";
 import ActivePanel from "@/components/spiral/ActivePanel";
 import BottomBar from "@/components/spiral/BottomBar";
 import CourseOverlay from "@/components/spiral/CourseOverlay";
@@ -8,9 +17,8 @@ import SpiralSection from "@/components/spiral/SpiralSection";
 import { site } from "@/content/site";
 import SceneLoader from "@/three/SceneLoader";
 
-// Layers: canvas (fixed) < grain < UI. Provisional below the spiral: one tall empty section to
-// test the exit (the real sections come in etapa 07) — for now it is also where the skip link
-// lands (`#indice`: the real CourseIndex takes the id over).
+// Layers: canvas (fixed) < grain < UI. The page, top to bottom: the spiral (and its exit, which
+// ends in the line of <Reach>), the sections, the footer.
 export default function Home() {
   return (
     <>
@@ -31,11 +39,18 @@ export default function Home() {
             <RightRail />
             <BottomBar />
           </SpiralSection>
-
-          <section id="indice" tabIndex={-1} className="h-[150svh] border-t border-line outline-none" />
+          <Reach />
+          <CourseIndex />
+          <Projects />
+          <Services />
+          <About />
+          <Process />
+          <Contact />
         </main>
 
+        <Footer />
         <CourseOverlay />
+        <Reveals />
       </div>
     </>
   );

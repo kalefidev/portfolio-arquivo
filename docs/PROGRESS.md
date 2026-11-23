@@ -3,8 +3,8 @@
 > O Code lê isto no começo de toda sessão e atualiza no fim de toda etapa. Curto e factual.
 
 ## Estado atual
-- Etapa atual: 07 — Seções + saída da espiral
-- Última tag: etapa-06
+- Etapa atual: 08 — Lançamento
+- Última tag: etapa-07
 - Bloqueios / pendências do Kaique: lista real do `docs/CURSOS.md` → `/ajuste` (courses.ts + arquétipos que faltarem); revisar `docs/CONTEUDO.md`
 
 ## Etapas
@@ -14,7 +14,7 @@
 - [x] 04 Interface da espiral
 - [x] 05 Interações, overlay e modos
 - [x] 06 Objetos 3D (parte 2) (parcial: lista real pendente)
-- [ ] 07 Seções + saída da espiral
+- [x] 07 Seções + saída da espiral
 - [ ] 08 Lançamento
 
 ## Parâmetros calibrados da espiral
@@ -138,6 +138,22 @@ Pendências:
 - Kaique: lista real do `CURSOS.md` → `/ajuste` (troca `courses.ts`, faz os arquétipos que faltarem e preenche a tabela Curso → objeto). Medir FPS de novo com a espiral cheia (estimativa: ≤ 14 peças × 8,5k ≈ 120k triângulos, abaixo de 200k).
 - Durante o morph do browser, blocos em trânsito se sobrepõem por um instante (mesmo plano z, mesmo material, então não aparece cintilação).
 Como testar: `npm run dev` → `/lab`. Na célula `browser`, marcar `hovered` (os blocos viram coluna, um atrás do outro) e `active` (vai e volta em loop lento). Na célula `gears`, `hovered` acelera e `active` deixa em velocidade média. `reducedMotion` deixa só a escala no hover; `detail low` derruba a contagem de triângulos. Na home, a peça 04 é a janela e a 06 as engrenagens (hover, clique abre o overlay); com AJUSTES → Movimento ambiente desligado, as engrenagens fora de foco param. Screenshots em `artifacts/etapa-06-*.png` (não versionados).
+
+### Etapa 07 — 2026-11-23
+Feito: **saída coreografada** (`EXIT` em `config/spiral.ts`, `exitStagger` em `math.ts` + 3 testes): as peças sobem com stagger e somem por escala; o eixo deita, espera em `restY` e acompanha a `#linha` de `Reach`, com crossfade (`handoff`) para a linha HTML; `pastSpiral` no store apaga o palco sticky (`inert`), o véu `.spiral-fade` e fecha os popovers. **Seções** em `components/sections/`: `Reach`, `CourseIndex` (`#indice`, filtro por categoria), `Projects` (`#projetos`, prévia só em CSS), `Services` (`#sobre`), `About`, `Process`, `Contact` + `ContactDialog` (`#contato`); `layout/Footer` e `layout/Reveals` (SplitText por linha + stagger, `once`, off em reduced motion); `ui/{SecondaryCta,Wordmark,Dot,SectionHead}`, `PrimaryCta` vira link ou botão. **Conteúdo**: `site.ts` (`projects`, `index.all`, `about.people`, `contact.dialog.{close,notReady}`, `↗` fora dos textos de `PrimaryCta`), `archiveCourses()`, `projectStatusLabels` / `projectId` / `projectTone`, `lib/whatsapp.ts` (`contactMessage`, `whatsappReady()`) + `whatsapp.test.ts` (número fictício só no teste), `scrollToId`. **Overlay** aceita qualquer curso do arquivo (hash `#peca-<slug>` também); chips levam a `#projeto-<slug>`. Header com `bg-paper` + hairline em `pastSpiral || staticMode`.
+Decisões:
+- **Tudo é função da posição.** O 3D lê `#linha.getBoundingClientRect().top` por frame (só com o eixo deitado) e a linha HTML usa um ScrollTrigger `scrub` na mesma régua (`top 50%` → `top 42%`): nada depende de pixel fixo, e rolar para cima desfaz.
+- Eixo: fase `p − round(p)` (pivô no centro na saída); a altura do mundo vem de `fov` + profundidade do eixo (`camera.z + radiusZ`) e `size.height`. O `lift` saiu do `SpiralFrame` (agora `viewHeight`): `SpiralItem` aplica `rise = t²·viewHeight` e o palco soma `y + rise`.
+- Reduced motion: `stagger` 0 (todas juntas), sem vanish por escala, eixo só some por opacidade, sem ScrollTrigger na linha (HTML sempre visível). Sem 3D: linha HTML sempre visível.
+- `whatsappReady()` é função (não constante) para o teste poder trocar `site.whatsapp`; `whatsapp.ts` importa `../content/site` (o vitest não tem o alias `@/`). `contactMessage` usa replacer em função: um `$&` digitado pelo visitante não vira padrão do `replace`.
+- Peça do arquivo que não é da espiral: `focus` do 3D recua as peças (invisível, o índice está fora do `#cursos`), palco de véu; Nº = posição no arquivo, total = tamanho do arquivo.
+- Render pausado: medido com contador de `drawElements`/`drawArrays` — 1159 draws/s no topo, 0 com `#projetos` na tela.
+- O h2 de Projetos ("O que saiu do papel.") é proposta minha: revisar.
+Pendências:
+- Kaique: número do WhatsApp (1 linha em `site.ts`) — o diálogo está com o Enviar desabilitado até lá; teste ponta a ponta no desktop e no Android (`npm run dev -- -H 0.0.0.0`); foto, bio, redes (TODO visíveis); revisar h2 de Projetos; lista real de cursos (hoje todos são destaque: o índice não mostra nenhum fora da espiral — o caminho foi testado com 2 cursos temporários).
+- Conferir no celular real o encaixe 3D → HTML (barra do navegador mexe na altura). Se ficar frágil: eixo some + linha por reveal (aviso).
+- Etapa 08: Popover API / `@starting-style` em navegadores antigos (da 05); `<dialog>` de contato herda o mesmo risco.
+Como testar: `npm run dev` → `http://localhost:3000`. Rolar até o fim da espiral: peças sobem uma a uma, o eixo deita no meio da tela e espera; continuar rolando até a linha de "Feito em Brasília" chegar nele (crossfade) e voltar (desfaz). Nav do header (CURSOS / PROJETOS / SOBRE / CONTATO) e skip link → índice. Índice: filtro, clicar num destaque (rola até a peça e abre). Projetos: hover mostra a prévia; chip "J.A.R.V.I.S" no overlay do curso n8n fecha e rola até a linha; "Nº 06 · Automação com n8n" volta à peça. Contato: "Chamar no WhatsApp" abre o diálogo (Esc fecha, campos obrigatórios, aviso de WhatsApp não configurado). Reduced motion (DevTools → Rendering): saída simples, sem reveals. AJUSTES → Ver sem 3D: header com fundo, linha visível. `npm run test` (24 testes). Screenshots em `artifacts/etapa-07-*.png` (não versionados).
 
 <!-- modelo:
 ### Etapa NN — AAAA-MM-DD

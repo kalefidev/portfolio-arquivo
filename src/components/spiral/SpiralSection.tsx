@@ -23,6 +23,7 @@ export default function SpiralSection({ hero, children }: { hero: React.ReactNod
   const section = useRef<HTMLElement>(null)
   const height = usePreset((preset) => sectionHeight(count, preset)) // in viewport heights
   const staticMode = useStore((s) => s.staticMode)
+  const pastSpiral = useStore((s) => s.pastSpiral)
 
   useEffect(() => {
     if (staticMode) {
@@ -41,12 +42,14 @@ export default function SpiralSection({ hero, children }: { hero: React.ReactNod
       end: 'bottom bottom',
       onUpdate: write,
       onRefresh: write,
-      // the bar scrolls away with the stage: its popovers (fixed, top layer) must not stay behind
-      onLeave: () =>
-        section.current?.querySelectorAll<HTMLElement>('[popover]').forEach((popover) => popover.hidePopover?.()),
     })
     return () => trigger.kill()
   }, [height, staticMode])
+
+  // The stage fades out on the way out (`pastSpiral`): its popovers (fixed, top layer) must not stay behind.
+  useEffect(() => {
+    if (pastSpiral) section.current?.querySelectorAll<HTMLElement>('[popover]').forEach((p) => p.hidePopover?.())
+  }, [pastSpiral])
 
   // Keyboard (DESIGN.md §9): arrows go to the previous / next piece, Enter opens the active one.
   useEffect(() => {
@@ -92,7 +95,7 @@ export default function SpiralSection({ hero, children }: { hero: React.ReactNod
 
   return (
     <section id="cursos" ref={section} className="relative" style={{ height: `${height * 100}svh` }}>
-      <div className="fades-in-focus pointer-events-none sticky top-0 h-svh">
+      <div inert={pastSpiral} className={`fades-in-focus pointer-events-none sticky top-0 h-svh ${pastSpiral ? 'opacity-0' : ''}`}>
         {hero}
         {children}
       </div>

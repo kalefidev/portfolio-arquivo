@@ -262,7 +262,8 @@ html:has(dialog.piece[open]) .fades-in-focus {
   opacity: 0;
 }
 
-html:has(dialog.piece[open]) {
+html:has(dialog.piece[open]),
+html:has(dialog.contact[open]) {
   overflow: hidden;
 }
 
@@ -301,6 +302,26 @@ dialog.menu[open] {
   animation: menu-in var(--duration-ui) var(--ease-enter);
 }
 
+/* Contact form (ContactDialog): a centred panel on a veil of paper. Enters like the menu. */
+dialog.contact {
+  width: min(32rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  border: 1px solid var(--color-line);
+  background: var(--color-paper-2);
+  color: var(--color-ink);
+}
+
+dialog.contact::backdrop {
+  background: color-mix(in srgb, var(--color-paper) 80%, transparent);
+}
+
+dialog.contact[open] {
+  animation: menu-in var(--duration-ui) var(--ease-enter);
+}
+
 @keyframes menu-in {
   from {
     opacity: 0;
@@ -309,7 +330,8 @@ dialog.menu[open] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  dialog.menu[open] {
+  dialog.menu[open],
+  dialog.contact[open] {
     animation: none;
   }
 

@@ -2,7 +2,7 @@ import { useRef, useState, type ComponentRef, type RefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Billboard, Line } from '@react-three/drei'
 import type { Group } from 'three'
-import { FOCUS_MARKS } from '@/config/spiral'
+import { EXIT, FOCUS_MARKS } from '@/config/spiral'
 import { cssVar } from '@/lib/cssVar'
 import { getItemTransform, newItemTransform, smoothstep } from './math'
 import type { SpiralFrame } from './Spiral'
@@ -49,7 +49,8 @@ export default function FocusMarks({ frame, count }: { frame: RefObject<SpiralFr
     const { cfg, p, exit, focus, extra } = frame.current
     const index = Math.min(Math.max(Math.round(p), 0), count - 1)
     const { position, scale, d } = getItemTransform(index, p, cfg, extra, target)
-    const on = (1 - smoothstep(fadeFrom, 0.5, Math.abs(d))) * (1 - exit) * (1 - focus)
+    // gone before the active piece starts to rise (exit = EXIT.stagger)
+    const on = (1 - smoothstep(fadeFrom, 0.5, Math.abs(d))) * (1 - smoothstep(0, EXIT.stagger, exit)) * (1 - focus)
 
     marks.current.visible = on > 0
     marks.current.position.copy(position)

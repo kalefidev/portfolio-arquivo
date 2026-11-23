@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { spiralPresets } from '../../config/spiral'
-import { courseScroll, getItemTransform, scrollToProgress, sectionHeight } from './math'
+import { courseScroll, exitStagger, getItemTransform, scrollToProgress, sectionHeight } from './math'
 
 const N = 6
 
@@ -68,5 +68,29 @@ describe.each(Object.entries(spiralPresets))('spiral math (%s)', (_name, cfg) =>
     expect(at(exitStart + cfg.exitZone / 2).progress).toBe(N - 1)
     expect(at(exitStart + cfg.exitZone / 2).exitProgress).toBeCloseTo(0.5)
     expect(scrollToProgress(1, N, cfg)).toEqual({ heroProgress: 1, progress: N - 1, exitProgress: 1 })
+  })
+})
+
+describe('exitStagger', () => {
+  const range = 3.5
+
+  it('is 0 before the exit and 1 at the end, for every piece', () => {
+    for (const d of [-range, -2, -1, 0, 1]) {
+      expect(exitStagger(0, d, range, 0.5)).toBe(0)
+      expect(exitStagger(1, d, range, 0.5)).toBe(1)
+    }
+  })
+
+  it('lets the highest piece go first and the active one last', () => {
+    expect(exitStagger(0.3, -range, range, 0.5)).toBeGreaterThan(0)
+    expect(exitStagger(0.5, 0, range, 0.5)).toBe(0) // the active one only starts once the stagger is over
+    const ds = [-range, -2, -1, 0]
+    const ts = ds.map((d) => exitStagger(0.6, d, range, 0.5))
+    expect([...ts].sort((a, b) => b - a)).toEqual(ts) // higher up (smaller d) = further along
+  })
+
+  it('moves every piece together without stagger (reduced motion)', () => {
+    expect(exitStagger(0.4, -range, range, 0)).toBeCloseTo(0.4)
+    expect(exitStagger(0.4, 0, range, 0)).toBeCloseTo(0.4)
   })
 })

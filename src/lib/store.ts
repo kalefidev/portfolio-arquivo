@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { HERO_UNTIL } from '@/config/spiral'
+import { EXIT, HERO_UNTIL } from '@/config/spiral'
 
 const PREFS_KEY = 'arquivo:prefs'
 
@@ -10,6 +10,7 @@ interface SpiralState {
   activeIndex: number // round(progress)
   exitProgress: number // 0 … 1 through the exit zone after the last piece
   pastHero: boolean // the hero has given way to the active-piece panel (discrete: fine to subscribe)
+  pastSpiral: boolean // the exit is far enough along for the spiral UI to be gone (discrete too)
   hoveredSlug: string | null
   focusSlug: string | null // piece open in the overlay
   ambientMotion: boolean
@@ -38,6 +39,7 @@ export const useStore = create<SpiralState>((set, get) => {
     activeIndex: 0,
     exitProgress: 0,
     pastHero: false,
+    pastSpiral: false,
     hoveredSlug: null,
     focusSlug: null,
     ambientMotion: true,
@@ -47,11 +49,12 @@ export const useStore = create<SpiralState>((set, get) => {
     setScroll: (progress, exitProgress, heroProgress) => {
       const activeIndex = Math.round(progress)
       const pastHero = heroProgress > HERO_UNTIL
+      const pastSpiral = exitProgress >= EXIT.uiOut
       const now = get()
       set(
-        activeIndex === now.activeIndex && pastHero === now.pastHero
+        activeIndex === now.activeIndex && pastHero === now.pastHero && pastSpiral === now.pastSpiral
           ? { progress, exitProgress }
-          : { progress, exitProgress, activeIndex, pastHero },
+          : { progress, exitProgress, activeIndex, pastHero, pastSpiral },
       )
     },
     setHovered: (hoveredSlug) => set({ hoveredSlug }),

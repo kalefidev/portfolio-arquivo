@@ -1,15 +1,16 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { categoryLabels, featuredCourses, pieceNo, statusLabels } from '@/content/courses'
-import { projectsForCourse } from '@/content/projects'
+import { archiveCourses, categoryLabels, featuredCourses, pieceNo, statusLabels } from '@/content/courses'
+import { projectId, projectsForCourse } from '@/content/projects'
 import { site } from '@/content/site'
-import { getLenis, pieceId, scrollToCourse } from '@/lib/scroll'
+import { getLenis, pieceId, scrollToCourse, scrollToId } from '@/lib/scroll'
 import { useStore } from '@/lib/store'
 import { startDrag } from '@/three/spiral/drag'
 
-const courses = featuredCourses()
-const total = pieceNo(courses.length - 1)
+const featured = featuredCourses() // the pieces of the spiral
+const archive = archiveCourses() // …and the rest of the archive, after them
+const rest = archive.filter((course) => !course.featured)
 const { panelLabel, overlay } = site.spiral
 
 const heading = 'label text-ink-2'
@@ -23,18 +24,27 @@ export default function CourseOverlay() {
   const focusSlug = useStore((s) => s.focusSlug)
   const staticMode = useStore((s) => s.staticMode)
   const dialog = useRef<HTMLDialogElement>(null)
-  const index = courses.findIndex((course) => course.slug === focusSlug)
-  const open = index >= 0
+  const focused = archive.find((course) => course.slug === focusSlug) ?? null
+  const open = focused !== null
 
   // the last piece stays in the panel while it slides out
-  const [shown, setShown] = useState(index)
-  if (open && shown !== index) setShown(index)
-  const course = shown < 0 ? null : courses[shown]
+  const [shown, setShown] = useState(focused)
+  if (focused && shown !== focused) setShown(focused)
+  const course = shown
+
+  // A piece of the spiral keeps everything as it was: Nº and total of the spiral, previous / next
+  // along the spiral, the piece on the 3D stage. Any other course of the archive has no piece:
+  // veil stage, Nº and total of the archive, previous / next among the others.
+  const inSpiral = course?.featured ?? false
+  const group = inSpiral ? featured : rest
+  const position = course ? group.indexOf(course) : -1
+  const number = course ? pieceNo(inSpiral ? position : archive.indexOf(course)) : pieceNo(0)
+  const total = pieceNo((inSpiral ? featured : archive).length - 1)
 
   // `#peca-<slug>` in the URL opens that piece (on load and when the hash changes).
   useEffect(() => {
     const openFromHash = () => {
-      const match = courses.find((c) => location.hash === `#${pieceId(c.slug)}`)
+      const match = archive.find((c) => location.hash === `#${pieceId(c.slug)}`)
       if (match) useStore.getState().setFocus(match.slug)
     }
     openFromHash()
@@ -55,17 +65,17 @@ export default function CourseOverlay() {
     }
   }, [open])
 
-  // The open piece is always the active one: "next" turns the spiral under the overlay, and when
-  // it closes everything is already in place.
+  // The open piece of the spiral is always the active one: "next" turns the spiral under the
+  // overlay, and when it closes everything is already in place.
   useEffect(() => {
-    if (!focusSlug || index < 0) return
-    scrollToCourse(index, { immediate: true })
-    history.replaceState(null, '', `#${pieceId(focusSlug)}`)
-  }, [focusSlug, index])
+    if (!focused) return
+    if (focused.featured) scrollToCourse(featured.indexOf(focused), { immediate: true })
+    history.replaceState(null, '', `#${pieceId(focused.slug)}`)
+  }, [focused])
 
   const close = () => dialog.current?.close()
   // at either end the button is `aria-disabled`, not `disabled`: a disabled button drops the keyboard focus
-  const go = (to: number) => courses[to] && useStore.getState().setFocus(courses[to].slug)
+  const go = (to: number) => group[to] && useStore.getState().setFocus(group[to].slug)
   const projects = course ? projectsForCourse(course.slug) : []
 
   return (
@@ -75,8 +85,8 @@ export default function CourseOverlay() {
       className="piece"
       onClose={() => useStore.getState().setFocus(null)}
     >
-      {staticMode ? (
-        // no 3D: a veil of paper over the page instead of the stage; a click on it closes
+      {staticMode || !inSpiral ? (
+        // no 3D, or a course that is not a piece of the spiral: a veil of paper over the page instead of the stage; a click on it closes
         <div className="piece-stage bg-paper/85" onClick={close} />
       ) : (
         <div
@@ -92,7 +102,7 @@ export default function CourseOverlay() {
       <div data-lenis-prevent className="piece-panel flex flex-col border-line bg-paper-2">
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-line pr-3 pl-6">
           <p className={`${heading} tabular-nums`}>
-            {panelLabel.replace('{n}', pieceNo(Math.max(shown, 0))).replace('{total}', total)}
+            {panelLabel.replace('{n}', number).replace('{total}', total)}
           </p>
           <button
             type="button"
@@ -149,11 +159,15 @@ export default function CourseOverlay() {
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {projects.map((project) => (
                     <li key={project.slug}>
-                      {/* closes first: Lenis is stopped while the overlay is open */}
+                      {/* closes first, then scrolls ourselves: Lenis is stopped while the overlay is open */}
                       <a
-                        href="#projetos"
+                        href={`#${projectId(project.slug)}`}
                         className="label flex h-9 items-center border border-line px-3 transition-colors duration-(--duration-micro) hover:bg-paper"
-                        onClick={close}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          close()
+                          scrollToId(projectId(project.slug))
+                        }}
                       >
                         {project.title}
                       </a>
@@ -177,15 +191,15 @@ export default function CourseOverlay() {
         )}
 
         <div className="grid shrink-0 grid-cols-2 divide-x divide-line border-t border-line">
-          <button type="button" className={step} aria-disabled={shown <= 0} onClick={() => go(shown - 1)}>
+          <button type="button" className={step} aria-disabled={position <= 0} onClick={() => go(position - 1)}>
             <span aria-hidden>←</span>
             {overlay.previous}
           </button>
           <button
             type="button"
             className={`${step} justify-end`}
-            aria-disabled={shown >= courses.length - 1}
-            onClick={() => go(shown + 1)}
+            aria-disabled={position >= group.length - 1}
+            onClick={() => go(position + 1)}
           >
             {overlay.next}
             <span aria-hidden>→</span>

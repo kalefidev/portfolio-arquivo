@@ -53,6 +53,13 @@ export function getItemTransform(
   return out
 }
 
+/** Exit progress (0 … 1) of the piece at offset `d` when the whole exit is at `exit`: the highest
+ *  visible piece (d = −visibleRange) starts at once, the active one (d = 0) after `stagger`. */
+export function exitStagger(exit: number, d: number, visibleRange: number, stagger: number) {
+  const order = clamp01((d + visibleRange) / visibleRange) // 0 = highest, 1 = active (or below)
+  return clamp01((exit - order * stagger) / (1 - stagger))
+}
+
 const steps = (n: number) => Math.max(n - 1, 0)
 
 /** Height of the spiral section, in viewport heights: 1 + heroZone + (N − 1) × scrollPerItem + exitZone. */

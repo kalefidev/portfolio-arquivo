@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { MathUtils, type Fog, type Group, type PerspectiveCamera } from 'three'
+import { MathUtils, type Fog, type PerspectiveCamera } from 'three'
 import {
   AMBIENT_SWAY,
   FOCUS_MODE,
@@ -28,7 +28,7 @@ export interface SpiralFrame {
   cfg: SpiralPreset // live parameters, eased toward the active preset
   p: number // damped progress
   exit: number // damped exitProgress
-  lift: number // world units the pieces and the rail have risen on the way out
+  viewHeight: number // world units of screen height at z = 0: how far a piece rises on the way out
   focus: number // 0 … 1, damped: 1 while a piece is open in the overlay (the rest of the spiral steps back)
   staged: number[] // per piece, 0 … 1, damped: how far it has travelled to the stage
   stage: { x: number; y: number } // where the stage is, in world units at z = 0
@@ -47,7 +47,6 @@ export default function Spiral() {
   const preset = usePreset((p) => p) // changes identity only when the viewport crosses presets
   const [reducedMotion] = useState(prefersReducedMotion)
   const detail = preset === spiralPresets.mobile ? 'low' : 'high' // fewer segments on mobile
-  const pieces = useRef<Group>(null!)
   const swayGain = useRef(0)
   const frame = useRef<SpiralFrame>(null!)
   if (frame.current === null) {
@@ -56,7 +55,7 @@ export default function Spiral() {
       cfg: { ...preset, camera: { ...preset.camera } },
       p: progress,
       exit: exitProgress,
-      lift: 0,
+      viewHeight: 0,
       focus: 0,
       staged: courses.map(() => 0),
       stage: { x: 0, y: 0 },
@@ -125,30 +124,25 @@ export default function Spiral() {
     fog.near = f.cfg.fogNear
     fog.far = f.cfg.fogFar
 
-    // Minimal exit (the real choreography is etapa 07): everything rises one screen, accelerating.
-    const viewHeight = 2 * Math.tan(degToRad(f.cfg.camera.fov) / 2) * f.cfg.camera.z
-    f.lift = f.exit * f.exit * viewHeight
-    f.stage.x = (f.cfg.stageX - 0.5) * viewHeight * state.viewport.aspect
-    f.stage.y = (0.5 - f.cfg.stageY) * viewHeight
-    pieces.current.position.y = f.lift
+    f.viewHeight = 2 * Math.tan(degToRad(f.cfg.camera.fov) / 2) * f.cfg.camera.z
+    f.stage.x = (f.cfg.stageX - 0.5) * f.viewHeight * state.viewport.aspect
+    f.stage.y = (0.5 - f.cfg.stageY) * f.viewHeight
   }, -2)
 
   return (
     <>
-      <group ref={pieces}>
-        {courses.map((course, index) => (
-          <SpiralItem
-            key={course.slug}
-            index={index}
-            course={course}
-            frame={frame}
-            reducedMotion={reducedMotion}
-            detail={detail}
-          />
-        ))}
-        <FocusMarks frame={frame} count={courses.length} />
-      </group>
-      <Axis frame={frame} count={courses.length} />
+      {courses.map((course, index) => (
+        <SpiralItem
+          key={course.slug}
+          index={index}
+          course={course}
+          frame={frame}
+          reducedMotion={reducedMotion}
+          detail={detail}
+        />
+      ))}
+      <FocusMarks frame={frame} count={courses.length} />
+      <Axis frame={frame} count={courses.length} reducedMotion={reducedMotion} />
     </>
   )
 }
