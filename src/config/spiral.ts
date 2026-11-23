@@ -98,8 +98,22 @@ export const FOCUS_MARKS = {
   lineWidth: 1.5, // px
   ringRadius: 0.85,
   ringY: -1.08,
+  ringSegments: 64,
+  ringWidth: 1, // px
   fadeFrom: 0.15, // |d| where the marks start fading; they are gone at 0.5, when the next piece takes over
   spread: 0.15, // extra scale of the corners while faded: they close in on the piece
+}
+
+/** Dashed axis with a ruler tick per piece + dotted rail of the helix (DESIGN.md §4 › Desenho). */
+export const AXIS = {
+  opacity: 0.3,
+  halfSpan: 8, // pitches drawn above and below the active piece (covers the view in any preset)
+  dashesPerPitch: 8,
+  tick: 0.18, // world units
+  railOpacity: 0.18,
+  railDotsPerPiece: 36,
+  railGap: 0.3, // fraction of a step left empty on each side of a piece: the rail never crosses an object
+  railDot: 2, // px
 }
 
 /** Focus mode (a piece open in the overlay): the piece travels to the stage, the others sink into the fog. */

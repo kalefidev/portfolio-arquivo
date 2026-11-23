@@ -8,7 +8,7 @@ const { eyebrow, h2, text, pillars, summary } = site.services
 /** "O que eu faço" — three pillars and a summary whose numbers come from the data. */
 export default function Services() {
   return (
-    <section id="sobre" className="scroll-mt-16 px-gutter py-section">
+    <section id="servicos" className="scroll-mt-16 px-gutter py-section">
       <SectionHead eyebrow={eyebrow} title={h2} sub={text} />
 
       <ol data-reveal="stagger" className="mt-12 grid border-t border-line md:grid-cols-3 md:border-l">

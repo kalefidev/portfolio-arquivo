@@ -2,20 +2,21 @@ import { useMemo, useRef, useState, type ComponentRef, type RefObject } from 're
 import { useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import { MathUtils, type BufferAttribute, type BufferGeometry, type Group, type Points, type PointsMaterial } from 'three'
-import { EXIT } from '@/config/spiral'
+import { AXIS, EXIT } from '@/config/spiral'
 import { cssVar } from '@/lib/cssVar'
 import { getItemTransform, newItemTransform, smoothstep } from './math'
 import type { SpiralFrame } from './Spiral'
 
-// DESIGN.md §4 › Desenho
-const AXIS_OPACITY = 0.3
-const AXIS_HALF_SPAN = 8 // pitches drawn above and below the active piece (covers the view in any preset)
-const DASHES_PER_PITCH = 8
-const TICK = 0.18 // world units
-const RAIL_OPACITY = 0.18
-const RAIL_DOTS_PER_PIECE = 36
-const RAIL_GAP = 0.3 // fraction of a step left empty on each side of a piece: the rail never crosses an object
-const RAIL_DOT = 2 // px
+const {
+  opacity: AXIS_OPACITY,
+  halfSpan: AXIS_HALF_SPAN,
+  dashesPerPitch: DASHES_PER_PITCH,
+  tick: TICK,
+  railOpacity: RAIL_OPACITY,
+  railDotsPerPiece: RAIL_DOTS_PER_PIECE,
+  railGap: RAIL_GAP,
+  railDot: RAIL_DOT,
+} = AXIS
 
 const { clamp, degToRad, lerp } = MathUtils
 const target = newItemTransform() // scratch

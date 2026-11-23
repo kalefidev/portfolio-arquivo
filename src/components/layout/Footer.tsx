@@ -7,7 +7,7 @@ const { copyright, backToTop } = site.footer
 export default function Footer() {
   return (
     <footer className="border-t border-line px-gutter pt-16 pb-8">
-      <Wordmark className="block text-[clamp(2.5rem,9vw,8rem)] leading-none" />
+      <Wordmark className="block text-wordmark" />
 
       <div className="label mt-16 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-ink-2">
         <a href={`mailto:${site.email}`} className="transition-colors duration-(--duration-micro) hover:text-ink">

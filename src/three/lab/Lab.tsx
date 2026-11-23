@@ -145,7 +145,7 @@ export default function Lab() {
   return (
     <main ref={page} className="relative z-[var(--z-ui)] min-h-svh px-gutter py-10">
       <header className="mb-8 flex items-baseline justify-between gap-4">
-        <h1 className="text-h3 font-bold tracking-tight">Laboratório de objetos</h1>
+        <h1 className="text-h3 font-bold tracking-title">Laboratório de objetos</h1>
         <p className="label text-ink-2">arraste para girar · {implemented.length} arquétipos</p>
       </header>
 

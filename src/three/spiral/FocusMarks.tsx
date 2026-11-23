@@ -7,8 +7,7 @@ import { cssVar } from '@/lib/cssVar'
 import { getItemTransform, newItemTransform, smoothstep } from './math'
 import type { SpiralFrame } from './Spiral'
 
-const { half, arm, lineWidth, ringRadius, ringY, fadeFrom, spread } = FOCUS_MARKS
-const RING_SEGMENTS = 64
+const { half, arm, lineWidth, ringRadius, ringY, ringSegments: RING_SEGMENTS, ringWidth, fadeFrom, spread } = FOCUS_MARKS
 
 type Point = [number, number, number]
 
@@ -68,7 +67,7 @@ export default function FocusMarks({ frame, count }: { frame: RefObject<SpiralFr
       <Billboard>
         <Line ref={corners} points={CORNERS} segments lineWidth={lineWidth} {...look} />
       </Billboard>
-      <Line ref={ring} points={RING} lineWidth={1} {...look} />
+      <Line ref={ring} points={RING} lineWidth={ringWidth} {...look} />
     </group>
   )
 }

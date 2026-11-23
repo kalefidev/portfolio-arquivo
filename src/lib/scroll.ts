@@ -1,6 +1,6 @@
 import type Lenis from 'lenis'
 import { featuredCourses } from '@/content/courses'
-import { courseScroll } from '@/three/spiral/math'
+import { courseScroll, sectionHeight } from '@/three/spiral/math'
 import { useStore } from './store'
 import { activePreset } from './viewport'
 
@@ -28,8 +28,12 @@ export function scrollToCourse(index: number, { immediate = false } = {}) {
   }
   const section = document.getElementById('cursos')
   if (!section) return
+  // As a fraction of the scroll range ScrollTrigger measures (offsetHeight − innerHeight): the
+  // section is sized in svh, and on mobile innerHeight is not 1svh while the browser bar is hidden.
+  const preset = activePreset()
+  const t01 = courseScroll(index, preset) / (sectionHeight(featuredCourses().length, preset) - 1)
   const top = section.getBoundingClientRect().top + window.scrollY
-  scrollToY(top + courseScroll(index, activePreset()) * window.innerHeight, immediate)
+  scrollToY(top + t01 * (section.offsetHeight - window.innerHeight), immediate)
 }
 
 /** Switching 3D ↔ grid changes the height of `#cursos` (the first section): start over from the top. */

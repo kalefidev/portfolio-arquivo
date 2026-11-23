@@ -47,7 +47,7 @@ export default function StaticCourses() {
                 <Icon svg={archetypeIcons[course.archetype]} className="size-10" />
               </span>
               <span className="mt-auto block">
-                <span className="block text-h3 font-bold tracking-tight [font-stretch:118%] transition-transform duration-(--duration-ui) ease-enter group-hover:translate-x-2 motion-reduce:transform-none">
+                <span className="block text-h3 font-bold tracking-title [font-stretch:118%] transition-transform duration-(--duration-ui) ease-enter group-hover:translate-x-2 motion-reduce:transform-none">
                   {course.title}
                 </span>
                 <span className="mt-2 block text-small text-ink-2">

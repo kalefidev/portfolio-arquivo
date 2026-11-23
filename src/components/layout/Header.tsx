@@ -73,7 +73,7 @@ export default function Header() {
             {nav.map((item, index) => (
               <a key={item.href} href={item.href} className="flex items-baseline gap-4 border-b border-line py-5">
                 <span className="label text-ink-2">{pieceNo(index)}</span>
-                <span className="text-h2 font-bold tracking-tight [font-stretch:118%]">{item.label}</span>
+                <span className="text-h2 font-bold tracking-title [font-stretch:118%]">{item.label}</span>
               </a>
             ))}
           </nav>

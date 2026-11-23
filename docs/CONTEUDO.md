@@ -54,7 +54,7 @@ Linhas com `TODO` viram texto visível `TODO:` no site até você preencher.
 
 Projeto de cliente: só publicar com autorização e sem dados reais. Status possíveis: no-ar · em-desenvolvimento · conceito.
 
-## O que eu faço (#sobre)
+## O que eu faço (#servicos)
 - Eyebrow: O QUE EU FAÇO · 02
 - H2: Escolha por onde começar.
 - Texto: Entendo o negócio, desenho a solução e construo — do site que vende ao atendimento que funciona sozinho no WhatsApp.
@@ -64,7 +64,7 @@ Projeto de cliente: só publicar com autorização e sem dados reais. Status pos
   - 03 Sistemas — Ferramentas sob medida pro jeito que o seu negócio trabalha.
 - Frase-resumo (contagens calculadas dos dados): {N} cursos viraram {M} projetos. E contando.
 
-## Sobre mim
+## Sobre mim (#sobre)
 - Eyebrow: QUEM CONSTRÓI · 03
 - Nome / cargo: Kaique Calefi · Desenvolvedor · Sites, automações e sistemas
 - Bullets: Sites e landing pages · Automação de atendimento (WhatsApp) · Sistemas sob medida

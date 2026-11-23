@@ -13,7 +13,7 @@ const corner = 'absolute size-4 border-signal'
  *  still a TODO is shown as plain text, never as a broken <a>. */
 export default function About() {
   return (
-    <section className="px-gutter py-section">
+    <section id="sobre" className="scroll-mt-16 px-gutter py-section">
       <p className="label flex items-center gap-3 text-ink-2 tabular-nums">
         {eyebrow}
         <span aria-hidden className="h-px flex-1 bg-line" />

@@ -81,6 +81,7 @@ export default function Spiral() {
       document.body.removeEventListener('pointerdown', down)
       hover()
       useStore.getState().setHovered(null)
+      document.body.classList.remove('piece-hover') // the subscription above is already gone
     }
   }, [])
 

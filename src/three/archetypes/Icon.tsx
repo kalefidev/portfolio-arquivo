@@ -3,7 +3,8 @@ import { useFrame } from '@react-three/fiber'
 import { ExtrudeGeometry, type Group } from 'three'
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js'
 import { clay, ink } from './materials'
-import { REDUCED_HOVER_SCALE, useDampedFlag, useIdleTime } from './motion'
+import { useStore } from '@/lib/store'
+import { REDUCED_HOVER_SCALE, step, useDampedFlag } from './motion'
 import { normalize } from './normalize'
 import { roundedRect } from './shapes'
 import { DEFAULT_ICON, icons } from './icons'
@@ -32,11 +33,11 @@ function iconGeometry(svg: string, curveSegments: number) {
     .translate(0, 0, ICON.depth)
 }
 
-export default function Icon({ tint, hovered, reducedMotion, detail, icon }: ArchetypeProps) {
+export default function Icon({ tint, hovered, active, reducedMotion, detail, icon }: ArchetypeProps) {
   const root = useRef<Group>(null!)
   const fit = useRef<Group>(null!)
   const hover = useDampedFlag(hovered)
-  const idle = useIdleTime(reducedMotion)
+  const spin = useRef(0) // idle and active are the same slow turn; ambient motion off stops only the idle one
 
   const high = detail === 'high'
   const name = icon && icons[icon] ? icon : DEFAULT_ICON
@@ -65,10 +66,11 @@ export default function Icon({ tint, hovered, reducedMotion, detail, icon }: Arc
 
   useLayoutEffect(() => normalize(fit.current), [glyph])
 
-  useFrame(() => {
+  useFrame((_, delta) => {
+    if (!reducedMotion && (active || useStore.getState().ambientMotion)) spin.current += step(delta) * SPIN
     const h = reducedMotion ? 0 : hover.current
     root.current.scale.setScalar(reducedMotion ? 1 + REDUCED_HOVER_SCALE * hover.current : 1)
-    root.current.rotation.y = idle.current * SPIN + h * Math.PI * 2
+    root.current.rotation.y = spin.current + h * Math.PI * 2
     root.current.position.y = Math.sin(Math.PI * h) * JUMP
   })
 

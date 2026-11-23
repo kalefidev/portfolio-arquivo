@@ -6,7 +6,6 @@ import chartBar from '@phosphor-icons/core/assets/regular/chart-bar.svg'
 import cloud from '@phosphor-icons/core/assets/regular/cloud.svg'
 import code from '@phosphor-icons/core/assets/regular/code.svg'
 import cpu from '@phosphor-icons/core/assets/regular/cpu.svg'
-import cube from '@phosphor-icons/core/assets/regular/cube.svg'
 import database from '@phosphor-icons/core/assets/regular/database.svg'
 import gear from '@phosphor-icons/core/assets/regular/gear.svg'
 import gitBranch from '@phosphor-icons/core/assets/regular/git-branch.svg'
@@ -38,5 +37,4 @@ export const archetypeIcons: Record<Archetype, string> = {
   palette,
   bulb: lightbulb,
   icon: certificate,
-  placeholder: cube,
 }

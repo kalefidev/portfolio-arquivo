@@ -77,7 +77,6 @@ export const site = {
     eyebrow: 'PROJETOS · 01',
     h2: 'O que saiu do papel.', // TODO: revisar o título
     sub: 'Cada projeto aponta de volta para os cursos que o tornaram possível.',
-    courses: 'Cursos',
     visit: 'Ver {title}',
     openCourse: 'Abrir a peça {n}: {title}',
   },

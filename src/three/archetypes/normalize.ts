@@ -4,14 +4,15 @@ const box = new Box3()
 const center = new Vector3()
 const point = new Vector3()
 const toGroup = new Matrix4()
-const toLocal = new Matrix4()
 
+// Chains the local matrices up to `group` instead of inverting its matrixWorld: a hidden piece has a
+// parent at scale 0, and that inverse would collapse every vertex onto the origin.
 function eachVertex(group: Object3D, visit: (p: Vector3) => void) {
-  toLocal.copy(group.matrixWorld).invert()
   group.traverse((child) => {
     const positions = (child as Mesh).geometry?.attributes.position
     if (!positions) return
-    toGroup.multiplyMatrices(toLocal, child.matrixWorld)
+    toGroup.identity()
+    for (let node = child; node !== group; node = node.parent!) toGroup.premultiply(node.matrix)
     for (let i = 0; i < positions.count; i++) {
       visit(point.fromBufferAttribute(positions, i).applyMatrix4(toGroup))
     }
@@ -23,7 +24,7 @@ function eachVertex(group: Object3D, visit: (p: Vector3) => void) {
 export function normalize(group: Object3D) {
   group.position.set(0, 0, 0)
   group.scale.setScalar(1)
-  group.updateWorldMatrix(true, true)
+  group.updateWorldMatrix(false, true) // refreshes the local matrices of the children
 
   box.makeEmpty()
   eachVertex(group, (p) => box.expandByPoint(p))

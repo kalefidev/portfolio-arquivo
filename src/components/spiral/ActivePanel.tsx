@@ -6,6 +6,7 @@ import { SplitText } from 'gsap/SplitText'
 import { categoryLabels, featuredCourses, pieceNo } from '@/content/courses'
 import { site } from '@/content/site'
 import { cssSeconds } from '@/lib/cssVar'
+import { LINE_SPLIT, MASK_TRAVEL } from '@/lib/split'
 import { useStore } from '@/lib/store'
 import { prefersReducedMotion } from '@/lib/viewport'
 
@@ -48,7 +49,7 @@ export default function ActivePanel() {
       // nothing to take out: the (empty) timeline completes on the next tick
     } else if (split.current) {
       timeline
-        .to(split.current.lines, { yPercent: -100, duration, ease: 'expo.in', stagger: LINE_STAGGER / 2, overwrite: true })
+        .to(split.current.lines, { yPercent: -MASK_TRAVEL, duration, ease: 'expo.in', stagger: LINE_STAGGER / 2, overwrite: true })
         .to(meta.current, { opacity: 0, duration: duration / 2, overwrite: true }, 0)
     } else {
       timeline.to(content.current, { opacity: 0, duration: duration / 2, overwrite: true }) // reduced motion
@@ -70,17 +71,22 @@ export default function ActivePanel() {
         return
       }
       gsap.registerPlugin(SplitText)
+      let played = false // a re-split after the entrance (resize) must not play it again
       split.current = SplitText.create(title.current, {
-        type: 'lines',
-        mask: 'lines',
+        ...LINE_SPLIT,
         autoSplit: true, // re-splits when the fonts land or the column changes width
         onSplit: (self) =>
-          gsap.from(self.lines, {
-            yPercent: 100,
-            duration: cssSeconds('--duration-title'),
-            ease: 'expo.out',
-            stagger: LINE_STAGGER,
-          }),
+          played
+            ? undefined
+            : gsap.from(self.lines, {
+                yPercent: MASK_TRAVEL,
+                duration: cssSeconds('--duration-title'),
+                ease: 'expo.out',
+                stagger: LINE_STAGGER,
+                onComplete: () => {
+                  played = true
+                },
+              }),
       })
       gsap.from(meta.current, { opacity: 0, duration, delay: META_DELAY })
     })
@@ -97,7 +103,7 @@ export default function ActivePanel() {
   return (
     <div
       inert={!visible}
-      className={`absolute inset-x-gutter bottom-22 h-36 transition-opacity duration-(--duration-ui) wide:top-[34%] wide:bottom-auto wide:h-auto ${
+      className={`absolute inset-x-gutter bottom-bar h-36 transition-opacity duration-(--duration-ui) wide:top-[34%] wide:bottom-auto wide:h-auto ${
         visible ? '' : 'opacity-0'
       }`}
     >
@@ -112,7 +118,7 @@ export default function ActivePanel() {
           <div key={shown} ref={content} className="min-w-0">
             {course && (
               <>
-                <h2 ref={title} className="text-h3 wide:text-h2 wide:leading-[1.08]">
+                <h2 ref={title} className="text-h3 wide:text-h2">
                   {course.title}
                 </h2>
                 <div ref={meta} className="mt-2 wide:mt-4">

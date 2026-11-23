@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
       },
       // Phosphor `fill` icons are imported as SVG source text (src/three/archetypes/icons.ts).
       "*-fill.svg": { type: "raw" },
-      // …and so are the `regular` ones the UI inlines (BottomBar).
+      // …and so are the `regular` ones the UI inlines (IndexMenu, SettingsPanel, archetypeIcons).
       "**/assets/regular/*.svg": { type: "raw" },
     },
   },

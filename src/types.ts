@@ -29,7 +29,6 @@ export type Archetype =
   | 'palette'
   | 'bulb'
   | 'icon'
-  | 'placeholder'
 
 export interface Course {
   slug: string

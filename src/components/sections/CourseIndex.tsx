@@ -53,7 +53,7 @@ export default function CourseIndex() {
                 onClick={() => useStore.getState().setFocus(course.slug)}
               >
                 <span className="label text-ink-2 tabular-nums">Nº {pieceNo(index)}</span>
-                <span className="text-h3 font-bold tracking-tight [font-stretch:118%] transition-transform duration-(--duration-ui) ease-enter group-hover:translate-x-2 motion-reduce:transform-none">
+                <span className="text-h3 font-bold tracking-title [font-stretch:118%] transition-transform duration-(--duration-ui) ease-enter group-hover:translate-x-2 motion-reduce:transform-none">
                   {course.title}
                 </span>
                 <span className="col-start-2 row-start-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-small text-ink-2 md:contents">

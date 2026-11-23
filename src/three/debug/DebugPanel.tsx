@@ -57,7 +57,7 @@ export default function DebugPanel() {
         2,
       )
       console.info(json)
-      navigator.clipboard.writeText(json)
+      navigator.clipboard.writeText(json).catch(() => {}) // no permission: the console has it
     }
     gui.add({ copy }, 'copy').name('Copiar config')
 
@@ -77,6 +77,7 @@ export default function DebugPanel() {
     return () => {
       unsubscribe()
       gui.destroy()
+      delete (window as { __spiral?: unknown }).__spiral
     }
   }, [preset])
 

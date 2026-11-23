@@ -38,7 +38,7 @@ export default function Brackets({ tint, hovered, active, reducedMotion, detail 
   const close = useRef<Mesh>(null!)
   const bar = useRef<Group>(null!)
   const cursor = useRef<Mesh>(null!)
-  const blink = useRef(0)
+  const clock = useRef(0) // own clock: the cursor blink and the active pulse go on with ambient motion off
   const hover = useDampedFlag(hovered)
   const on = useDampedFlag(active)
   const idle = useIdleTime(reducedMotion)
@@ -58,12 +58,13 @@ export default function Brackets({ tint, hovered, active, reducedMotion, detail 
   useLayoutEffect(() => normalize(fit.current), [detail])
 
   useFrame((_, delta) => {
+    clock.current += step(delta)
     const h = reducedMotion ? 0 : hover.current
     root.current.scale.setScalar(
       1 +
         (reducedMotion
           ? REDUCED_HOVER_SCALE * hover.current
-          : PULSE.amount * on.current * Math.sin(idle.current * PULSE.speed)),
+          : PULSE.amount * on.current * Math.sin(clock.current * PULSE.speed)),
     )
     root.current.rotation.y = Math.sin(idle.current * SWAY.speed) * SWAY.angle
 
@@ -71,8 +72,7 @@ export default function Brackets({ tint, hovered, active, reducedMotion, detail 
     close.current.position.x = SPREAD.rest + SPREAD.hover * h
     bar.current.rotation.y = h * Math.PI * 2
 
-    blink.current += step(delta)
-    cursor.current.scale.setScalar((blink.current * CURSOR.blink) % 1 < 0.5 ? h : 0)
+    cursor.current.scale.setScalar((clock.current * CURSOR.blink) % 1 < 0.5 ? h : 0)
   })
 
   return (

@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { cssSeconds } from '@/lib/cssVar'
+import { LINE_SPLIT, MASK_TRAVEL } from '@/lib/split'
 import { useStore } from '@/lib/store'
 import { prefersReducedMotion } from '@/lib/viewport'
 
@@ -27,19 +28,25 @@ export default function Reveals() {
 
     const context = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('[data-reveal="lines"]').forEach((element) => {
+        let played = false
         SplitText.create(element, {
-          type: 'lines',
-          mask: 'lines',
+          ...LINE_SPLIT,
           autoSplit: true, // re-splits when the fonts land or the width changes…
-          // …and the animation has to come back from here: autoSplit does not repeat it on its own
+          // …and the animation has to come back from here (autoSplit does not repeat it on its own),
+          // but only until it has played: a resize must not reveal a visible title again
           onSplit: (self) =>
-            gsap.from(self.lines, {
-              yPercent: 100,
-              duration: cssSeconds('--duration-title'),
-              ease: 'expo.out',
-              stagger: LINE_STAGGER,
-              scrollTrigger: once(element),
-            }),
+            played
+              ? undefined
+              : gsap.from(self.lines, {
+                  yPercent: MASK_TRAVEL,
+                  duration: cssSeconds('--duration-title'),
+                  ease: 'expo.out',
+                  stagger: LINE_STAGGER,
+                  scrollTrigger: once(element),
+                  onComplete: () => {
+                    played = true
+                  },
+                }),
         })
       })
       gsap.utils.toArray<HTMLElement>('[data-reveal="stagger"]').forEach((element) => {

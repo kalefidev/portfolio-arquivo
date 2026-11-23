@@ -31,7 +31,7 @@ src/
     globals.css          Tailwind v4 + tokens @theme
     lab/page.tsx         laboratório de objetos (só dev ou NEXT_PUBLIC_LAB=1)
   components/
-    layout/              Header, Footer, SmoothScroll, Grain, Loader
+    layout/              Header, Footer, SmoothScroll, Reveals, Loader (etapa 08)
     spiral/              SpiralSection, HeroIntro, ActivePanel, RightRail, BottomBar,
                          IndexMenu, SettingsPanel, CourseOverlay, StaticCourses, archetypeIcons.ts
     sections/            Reach, CourseIndex, Projects, Services, About, Process, Contact, ContactDialog
@@ -39,7 +39,7 @@ src/
   three/
     Scene.tsx  SceneLoader.tsx  Lights.tsx
     spiral/              Spiral, SpiralItem, Axis, Callout, FocusMarks, math.ts, drag.ts (+ testes)
-    archetypes/          index.ts, types.ts, materials.ts, normalize.ts, useDampedFlag.ts, Cloud.tsx, Shield.tsx…
+    archetypes/          index.ts, types.ts, materials.ts, normalize.ts, motion.ts, Cloud.tsx, Shield.tsx…
     debug/               DebugPanel.ts (lil-gui, só com ?debug)
   content/               courses.ts, projects.ts, site.ts
   config/                spiral.ts

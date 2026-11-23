@@ -16,7 +16,7 @@ export default function BottomBar() {
   const activeIndex = useStore((s) => s.activeIndex)
 
   return (
-    <div className="absolute inset-x-0 bottom-0 grid h-22 grid-cols-2 content-center items-center gap-y-2 px-gutter wide:h-16 wide:grid-cols-[1fr_auto_1fr]">
+    <div className="absolute inset-x-0 bottom-0 grid h-bar grid-cols-2 content-center items-center gap-y-2 px-gutter wide:h-bar-wide wide:grid-cols-[1fr_auto_1fr]">
       <p className="label col-span-2 text-ink-2 wide:col-span-1">
         <span className="wide:hidden">{hintsMobile}</span>
         <span className="hidden wide:inline">{hintsDesktop}</span>

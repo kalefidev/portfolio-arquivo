@@ -25,7 +25,7 @@ Tons de argila por categoria (`--color-cat-<categoria>`):
 cloud `#A8C0DA` · security `#D9A441` · frontend `#E2937F` · backend `#8DB39A` · data `#A99BD0` · automation `#E7B27C` · ai `#9CC7C1` · devops `#9BA3AE` · design `#E3A9C0` · fundamentals `#D8CFBF` · hardware `#B9A27E`
 
 ### Tipografia (next/font/google)
-- **Archivo** (variável, eixos `wght` + `wdth`) — títulos com `wdth` 112–125, peso 600–750, tracking −0.02em, entrelinha 0.92; texto corrido com `wdth` 100, peso 400.
+- **Archivo** (variável, eixos `wght` + `wdth`) — títulos com `wdth` 112–125, peso 600–750, tracking −0.02em (token `--tracking-title`, também nos títulos em `<span>`/`<a>`), entrelinha 0.92 no display e 0.95 no h2; texto corrido com `wdth` 100, peso 400.
 - **IBM Plex Mono** 400/500 — rótulos técnicos em CAIXA ALTA, tracking 0.08em, 11–13px.
 
 Escala: display `clamp(2.75rem, min(6.2vw, 12vh), 6.5rem)` (o `12vh` só pesa em janela baixa) · h2 `clamp(2rem, 4vw, 3.75rem)` · h3 `1.5rem` · corpo `1.0625rem/1.55` · pequeno `0.875rem` · rótulo `0.75rem` mono.
@@ -38,7 +38,7 @@ Escala: display `clamp(2.75rem, min(6.2vw, 12vh), 6.5rem)` (o `12vh` só pesa em
 
 ## §3 Layout da seção da espiral (tela fixa enquanto rola)
 Desktop:
-- **Header**: wordmark `kaique calefi■` (■ em signal) à esquerda · nav em mono separada por hairlines (CURSOS · PROJETOS · SOBRE · CONTATO) · CTA retangular signal "VAMOS CONVERSAR ↗". Transparente sobre a espiral; ganha fundo `paper` + hairline embaixo quando as seções passam por baixo (`pastSpiral`) e no modo sem 3D.
+- **Header**: wordmark `kaique calefi■` (■ em signal) à esquerda · nav em mono separada por hairlines (CURSOS · PROJETOS · SOBRE · CONTATO → `#cursos`, `#projetos`, `#sobre` = "Quem constrói", `#contato`; "O que eu faço" é `#servicos`, fora da nav) · CTA retangular signal "VAMOS CONVERSAR ↗". Transparente sobre a espiral; ganha fundo `paper` + hairline embaixo quando as seções passam por baixo (`pastSpiral`) e no modo sem 3D.
 - **Coluna esquerda** (cols 1–5): no começo, o hero (eyebrow + H1 + sub + "Explorar o arquivo ↓"). O hero tem uma **zona de entrada** (`heroZone`, 25% da tela de rolagem) em que a espiral fica parada na peça 01; a 40% dela (`HERO_UNTIL`) ele troca pelo **painel da peça ativa** (e volta ao subir). Assim a peça 01 ganha o painel ainda centralizada.
 - **Espiral**: eixo em ~62% da largura; a peça ativa fica à frente, no centro-direita.
 - **Borda direita — régua**: linha vertical com 1 tique por peça (tiques para o lado da espiral); ativa = tique longo em signal + "Nº 03" do lado de fora da linha (onde nenhum callout alcança); clique no tique leva à peça. Rótulo vertical "ARQUIVO DE ESTUDOS" embaixo da régua. Os tiques se apertam se a tela for baixa demais para todos.
@@ -135,7 +135,6 @@ Catálogo — a chave vai no campo `archetype` de `courses.ts`:
 | `palette` | paleta | design, UX/UI, Figma | 5 amostras presas num pino, em leque | levemente aberta | leque abre ~120° | abre/fecha lento |
 | `bulb` | lâmpada | lógica, soft skills, carreira | Lathe (bulbo + rosca) | parado | acende (emissivo quente + halo) | acesa suave |
 | `icon` | ícone extrudado | qualquer outro tema | ícone Phosphor peso `fill` → SVGLoader → Extrude nas duas faces de uma placa chanfrada (nome registrado em `archetypes/icons.ts`) | gira lento | gira 360° com salto | gira lento |
-| `placeholder` | poliedro facetado | provisório (etapa 02) | Icosahedron detail 1, flatShading | gira lento | escala 1.08 | — |
 
 Dois cursos da espiral no mesmo arquétipo → usar `variant` para não repetir igual (ex.: nuvem com raio, nuvem com servidor).
 
@@ -156,7 +155,7 @@ Meta: argila fosca com volume legível, nada estourado contra o papel claro.
 ## §8 Componentes
 - **CTA primário**: retângulo signal, texto ink em mono caixa alta + ↗; hover: seta anda 2px e fundo escurece 6%.
 - **CTA secundário**: texto + sublinhado hairline que cresce no hover.
-- **Linha de índice** (cursos e projetos): `Nº | nome (display 1.5rem) | instituição ou tipo | ano | ● status | ↗`, hairlines entre linhas; hover: fundo paper-2 e nome anda 8px. Numeração: destaques primeiro, na mesma ordem e número da espiral; depois os demais.
+- **Linha de índice** (cursos e projetos): `Nº | nome (display 1.5rem) | instituição ou tipo | ano | ● status | ↗` — projetos sem a coluna de ano, hairlines entre linhas; hover: fundo paper-2 e nome anda 8px. Numeração: destaques primeiro, na mesma ordem e número da espiral; depois os demais.
 - **Prévia de projeto**: no hover/foco da linha de projeto aparece um cartão só em CSS (tom `--color-cat-*` do 1º curso ligado, ou paper-2 sem curso; iniciais + Nº), `pointer-events: none`, escondido em telas sem hover. Os cursos relacionados são botões "Nº 06 · Automação com n8n" que abrem a peça.
 - **Diálogo de contato** (`ContactDialog`): `<dialog>` modal centrado sobre véu de papel (Lenis parado, Esc fecha). Nome e mensagem obrigatórios, tipo em rádio segmentado (Site / Automação / Sistema / Outro). Enviar abre `wa.me` com a mensagem montada (`contactMessage`), sem backend; enquanto o número do `site.ts` for TODO o botão fica desabilitado, com o aviso "WhatsApp ainda não configurado".
 - **Overlay da peça** (clique, Enter ou ↗): `<dialog>` modal em tela cheia e transparente — painel paper-2 à direita (desktop, 44vw) ou bottom sheet (mobile, 62svh). A peça vai para o "palco" (a parte livre), maior, e gira no arraste (mouse e toque); as demais recuam e somem no papel; header e UI da espiral somem junto. Conteúdo: Nº, título, instituição · ano · horas · status, resumo, "O que aprendi" (3–5 itens), "Projetos com isso" (chips), "Ver certificado ↗", anterior / próxima, fechar (Esc). Campo vazio não aparece. A URL ganha `#peca-<slug>` (abre direto ao carregar). Serve para qualquer curso do arquivo: um que não é peça da espiral abre com o véu de papel no lugar do palco, Nº e total do arquivo e anterior / próxima só entre os não destaques. Os chips "Projetos com isso" levam à linha `#projeto-<slug>`. Entra em 520ms, sai em 320ms.
