@@ -22,10 +22,10 @@ Kit pré-projeto do portfólio "Arquivo". Tudo que o Claude Code precisa já est
 4. Para cada etapa: `/clear` → `/etapa 01` → teste no navegador → ajustes → próxima.
    Se o `/etapa` não aparecer, cole o conteúdo de `docs/prompts/etapa-01.md`.
 5. Etapas 02, 03 e 05: ative o modo plano (Shift+Tab) antes de mandar.
-6. Calibrar a espiral (depois da etapa 02): abra `http://localhost:3000/?debug`, mexa em `radiusX`, `angleStep` e `scrollPerItem` até ficar do seu jeito → "Copiar config" → `/ajuste aplica esta config: <cola o JSON>`.
+6. Calibrar a espiral (depois da etapa 02): abra `http://localhost:3001/?debug`, mexa em `radiusX`, `angleStep` e `scrollPerItem` até ficar do seu jeito → "Copiar config" → `/ajuste aplica esta config: <cola o JSON>`.
 7. Mudança fora das etapas: `/ajuste <o que você quer>`. Vai parar no meio de algo: `/salvar` antes do `/clear`.
 8. Deu ruim: cada etapa vira uma tag — `git checkout etapa-03` volta ao fim da etapa 03 (ou peça ao Code).
 
 ## Testar no celular (Android)
-`npm run dev -- -H 0.0.0.0` e abra `http://<IP-do-PC>:3000` no celular, na mesma rede Wi-Fi.
+`npm run dev -- -H 0.0.0.0` e abra `http://<IP-do-PC>:3001` no celular, na mesma rede Wi-Fi.
 Se o Next bloquear o acesso, mande: `/ajuste libera allowedDevOrigins para o IP do meu PC`.

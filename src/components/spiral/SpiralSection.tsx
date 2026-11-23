@@ -4,10 +4,10 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { featuredCourses } from '@/content/courses'
-import { scrollToCourse } from '@/lib/scroll'
+import { scrollThroughSpiral, scrollToCourse } from '@/lib/scroll'
 import { useStore } from '@/lib/store'
 import { activePreset, usePreset } from '@/lib/viewport'
-import { scrollToProgress, sectionHeight } from '@/three/spiral/math'
+import { progressToScroll, scrollToProgress, sectionHeight, type ScrollState } from '@/three/spiral/math'
 import StaticCourses from './StaticCourses'
 
 const courses = featuredCourses()
@@ -24,18 +24,38 @@ export default function SpiralSection({ hero, children }: { hero: React.ReactNod
   const height = usePreset((preset) => sectionHeight(count, preset)) // in viewport heights
   const staticMode = useStore((s) => s.staticMode)
   const pastSpiral = useStore((s) => s.pastSpiral)
+  const last = useRef<ScrollState>({ progress: 0, exitProgress: 0, heroProgress: 0 }) // last state written
 
   useEffect(() => {
     if (staticMode) {
+      last.current = { progress: 0, exitProgress: 0, heroProgress: 0 } // back in 3D, start over from the top
       useStore.getState().setScroll(0, 0, 0)
       return
     }
     gsap.registerPlugin(ScrollTrigger) // SmoothScroll skips this with reduced motion
 
     const write = (self: ScrollTrigger) => {
-      const { progress, exitProgress, heroProgress } = scrollToProgress(self.progress, count, activePreset())
+      last.current = scrollToProgress(self.progress, count, activePreset())
+      const { progress, exitProgress, heroProgress } = last.current
       useStore.getState().setScroll(progress, exitProgress, heroProgress)
     }
+
+    // A resize (another preset, another svh) changes the height of the section while scrollY stays:
+    // the same scrollY would land on another piece. Note where the spiral was before each refresh
+    // and jump back there after it. Only from inside the section — above or below it, leave the page alone.
+    // A trigger created here still measures with the viewport height ScrollTrigger cached before the
+    // resize, so what it writes is off until a refresh: the state from before wins until then.
+    let saved = last.current
+    let pending = true
+    const save = () => {
+      if (!pending) saved = last.current
+    }
+    const restore = () => {
+      pending = false
+      const t01 = progressToScroll(saved, count, activePreset())
+      if (t01 > 0 && t01 < 1) scrollThroughSpiral(t01, true)
+    }
+
     const trigger = ScrollTrigger.create({
       trigger: section.current,
       start: 'top top',
@@ -43,7 +63,14 @@ export default function SpiralSection({ hero, children }: { hero: React.ReactNod
       onUpdate: write,
       onRefresh: write,
     })
-    return () => trigger.kill()
+    ScrollTrigger.addEventListener('refreshInit', save)
+    ScrollTrigger.addEventListener('refresh', restore)
+    ScrollTrigger.refresh()
+    return () => {
+      ScrollTrigger.removeEventListener('refreshInit', save)
+      ScrollTrigger.removeEventListener('refresh', restore)
+      trigger.kill()
+    }
   }, [height, staticMode])
 
   // The stage fades out on the way out (`pastSpiral`): its popovers (fixed, top layer) must not stay behind.

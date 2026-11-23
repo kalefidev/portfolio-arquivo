@@ -35,7 +35,7 @@ frontend-design / impeccable (UI) · skills oficiais do GSAP (ScrollTrigger, Spl
 Vault do Obsidian (via CLAUDE.md global): consulte notas de design/segurança/hospedagem só se a etapa pedir.
 
 ## Ambiente
-Windows (Git Bash dentro do Claude Code) · Node ≥ 20 · `npm run dev` → http://localhost:3000 · calibrar espiral: `/?debug` · laboratório de objetos: `/lab`.
+Windows (Git Bash dentro do Claude Code) · Node ≥ 20 · `npm run dev` → http://localhost:3001 (fixo no package.json: a 3000 é de outro projeto) · calibrar espiral: `/?debug` · laboratório de objetos: `/lab`.
 
 ## Ritual de fim de etapa (sempre)
 1. `npm run typecheck && npm run lint && npm run test --if-present && npm run build` — corrija até passar.

@@ -26,12 +26,16 @@ export function scrollToCourse(index: number, { immediate = false } = {}) {
     document.getElementById(pieceId(featuredCourses()[index].slug))?.scrollIntoView({ block: 'center' })
     return
   }
+  const preset = activePreset()
+  scrollThroughSpiral(courseScroll(index, preset) / (sectionHeight(featuredCourses().length, preset) - 1), immediate)
+}
+
+/** Scrolls to `t01` (0 … 1) of the way through `#cursos` — as a fraction of the range ScrollTrigger
+ *  measures (offsetHeight − innerHeight): the section is sized in svh, and on mobile innerHeight is
+ *  not 1svh while the browser bar is hidden. */
+export function scrollThroughSpiral(t01: number, immediate = false) {
   const section = document.getElementById('cursos')
   if (!section) return
-  // As a fraction of the scroll range ScrollTrigger measures (offsetHeight − innerHeight): the
-  // section is sized in svh, and on mobile innerHeight is not 1svh while the browser bar is hidden.
-  const preset = activePreset()
-  const t01 = courseScroll(index, preset) / (sectionHeight(featuredCourses().length, preset) - 1)
   const top = section.getBoundingClientRect().top + window.scrollY
   scrollToY(top + t01 * (section.offsetHeight - window.innerHeight), immediate)
 }

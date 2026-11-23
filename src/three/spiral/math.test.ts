@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { spiralPresets } from '../../config/spiral'
-import { courseScroll, exitStagger, getItemTransform, scrollToProgress, sectionHeight } from './math'
+import { courseScroll, exitStagger, getItemTransform, progressToScroll, scrollToProgress, sectionHeight } from './math'
 
 const N = 6
 
@@ -68,6 +68,12 @@ describe.each(Object.entries(spiralPresets))('spiral math (%s)', (_name, cfg) =>
     expect(at(exitStart + cfg.exitZone / 2).progress).toBe(N - 1)
     expect(at(exitStart + cfg.exitZone / 2).exitProgress).toBeCloseTo(0.5)
     expect(scrollToProgress(1, N, cfg)).toEqual({ heroProgress: 1, progress: N - 1, exitProgress: 1 })
+  })
+
+  it('progressToScroll undoes scrollToProgress (hero, pieces and exit)', () => {
+    for (const t01 of [0, 0.02, 0.1, 0.37, 0.5, 0.81, 0.95, 1]) {
+      expect(progressToScroll(scrollToProgress(t01, N, cfg), N, cfg)).toBeCloseTo(t01)
+    }
   })
 })
 

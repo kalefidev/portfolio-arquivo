@@ -69,6 +69,24 @@ export const sectionHeight = (n: number, cfg: SpiralPreset) =>
 /** Scroll from the top of the section (in viewport heights) at which piece `i` is the centred one. */
 export const courseScroll = (i: number, cfg: SpiralPreset) => cfg.heroZone + i * cfg.scrollPerItem
 
+export interface ScrollState {
+  progress: number
+  exitProgress: number
+  heroProgress: number
+}
+
+/** Inverse of scrollToProgress: how far through the section (0 … 1) a state is drawn. */
+export function progressToScroll({ progress, exitProgress, heroProgress }: ScrollState, n: number, cfg: SpiralPreset) {
+  const total = sectionHeight(n, cfg) - 1
+  const scrolled =
+    exitProgress > 0
+      ? total - (1 - exitProgress) * cfg.exitZone
+      : progress > 0
+        ? cfg.heroZone + progress * cfg.scrollPerItem
+        : heroProgress * cfg.heroZone
+  return scrolled / total
+}
+
 /** Scroll through the section (0 … 1) → heroProgress (0 … 1 through the hero zone, the spiral still
  *  at piece 0) + progress (holds at N−1 in the exit zone) + exitProgress (0 … 1). */
 export function scrollToProgress(t01: number, n: number, cfg: SpiralPreset) {
