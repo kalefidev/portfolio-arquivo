@@ -60,7 +60,7 @@ export default function About() {
 
             <p className="mt-8 max-w-[56ch]">{person.bio}</p>
 
-            <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-2">
+            <ul className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-2">
               {person.links.map((link) => (
                 <li key={link.label} className="label">
                   {isTodo(link.href) ? (

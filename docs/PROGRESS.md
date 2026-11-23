@@ -5,7 +5,7 @@
 ## Estado atual
 - Etapa atual: 08 concluída + passe final de UI/UX (2026-11-23, ver "Ajustes") — v1.0 pronta para publicar (falta o deploy, que é do Kaique: ver "Deploy" abaixo)
 - Última tag: etapa-08 (= v1.0)
-- Bloqueios / pendências do Kaique: deploy (GitHub + Vercel + DNS); número do WhatsApp; lista real do `docs/CURSOS.md` → `/ajuste`; revisar `docs/CONTEUDO.md`, `site.seo.description` e os textos do 404; QA no Android real
+- Bloqueios / pendências do Kaique: deploy (GitHub + Vercel + DNS); foto, bio e Instagram; lista real do `docs/CURSOS.md` → `/ajuste`; revisar `docs/CONTEUDO.md`, `site.seo.description` e os textos do 404; QA no Android real
 
 ## Etapas
 - [x] 01 Fundação
@@ -188,7 +188,7 @@ Como testar: `npm run build && npx next start -p 3002` → `http://localhost:300
 - [x] 390×844 emulado (toque, DPR 2): loader e espiral.
 - [ ] Android real: `npm run build && npx next start -H 0.0.0.0 -p 3002` → no celular, no mesmo Wi-Fi, `http://<IP-do-PC>:3002` (liberar o Node no firewall do Windows se pedir). Roteiro: loader some; rolar a espiral devagar e rápido (não pode encaixar sozinha: o encaixe é só de mouse); tocar no painel (abre a peça **ativa**) e numa peça (bottom sheet) e fechar — também pelo **botão Voltar** do Android, que deve fechar a peça e não sair do site (o Chrome fecha `<dialog>` pelo CloseWatcher; se sair, avisar); arrastar a peça; dicas "Deslize… · Toque…" no hero e sem "Esc" no Fechar; saída da espiral até a linha de Brasília com a barra do navegador aparecendo e sumindo; índice (abrir uma peça e fechar volta para o índice); contato.
 - [ ] Safari / iPhone (se der): mesmo roteiro; conferir se o favicon (SVG) aparece.
-- [ ] WhatsApp de ponta a ponta quando o número entrar em `site.ts`.
+- [ ] WhatsApp de ponta a ponta (o número já está em `site.ts`): mandar uma mensagem pelo formulário de contato e abrir o "Vamos conversar" do header.
 - [ ] Depois do deploy: PageSpeed Insights mobile e desktop na URL real.
 
 <!-- modelo:
@@ -238,3 +238,4 @@ Como testar: …
   - Lighthouse não foi refeito.
 
   — `fix(ux)`
+- 2026-11-23 — WhatsApp (5561994028229), GitHub e LinkedIn em `site.ts`: os CTAs do header e de Brasília abrem o `wa.me`, o formulário de contato envia e as redes viram links (e entram no `sameAs` do JSON-LD); redes do Sobre alinhadas pelo centro (o "Instagram · TODO" ficava mais alto que os links novos) — `tweak`

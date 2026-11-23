@@ -7,7 +7,7 @@ export const site = {
   role: 'Desenvolvedor · Sites, automações e sistemas',
   domain: 'site.kaiquecalefi.online', // canonical, sitemap, robots, Open Graph
   email: 'kaiquecalefi.dev@gmail.com', // confirmar
-  whatsapp: 'TODO: WhatsApp (55 + DDD + número, só dígitos)',
+  whatsapp: '5561994028229', // 55 + DDD + número, só dígitos
 
   seo: {
     title: 'Kaique Calefi — Desenvolvedor de sites, automações e sistemas',
@@ -122,8 +122,8 @@ export const site = {
         bullets: ['Sites e landing pages', 'Automação de atendimento (WhatsApp)', 'Sistemas sob medida'],
         bio: 'TODO: bio — 3 a 5 linhas suas. Ponto de partida: "Aprendo rápido e vou atrás do que não sei. Hoje construo sites, automações e sistemas para negócios do DF e para projetos remotos — e cada curso desta página virou parte disso."',
         links: [
-          { label: 'GitHub', href: 'TODO: GitHub' },
-          { label: 'LinkedIn', href: 'TODO: LinkedIn' },
+          { label: 'GitHub', href: 'https://github.com/kalefidev' },
+          { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kaiquecalefi/' },
           { label: 'Instagram', href: 'TODO: Instagram' },
         ],
       },

@@ -9,8 +9,8 @@ Linhas com `TODO` viram texto visível `TODO:` no site até você preencher.
 - Cargo: Desenvolvedor · Sites, automações e sistemas
 - Domínio: `site.kaiquecalefi.online` (decidido na etapa 08)
 - E-mail público: kaiquecalefi.dev@gmail.com (confirmar)
-- WhatsApp: TODO (formato 55 + DDD + número, só dígitos)
-- GitHub: TODO · LinkedIn: TODO · Instagram: TODO
+- WhatsApp: 5561994028229
+- GitHub: https://github.com/kalefidev · LinkedIn: https://www.linkedin.com/in/kaiquecalefi/ · Instagram: TODO
 - Foto: TODO → `public/images/kaique.webp` (retrato, fundo neutro, ≥ 1200px de altura)
 
 ## Hero
