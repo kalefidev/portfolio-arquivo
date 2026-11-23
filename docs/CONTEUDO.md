@@ -7,7 +7,7 @@ Linhas com `TODO` viram texto visível `TODO:` no site até você preencher.
 - Nome: Kaique Calefi
 - Wordmark: kaique calefi■
 - Cargo: Desenvolvedor · Sites, automações e sistemas
-- Domínio: TODO — usar `site.kaiquecalefi.online` (link atual da bio) ou outro?
+- Domínio: `site.kaiquecalefi.online` (decidido na etapa 08)
 - E-mail público: kaiquecalefi.dev@gmail.com (confirmar)
 - WhatsApp: TODO (formato 55 + DDD + número, só dígitos)
 - GitHub: TODO · LinkedIn: TODO · Instagram: TODO
@@ -83,7 +83,7 @@ Projeto de cliente: só publicar com autorização e sem dados reais. Status pos
 - Sub: Me conta. Eu respondo rápido.
 - CTAs: Chamar no WhatsApp ↗ · e-mail
 - Diálogo: "Me conta o que você precisa." Campos: Nome · Tipo (Site / Automação / Sistema / Outro) · Mensagem → "Enviar pelo WhatsApp ↗"
-- Mensagem montada: "Olá, Kaique! Sou {nome}. Quero um(a) {tipo}: {mensagem}"
+- Mensagem montada: "Olá, Kaique! Sou {nome}. Assunto: {tipo}." + linha em branco + "{mensagem}"
 
 ## Footer
 - © 2026 Kaique Calefi · Voltar ao topo ↑
