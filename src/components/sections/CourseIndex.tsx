@@ -13,7 +13,7 @@ const categories = [...new Set(archive.map((c) => c.category))] // only the ones
 const { eyebrow, h2, sub, all, filterLabel, open } = site.index
 
 const chip =
-  'label flex h-9 items-center border border-line px-3 transition-colors duration-(--duration-micro) hover:bg-paper-2 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper'
+  'label flex h-9 items-center border border-line px-3 transition-[color,background-color,border-color,scale] duration-(--duration-micro) hover:bg-paper-2 active:scale-[0.97] active:bg-paper-2 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper'
 
 /** Every course, in lines (DESIGN.md §8). A click opens the overlay: for a piece of the spiral it
  *  scrolls up to the piece first (the overlay does that); for the others it opens without 3D.
@@ -49,7 +49,7 @@ export default function CourseIndex() {
               <button
                 type="button"
                 aria-label={open.replace('{title}', course.title)}
-                className="group grid w-full grid-cols-[3rem_minmax(0,1fr)_1.5rem] items-center gap-x-4 gap-y-2 px-2 py-5 text-left transition-colors duration-(--duration-micro) hover:bg-paper-2 md:grid-cols-[4rem_minmax(0,1fr)_14rem_4rem_10rem_1.5rem]"
+                className="group grid w-full grid-cols-[3rem_minmax(0,1fr)_1.5rem] items-center gap-x-4 gap-y-2 px-2 py-5 text-left transition-colors duration-(--duration-micro) hover:bg-paper-2 active:bg-paper-2 md:grid-cols-[4rem_minmax(0,1fr)_14rem_4rem_10rem_1.5rem]"
                 onClick={() => useStore.getState().setFocus(course.slug)}
               >
                 <span className="label text-ink-2 tabular-nums">Nº {pieceNo(index)}</span>

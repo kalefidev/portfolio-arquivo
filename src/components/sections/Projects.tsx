@@ -17,6 +17,10 @@ const { eyebrow, h2, sub, visit, openCourse } = site.projects
 
 const statusTone = { 'no-ar': 'var(--color-signal)', 'em-desenvolvimento': 'var(--color-ink)', conceito: 'transparent' }
 
+// The hover of a line says "this goes somewhere": only on a project with a link (DESIGN.md §8).
+const linkedRow = 'transition-colors duration-(--duration-micro) focus-within:bg-paper-2 hover:bg-paper-2'
+const linkedTitle = 'transition-transform duration-(--duration-ui) ease-enter group-hover:translate-x-2 motion-reduce:transform-none'
+
 /** Projects in lines (DESIGN.md §8). The related courses are buttons that take you back to the piece. */
 export default function Projects() {
   return (
@@ -28,13 +32,11 @@ export default function Projects() {
           <li
             key={project.slug}
             id={projectId(project.slug)}
-            className="group scroll-mt-20 border-b border-line transition-colors duration-(--duration-micro) focus-within:bg-paper-2 hover:bg-paper-2"
+            className={`group scroll-mt-20 border-b border-line ${project.url ? linkedRow : ''}`}
           >
             <div className="grid grid-cols-[3rem_minmax(0,1fr)_1.5rem] items-center gap-x-4 gap-y-3 px-2 py-5 md:grid-cols-[4rem_minmax(0,1fr)_13rem_11rem_minmax(0,1fr)_1.5rem]">
               <span className="label text-ink-2 tabular-nums">Nº {pieceNo(index)}</span>
-              <h3 className="text-h3 transition-transform duration-(--duration-ui) ease-enter group-hover:translate-x-2 motion-reduce:transform-none">
-                {project.title}
-              </h3>
+              <h3 className={`text-h3 ${project.url ? linkedTitle : ''}`}>{project.title}</h3>
               <span className="col-start-2 row-start-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-small text-ink-2 md:contents">
                 <span>{project.kind}</span>
                 <span className="label flex items-center gap-2 text-ink">
@@ -49,7 +51,7 @@ export default function Projects() {
                     <button
                       type="button"
                       aria-label={openCourse.replace('{n}', pieceNo(archive.indexOf(course))).replace('{title}', course.title)}
-                      className="label text-left text-ink-2 underline decoration-line underline-offset-4 transition-colors duration-(--duration-micro) hover:text-ink hover:decoration-ink"
+                      className="label text-left text-ink-2 underline decoration-line underline-offset-4 transition-colors duration-(--duration-micro) hover:text-ink hover:decoration-ink active:text-ink active:decoration-ink"
                       onClick={() => useStore.getState().setFocus(course.slug)}
                     >
                       Nº {pieceNo(archive.indexOf(course))} · {course.title}

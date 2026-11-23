@@ -133,6 +133,13 @@ export const DRAG = {
   resetLambda: 6, // damping of "Resetar posições"
 }
 
+/** Settling on the nearest piece once the scroll stops (DESIGN.md §7). Mouse / trackpad only: on touch
+ *  a programmatic glide would fight the finger. Off with prefers-reduced-motion. */
+export const SNAP = {
+  idleMs: 150, // the page has been still this long (Lenis' own glide included) before it settles
+  tolerance: 0.02, // |progress − nearest piece| under this is already settled
+}
+
 /** Lambda that replaces `damping` and `FOCUS_MODE.lambda` with prefers-reduced-motion: things
  *  land almost at once instead of gliding (DESIGN.md §7). */
 export const REDUCED_DAMPING = 30

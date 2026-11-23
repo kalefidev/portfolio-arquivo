@@ -21,7 +21,7 @@ export default function StaticCourses() {
         {hasWebGL() && (
           <button
             type="button"
-            className="label flex h-10 items-center gap-2 px-3 transition-colors duration-(--duration-micro) hover:bg-paper-2"
+            className="label flex h-10 items-center gap-2 px-3 transition-[color,background-color,scale] duration-(--duration-micro) hover:bg-paper-2 active:scale-[0.97] active:bg-paper-2"
             onClick={() => {
               useStore.getState().setStaticMode(false)
               scrollToTop()
@@ -39,7 +39,7 @@ export default function StaticCourses() {
             <button
               id={pieceId(course.slug)}
               type="button"
-              className="group flex size-full flex-col gap-10 p-5 text-left transition-colors duration-(--duration-micro) hover:bg-paper-2"
+              className="group flex size-full flex-col gap-10 p-5 text-left transition-colors duration-(--duration-micro) hover:bg-paper-2 active:bg-paper-2"
               onClick={() => useStore.getState().setFocus(course.slug)}
             >
               <span className="flex w-full items-start justify-between">

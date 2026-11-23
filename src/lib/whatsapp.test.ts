@@ -15,7 +15,7 @@ describe('whatsapp', () => {
   const input = { name: ' Ana ', type: 'Automação', message: 'Preciso de um bot & mais $& 100%' }
 
   it('fills the template', () => {
-    expect(contactMessage(input)).toBe('Olá, Kaique! Sou Ana. Quero um(a) automação: Preciso de um bot & mais $& 100%')
+    expect(contactMessage(input)).toBe('Olá, Kaique! Sou Ana. Assunto: Automação.\n\nPreciso de um bot & mais $& 100%')
   })
 
   it('builds the wa.me link with the message encoded', () => {

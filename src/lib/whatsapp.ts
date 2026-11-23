@@ -13,5 +13,5 @@ export const contactMessage = ({ name, type, message }: { name: string; type: st
   // function replacers: a "$&" typed by the visitor must not be read as a replacement pattern
   site.contact.dialog.template
     .replace('{nome}', () => name.trim())
-    .replace('{tipo}', () => type.toLowerCase())
+    .replace('{tipo}', () => type)
     .replace('{mensagem}', () => message.trim())

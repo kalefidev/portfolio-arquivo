@@ -5,8 +5,14 @@
    (MOBILE_MAX_ASPECT = 0.8), so the UI and the 3D always switch together. */
 @custom-variant wide (@media (min-aspect-ratio: 4/5));
 
-/* `short:` = landscape phones and very low windows: the stage has to fit in little height. */
-@custom-variant short (@media (max-height: 560px));
+/* `short:` = the stage has little height: landscape phones and very low windows, and portrait phones
+   up to ~740px tall (iPhones in Safari, small Androids, in-app browsers), where the hero text would
+   run into the active piece. */
+@custom-variant short {
+  @media (max-height: 560px), (max-aspect-ratio: 4/5) and (max-height: 740px) {
+    @slot;
+  }
+}
 
 /* Design tokens — DESIGN.md §2. Single source: the 3D scene reads these via getComputedStyle,
    so `static` keeps them in :root even when no utility uses them. */
@@ -82,6 +88,14 @@
   --z-loader: 30;
 }
 
+/* Portrait `short`: the bottom bar keeps one row (its hints leave once the panel is in, BottomBar),
+   so the panel and the popovers sit lower and the active piece keeps its room. */
+@media (max-aspect-ratio: 4/5) and (max-height: 740px) {
+  :root {
+    --spacing-bar: var(--spacing-bar-wide);
+  }
+}
+
 @layer base {
   html {
     background: var(--color-paper);
@@ -89,6 +103,9 @@
     /* the page stops scrolling while a piece is open: keep the room of the scrollbar, or
        everything (the canvas included) would shift and resize */
     scrollbar-gutter: stable;
+    scrollbar-color: var(--color-ink-3) transparent;
+    /* every control has its own pressed state (`active:`); the grey flash of the platform would double it */
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -107,6 +124,16 @@
     letter-spacing: var(--tracking-title);
   }
 
+  /* no word left alone on the last line; the h1s are composed by hand */
+  p {
+    text-wrap: pretty;
+  }
+
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
   /* Signal ring 3px off the element. Signal on paper is 2.7:1, under the 3:1 of WCAG 1.4.11, so
      the ring gets a 1px ink edge: a paper band fills the gap and ink shows just outside the outline. */
   :focus-visible {
@@ -115,6 +142,13 @@
     box-shadow:
       0 0 0 3px var(--color-paper),
       0 0 0 6px var(--color-ink);
+  }
+
+  /* A dialog takes the focus itself when it opens (screen readers read its title; Tab goes on to
+     its controls): no ring around the whole dialog, and none on "Fechar" every time it opens. */
+  dialog:focus-visible {
+    outline: none;
+    box-shadow: none;
   }
 
   ::selection {
@@ -161,22 +195,26 @@
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 0 0.08 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
-/* Readability over the canvas (DESIGN.md §3), under the grain. Paper comes in from the top and
-   bottom edges, so a piece passing there never sits behind the header or the bottom bar, and from
-   behind the text: the lower strip on portrait, the left column on `wide`. */
+/* Readability over the canvas (DESIGN.md §3), under the grain. At the top (and at the bottom on
+   `wide`) a band of solid paper as tall as the header / the bottom bar, then a fade: a piece passing
+   there is gone before it gets behind the nav or the counter. Behind the text: on portrait, paper up
+   to the panel strip, fading out before the ring of the active piece; on `wide`, a veil behind the
+   left column. */
 .spiral-fade {
   --veil: color-mix(in srgb, var(--color-paper) 85%, transparent);
-  --edge: 6rem;
+  --band: 4rem;
+  --edge: 5rem;
+  --top: linear-gradient(to bottom, var(--color-paper) var(--band), transparent calc(var(--band) + var(--edge)));
   background:
-    linear-gradient(to bottom, var(--color-paper), transparent var(--edge)),
-    linear-gradient(to top, var(--veil) 20%, transparent 50%);
+    var(--top),
+    linear-gradient(to top, var(--color-paper) 22%, transparent 36%);
 }
 
 @media (min-aspect-ratio: 4/5) {
   .spiral-fade {
     background:
-      linear-gradient(to bottom, var(--color-paper), transparent var(--edge)),
-      linear-gradient(to top, var(--color-paper), transparent var(--edge)),
+      var(--top),
+      linear-gradient(to top, var(--color-paper) var(--band), transparent calc(var(--band) + var(--edge))),
       linear-gradient(to right, var(--veil) 25%, transparent 50%);
   }
 }
@@ -207,7 +245,7 @@ dialog.piece {
   height: 100dvh;
   max-height: none;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden; /* the panel slides in from outside the dialog */
   background: transparent;
   color: var(--color-ink);
   /* stays rendered (and in the top layer) until the panel is out */
@@ -268,6 +306,13 @@ dialog.piece[open] .piece-panel {
   .piece-panel {
     border-top-width: 0;
     border-left-width: 1px;
+  }
+
+  /* The page is locked, but the room of its scrollbar is still kept (scrollbar-gutter) and nothing can
+     paint there except the page's own background: the panel's colour while a piece is open, so no
+     strip of page shows beside the panel. */
+  html:has(dialog.piece[open]) {
+    background: var(--color-paper-2);
   }
 }
 

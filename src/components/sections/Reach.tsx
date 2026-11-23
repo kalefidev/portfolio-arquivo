@@ -16,10 +16,12 @@ const { eyebrow, h2, points, here, text, ctas } = site.brasilia
 // Where each point sits along the line, in % of its length: spaced like the real distances.
 const STOPS = [0, 18, 52, 100]
 
-/** "Feito em Brasília…": a line edge to edge with four points, then the text and the two CTAs.
- *  The line is where the axis of the spiral ends up: the 3D axis lies down and waits at `EXIT.restY`
- *  of the screen; when this line gets there it takes over (the 3D side lives in `Axis`, reading
- *  the position of `#linha`). Here the HTML side fades in over the same stretch, scrubbed.
+/** "Feito em Brasília…": a line edge to edge with four points, its caption, then the text and the two
+ *  CTAs. The line is where the axis of the spiral ends up: the 3D axis lies down and waits at
+ *  `EXIT.restY` of the screen; when this line gets there it takes over (the 3D side lives in `Axis`,
+ *  reading the position of `#linha`). Here the HTML side fades in over the same stretch, scrubbed.
+ *  Nothing sits above the line: whatever scrolled up ahead of it would cross the waiting axis — so the
+ *  section starts on the line, and "DE ÁGUAS CLARAS PARA ONDE PRECISAR" is its caption, below it.
  *  Reduced motion and "ver sem 3D": the line is simply there. */
 export default function Reach() {
   const rule = useRef<HTMLDivElement>(null)
@@ -48,39 +50,38 @@ export default function Reach() {
   }, [staticMode])
 
   return (
-    <section className="py-section">
-      <p className="label flex items-center gap-3 px-gutter text-ink-2">
-        {eyebrow}
-        <span aria-hidden className="h-px flex-1 bg-line" />
-      </p>
-
-      <div ref={rule} className="relative mt-10 h-32">
-        <div id={EXIT.lineId} className="absolute inset-x-0 top-1/2 h-px bg-ink/30" />
-        <ol className="absolute inset-x-gutter inset-y-0">
-          {points.map((label, index) => {
-            const first = index === 0
-            const last = index === points.length - 1
-            return (
-              <li key={label} className="absolute top-1/2" style={{ left: `${STOPS[index]}%` }}>
-                <span
-                  aria-hidden
-                  className={`absolute size-2.5 -translate-1/2 border ${
-                    first ? 'border-signal bg-signal' : 'border-ink bg-paper'
-                  }`}
-                />
-                <span
-                  className={`label absolute whitespace-nowrap ${index % 2 === 0 ? 'bottom-4' : 'top-4'} ${
-                    first ? 'left-0' : last ? 'right-0 text-right' : '-translate-x-1/2'
-                  }`}
-                >
-                  {label}
-                  {first && <span className="block text-ink-2">{here}</span>}
-                </span>
-              </li>
-            )
-          })}
-        </ol>
-      </div>
+    <section className="pb-section">
+      <figure>
+        <div ref={rule} className="relative h-32">
+          <div id={EXIT.lineId} className="absolute inset-x-0 top-1/2 h-px bg-ink/30" />
+          <ol className="absolute inset-x-gutter inset-y-0">
+            {points.map((label, index) => {
+              const first = index === 0
+              const last = index === points.length - 1
+              return (
+                <li key={label} className="absolute top-1/2" style={{ left: `${STOPS[index]}%` }}>
+                  <span
+                    aria-hidden
+                    className={`absolute size-2.5 -translate-1/2 border ${
+                      first ? 'border-signal bg-signal' : 'border-ink bg-paper'
+                    }`}
+                  />
+                  <span
+                    className={`label absolute whitespace-nowrap ${index % 2 === 0 ? 'bottom-4' : 'top-4'} ${
+                      first ? 'left-0' : last ? 'right-0 text-right' : '-translate-x-1/2'
+                    }`}
+                  >
+                    {label}
+                    {first && <span className="block text-ink-2">{here}</span>}
+                  </span>
+                </li>
+              )
+            })}
+          </ol>
+        </div>
+        {/* the caption of the line (like "FIG. 01" in Sobre): close to it, well clear of the heading */}
+        <figcaption className="label mt-2 px-gutter text-ink-2">{eyebrow}</figcaption>
+      </figure>
 
       <div className="mt-16 px-gutter wide:grid wide:grid-cols-12 wide:gap-x-6">
         <h2 data-reveal="lines" className="max-w-[18ch] text-h2 wide:col-span-7">

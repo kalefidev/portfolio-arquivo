@@ -14,16 +14,19 @@ export const setLenis = (lenis: Lenis | null) => {
 export const getLenis = () => instance
 
 /** Jumps or eases to `y`. `force`: also while Lenis is stopped (overlay open). */
-const scrollToY = (y: number, immediate: boolean) => {
+export const scrollToY = (y: number, immediate: boolean) => {
   if (instance) instance.scrollTo(y, { immediate, force: true })
   else window.scrollTo(0, y) // reduced motion: no Lenis, jump
 }
 
 /** Scrolls until piece `index` of the spiral is the centred one (for piece 0: just past the hero).
- *  Without 3D there is no spiral: brings the card of the piece into view instead. */
+ *  Without 3D there is no spiral: centres the card of the piece instead — through `scrollToY` as
+ *  well, so Lenis always knows where the page is (a native jump behind its back left it stale, and
+ *  its next `scrollTo` to the old spot did nothing). */
 export function scrollToCourse(index: number, { immediate = false } = {}) {
   if (useStore.getState().staticMode) {
-    document.getElementById(pieceId(featuredCourses()[index].slug))?.scrollIntoView({ block: 'center' })
+    const card = document.getElementById(pieceId(featuredCourses()[index].slug))
+    if (card) scrollToY(card.getBoundingClientRect().top + window.scrollY - (window.innerHeight - card.offsetHeight) / 2, immediate)
     return
   }
   const preset = activePreset()

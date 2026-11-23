@@ -11,7 +11,7 @@ const { buttons, settingsLabel, settings } = site.spiral
 const ID = 'settings-panel'
 
 // the popover clips: the focus ring goes inside the row
-const row = 'label flex min-h-11 w-full cursor-pointer items-center justify-between gap-8 px-4 py-2 text-left -outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink transition-colors duration-(--duration-micro) hover:bg-paper'
+const row = 'label flex min-h-11 w-full cursor-pointer items-center justify-between gap-8 px-4 py-2 text-left -outline-offset-2 has-focus-visible:outline-2 has-focus-visible:outline-ink transition-colors duration-(--duration-micro) hover:bg-paper active:bg-paper'
 
 /** AJUSTES button + its panel (DESIGN.md §8), a native popover like the index. Both preferences
  *  are remembered (store → localStorage). This panel only exists with the 3D on: the way back from

@@ -152,7 +152,7 @@ export const site = {
       submit: 'Enviar pelo WhatsApp',
       close: 'Fechar',
       notReady: 'WhatsApp ainda não configurado',
-      template: 'Olá, Kaique! Sou {nome}. Quero um(a) {tipo}: {mensagem}',
+      template: 'Olá, Kaique! Sou {nome}. Assunto: {tipo}.\n\n{mensagem}', // {tipo} as it is in `types`
     },
   },
 

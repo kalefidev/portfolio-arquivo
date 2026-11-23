@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import SecondaryCta from '@/components/ui/SecondaryCta'
 import { pieceNo } from '@/content/courses'
 import { site } from '@/content/site'
 
@@ -67,14 +68,7 @@ export default function About() {
                       {link.label} · {link.href}
                     </span>
                   ) : (
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="border-b border-ink pb-1 transition-colors duration-(--duration-micro) hover:border-signal"
-                    >
-                      {link.label} ↗
-                    </a>
+                    <SecondaryCta href={link.href}>{link.label} ↗</SecondaryCta>
                   )}
                 </li>
               ))}

@@ -107,7 +107,9 @@ export default function ActivePanel() {
         visible ? '' : 'opacity-0'
       }`}
     >
-      <div className="wide:w-5/12">
+      {/* `relative`: the ↗ stretches over the whole panel (its ::after) — the panel opens the active
+          piece, and a tap on it never reaches the piece fading behind */}
+      <div className="relative wide:w-5/12">
         <p className="label flex items-center gap-3 text-ink-2 tabular-nums">
           {fill(panelLabel)}
           <span aria-hidden className="h-px flex-1 bg-line" />
@@ -141,7 +143,8 @@ export default function ActivePanel() {
           <button
             type="button"
             aria-label={fill(open)}
-            className="pointer-events-auto flex size-10 shrink-0 items-center justify-center border border-ink text-h3 transition-colors duration-(--duration-micro) hover:bg-ink hover:text-paper"
+            // no press scale here: a transform would make the button the box of its ::after and shrink the panel's hit area mid-click
+            className="pointer-events-auto flex size-10 shrink-0 items-center justify-center border border-ink text-h3 transition-colors duration-(--duration-micro) after:absolute after:inset-0 hover:bg-ink hover:text-paper active:bg-ink active:text-paper"
             onClick={() => useStore.getState().setFocus(active.slug)}
           >
             ↗

@@ -36,8 +36,9 @@ export function hasWebGL() {
 }
 
 /** The canvas listens on <body> (the page sits on top of it), so every pointer event gets there.
- *  Only the ones on the spiral itself are meant for the 3D: inside `#cursos`, not on a control. */
+ *  Only the ones on the spiral itself are meant for the 3D: inside `#cursos`, not on a control nor
+ *  on the text of the stage (`data-ui`: a tap on the panel must not open the piece fading behind it). */
 export const reaches3d = (target: EventTarget | null) =>
   target instanceof Element &&
   target.closest('#cursos') !== null &&
-  target.closest('a, button, input, label, dialog, [popover]') === null
+  target.closest('a, button, input, label, dialog, [popover], [data-ui]') === null

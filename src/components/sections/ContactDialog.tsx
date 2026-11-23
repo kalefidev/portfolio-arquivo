@@ -22,6 +22,7 @@ export default function ContactDialog({ open, onClose }: { open: boolean; onClos
     if (!open) return
     const element = dialog.current!
     element.showModal()
+    element.focus() // the dialog itself (its title is read), not "Fechar" with a ring every time it opens
     getLenis()?.stop() // without Lenis (reduced motion) the lock is CSS: `html:has(dialog.contact[open])`
     return () => {
       element.close()
@@ -33,6 +34,7 @@ export default function ContactDialog({ open, onClose }: { open: boolean; onClos
     <dialog
       ref={dialog}
       aria-labelledby="contact-title"
+      tabIndex={-1}
       className="contact"
       data-lenis-prevent
       onClose={onClose}
@@ -61,11 +63,11 @@ export default function ContactDialog({ open, onClose }: { open: boolean; onClos
           </h2>
           <button
             type="button"
-            className="label -mt-1 -mr-2 flex h-10 shrink-0 items-center gap-3 px-3 transition-colors duration-(--duration-micro) hover:bg-paper"
+            className="label -mt-1 -mr-2 flex h-10 shrink-0 items-center gap-3 px-3 transition-[color,background-color,scale] duration-(--duration-micro) hover:bg-paper active:scale-[0.97] active:bg-paper"
             onClick={() => dialog.current?.close()}
           >
             {close}
-            <kbd aria-hidden className="border border-line px-1.5 py-0.5 font-mono text-ink-2">
+            <kbd aria-hidden className="border border-line px-1.5 py-0.5 font-mono text-ink-2 pointer-coarse:hidden">
               Esc
             </kbd>
           </button>
@@ -82,7 +84,7 @@ export default function ContactDialog({ open, onClose }: { open: boolean; onClos
             {types.map((type, index) => (
               <label
                 key={type}
-                className="label flex h-10 cursor-pointer items-center justify-center bg-paper-2 transition-colors duration-(--duration-micro) hover:bg-paper has-checked:bg-ink has-checked:text-paper has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink"
+                className="label flex h-10 cursor-pointer items-center justify-center bg-paper-2 transition-colors duration-(--duration-micro) hover:bg-paper active:bg-paper has-checked:bg-ink has-checked:text-paper has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink"
               >
                 <input type="radio" name="type" value={type} defaultChecked={index === 0} className="sr-only" />
                 {type}

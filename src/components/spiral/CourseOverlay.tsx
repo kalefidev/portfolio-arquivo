@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import SecondaryCta from '@/components/ui/SecondaryCta'
 import { archiveCourses, categoryLabels, featuredCourses, pieceNo, statusLabels } from '@/content/courses'
 import { projectId, projectsForCourse } from '@/content/projects'
 import { site } from '@/content/site'
-import { getLenis, pieceId, scrollToCourse, scrollToId } from '@/lib/scroll'
+import { getLenis, pieceId, scrollToCourse, scrollToId, scrollToY } from '@/lib/scroll'
 import { useStore } from '@/lib/store'
 import { startDrag } from '@/three/spiral/drag'
 
@@ -13,8 +14,11 @@ const archive = archiveCourses() // …and the rest of the archive, after them
 const rest = archive.filter((course) => !course.featured)
 const { panelLabel, overlay } = site.spiral
 
+const STEP: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1 } // previous / next from the keyboard
+
 const heading = 'label text-ink-2'
-const step = 'label flex h-14 items-center gap-2 px-6 transition-colors duration-(--duration-micro) hover:bg-paper aria-disabled:cursor-default aria-disabled:bg-transparent aria-disabled:text-ink-3'
+const step = 'label flex h-14 items-center gap-2 px-6 transition-colors duration-(--duration-micro) hover:bg-paper active:bg-paper aria-disabled:cursor-default aria-disabled:bg-transparent aria-disabled:text-ink-3'
+const pressable = 'transition-[color,background-color,scale] duration-(--duration-micro) hover:bg-paper active:scale-[0.97] active:bg-paper'
 
 /** Overlay of the open piece (DESIGN.md §8): a full-screen modal <dialog> with nothing painted on
  *  its "stage" half, where the 3D piece shows through, and the panel on the other — to the right
@@ -52,15 +56,25 @@ export default function CourseOverlay() {
     return () => window.removeEventListener('hashchange', openFromHash)
   }, [])
 
+  // Opening a piece of the spiral from below it (the index, a project) makes the page jump up to the
+  // piece underneath the overlay. Closing takes the user back to where they were — unless they opened
+  // it from the stage itself, or a chip below is taking them somewhere else (null: stay).
+  const comeBack = useRef<number | null>(null)
+
   // The dialog and the scroll lock follow `focusSlug`.
   useEffect(() => {
     if (!open) return
     const element = dialog.current!
+    const { top = 0, bottom = 0 } = document.getElementById('cursos')?.getBoundingClientRect() ?? {}
+    const fromStage = !useStore.getState().staticMode && top <= 0 && bottom >= window.innerHeight
+    comeBack.current = fromStage ? null : window.scrollY
     element.showModal()
+    element.focus() // the dialog itself (its title is read), not "Fechar" with a ring every time it opens
     getLenis()?.stop() // without Lenis (reduced motion) the lock is CSS: `html:has(dialog.piece[open])`
     return () => {
       element.close()
       getLenis()?.start()
+      if (comeBack.current !== null) scrollToY(comeBack.current, true)
       history.replaceState(null, '', location.pathname + location.search)
     }
   }, [open])
@@ -82,8 +96,15 @@ export default function CourseOverlay() {
     <dialog
       ref={dialog}
       aria-labelledby="piece-title"
+      tabIndex={-1}
       className="piece"
       onClose={() => useStore.getState().setFocus(null)}
+      onKeyDown={(event) => {
+        const to = STEP[event.key]
+        if (!to || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
+        event.preventDefault()
+        go(position + to)
+      }}
     >
       {staticMode || !inSpiral ? (
         // no 3D, or a course that is not a piece of the spiral: a veil of paper over the page instead of the stage; a click on it closes
@@ -104,13 +125,9 @@ export default function CourseOverlay() {
           <p className={`${heading} tabular-nums`}>
             {panelLabel.replace('{n}', number).replace('{total}', total)}
           </p>
-          <button
-            type="button"
-            className="label flex h-10 items-center gap-3 px-3 transition-colors duration-(--duration-micro) hover:bg-paper"
-            onClick={close}
-          >
+          <button type="button" className={`label flex h-10 items-center gap-3 px-3 ${pressable}`} onClick={close}>
             {overlay.close}
-            <kbd aria-hidden className="border border-line px-1.5 py-0.5 font-mono text-ink-2">
+            <kbd aria-hidden className="border border-line px-1.5 py-0.5 font-mono text-ink-2 pointer-coarse:hidden">
               Esc
             </kbd>
           </button>
@@ -162,9 +179,10 @@ export default function CourseOverlay() {
                       {/* closes first, then scrolls ourselves: Lenis is stopped while the overlay is open */}
                       <a
                         href={`#${projectId(project.slug)}`}
-                        className="label flex h-9 items-center border border-line px-3 transition-colors duration-(--duration-micro) hover:bg-paper"
+                        className={`label flex h-9 items-center border border-line px-3 ${pressable}`}
                         onClick={(event) => {
                           event.preventDefault()
+                          comeBack.current = null // this one goes to the project, not back
                           close()
                           scrollToId(projectId(project.slug))
                         }}
@@ -178,14 +196,9 @@ export default function CourseOverlay() {
             )}
 
             {course.certificateUrl && (
-              <a
-                href={course.certificateUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="label mt-10 inline-block border-b border-ink pb-1 transition-colors duration-(--duration-micro) hover:border-signal"
-              >
-                {overlay.certificate}
-              </a>
+              <p className="mt-10">
+                <SecondaryCta href={course.certificateUrl}>{overlay.certificate}</SecondaryCta>
+              </p>
             )}
           </div>
         )}

@@ -8,6 +8,9 @@ import { useStore } from '@/lib/store'
 import { prefersReducedMotion } from '@/lib/viewport'
 
 const STEPS = 3 // the page's JS ran · fonts ready · the canvas drew its first frame (or there is no 3D)
+// A way out, not a fake: if a step never reports (a stalled GPU readback, a lost context), the page
+// under the loader is already usable — let it be seen; the 3D appears whenever it is ready.
+const MAX_WAIT = 8000 // ms
 const pad = (n: number) => String(Math.round(n)).padStart(3, '0')
 
 /** "CATALOGANDO O ARQUIVO 064" — DESIGN.md §8. Server-rendered, so it covers the page from the first
@@ -16,16 +19,19 @@ const pad = (n: number) => String(Math.round(n)).padStart(3, '0')
 export default function Loader() {
   const [fonts, setFonts] = useState(false)
   const [gone, setGone] = useState(false)
+  const [timedOut, setTimedOut] = useState(false)
   const hydrated = useStore((s) => s.prefsLoaded)
   const drawn = useStore((s) => s.prefsLoaded && (s.staticMode || s.sceneReady))
   const counter = useRef<HTMLSpanElement>(null)
   const shown = useRef({ n: 0 })
 
   const done = Number(hydrated) + Number(fonts) + Number(drawn)
-  const ready = done === STEPS
+  const ready = done === STEPS || timedOut
 
   useEffect(() => {
     document.fonts.ready.then(() => setFonts(true))
+    const timer = setTimeout(() => setTimedOut(true), MAX_WAIT)
+    return () => clearTimeout(timer)
   }, [])
 
   useEffect(() => {
