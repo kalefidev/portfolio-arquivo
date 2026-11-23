@@ -25,42 +25,52 @@ export default function Reveals() {
     if (prefersReducedMotion()) return
     gsap.registerPlugin(ScrollTrigger, SplitText)
     const once = (trigger: Element) => ({ trigger, start: START, once: true })
+    let context: gsap.Context | undefined
+    let live = true
 
-    const context = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>('[data-reveal="lines"]').forEach((element) => {
-        let played = false
-        SplitText.create(element, {
-          ...LINE_SPLIT,
-          autoSplit: true, // re-splits when the fonts land or the width changes…
-          // …and the animation has to come back from here (autoSplit does not repeat it on its own),
-          // but only until it has played: a resize must not reveal a visible title again
-          onSplit: (self) =>
-            played
-              ? undefined
-              : gsap.from(self.lines, {
-                  yPercent: MASK_TRAVEL,
-                  duration: cssSeconds('--duration-title'),
-                  ease: 'expo.out',
-                  stagger: LINE_STAGGER,
-                  scrollTrigger: once(element),
-                  onComplete: () => {
-                    played = true
-                  },
-                }),
+    // Split once, with the final fonts: splitting before they land made autoSplit split every title
+    // again right after (two full passes of line measuring during the page load).
+    document.fonts.ready.then(() => {
+      if (!live) return
+      context = gsap.context(() => {
+        gsap.utils.toArray<HTMLElement>('[data-reveal="lines"]').forEach((element) => {
+          let played = false
+          SplitText.create(element, {
+            ...LINE_SPLIT,
+            autoSplit: true, // re-splits when the width changes…
+            // …and the animation has to come back from here (autoSplit does not repeat it on its own),
+            // but only until it has played: a resize must not reveal a visible title again
+            onSplit: (self) =>
+              played
+                ? undefined
+                : gsap.from(self.lines, {
+                    yPercent: MASK_TRAVEL,
+                    duration: cssSeconds('--duration-title'),
+                    ease: 'expo.out',
+                    stagger: LINE_STAGGER,
+                    scrollTrigger: once(element),
+                    onComplete: () => {
+                      played = true
+                    },
+                  }),
+          })
         })
-      })
-      gsap.utils.toArray<HTMLElement>('[data-reveal="stagger"]').forEach((element) => {
-        gsap.from(element.children, {
-          opacity: 0,
-          y: ITEM_Y,
-          duration: cssSeconds('--duration-ui'),
-          ease: 'expo.out',
-          stagger: ITEM_STAGGER,
-          scrollTrigger: once(element),
+        gsap.utils.toArray<HTMLElement>('[data-reveal="stagger"]').forEach((element) => {
+          gsap.from(element.children, {
+            opacity: 0,
+            y: ITEM_Y,
+            duration: cssSeconds('--duration-ui'),
+            ease: 'expo.out',
+            stagger: ITEM_STAGGER,
+            scrollTrigger: once(element),
+          })
         })
       })
     })
-    return () => context.revert()
+    return () => {
+      live = false
+      context?.revert()
+    }
   }, [])
 
   // "Ver sem 3D" swaps the 3D section for a much shorter grid: every trigger below has moved.

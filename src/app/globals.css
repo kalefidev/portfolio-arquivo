@@ -75,10 +75,11 @@
 }
 
 :root {
-  /* stacking: canvas < grain < UI */
+  /* stacking: canvas < grain < UI < loader */
   --z-canvas: 0;
   --z-grain: 10;
   --z-ui: 20;
+  --z-loader: 30;
 }
 
 @layer base {
@@ -106,9 +107,14 @@
     letter-spacing: var(--tracking-title);
   }
 
+  /* Signal ring 3px off the element. Signal on paper is 2.7:1, under the 3:1 of WCAG 1.4.11, so
+     the ring gets a 1px ink edge: a paper band fills the gap and ink shows just outside the outline. */
   :focus-visible {
     outline: 2px solid var(--color-signal);
     outline-offset: 3px;
+    box-shadow:
+      0 0 0 3px var(--color-paper),
+      0 0 0 6px var(--color-ink);
   }
 
   ::selection {
@@ -281,7 +287,15 @@ html:has(dialog.contact[open]) {
   overflow: hidden;
 }
 
-/* ÍNDICE / AJUSTES (IndexMenu, SettingsPanel): native popovers, sitting just above the bottom bar. */
+/* ÍNDICE / AJUSTES (IndexMenu, SettingsPanel): native popovers, sitting just above the bottom bar.
+   Without the Popover API (browsers before 2024) their buttons would do nothing: hidden — the full
+   index is still in #indice. Without @starting-style they just open without the slide. */
+@supports not selector(:popover-open) {
+  .needs-popover {
+    display: none;
+  }
+}
+
 .bar-popover {
   position: fixed;
   --bar-gap: calc(var(--spacing) * 2); /* clear of the bar, not touching it */

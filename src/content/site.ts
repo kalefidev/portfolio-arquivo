@@ -5,9 +5,25 @@ export const site = {
   name: 'Kaique Calefi',
   wordmark: 'kaique calefi', // followed by a ■ in signal color
   role: 'Desenvolvedor · Sites, automações e sistemas',
-  domain: 'TODO: domínio (usar site.kaiquecalefi.online ou outro?)',
+  domain: 'site.kaiquecalefi.online', // canonical, sitemap, robots, Open Graph
   email: 'kaiquecalefi.dev@gmail.com', // confirmar
   whatsapp: 'TODO: WhatsApp (55 + DDD + número, só dígitos)',
+
+  seo: {
+    title: 'Kaique Calefi — Desenvolvedor de sites, automações e sistemas',
+    description:
+      'Desenvolvedor em Brasília: sites, automações de atendimento no WhatsApp e sistemas sob medida para pequenos negócios. Veja os projetos e o que estudei.',
+    ogAlt: 'Kaique Calefi — Estudo, construo e entrego. Sites, automações e sistemas.',
+    locality: { city: 'Brasília', region: 'DF', country: 'BR' },
+  },
+
+  notFound: {
+    title: 'Página não encontrada',
+    label: 'ERRO 404 · PEÇA NÃO CATALOGADA',
+    h1: 'Esta página não está no arquivo.',
+    text: 'O endereço pode ter mudado ou nunca ter existido. O resto do arquivo continua no lugar.',
+    back: 'Voltar ao arquivo →',
+  },
 
   header: {
     nav: [

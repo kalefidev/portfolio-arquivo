@@ -16,6 +16,7 @@ interface SpiralState {
   ambientMotion: boolean
   staticMode: boolean // "ver sem 3D"
   prefsLoaded: boolean // false on the server and until `loadPrefs()` ran
+  sceneReady: boolean // the 3D scene is lit and drawn (<Lights>); the loader waits for it. Set once
 
   setScroll: (progress: number, exitProgress: number, heroProgress: number) => void
   setHovered: (slug: string | null) => void
@@ -45,6 +46,7 @@ export const useStore = create<SpiralState>((set, get) => {
     ambientMotion: true,
     staticMode: false,
     prefsLoaded: false,
+    sceneReady: false,
 
     setScroll: (progress, exitProgress, heroProgress) => {
       const activeIndex = Math.round(progress)

@@ -139,7 +139,7 @@ Catálogo — a chave vai no campo `archetype` de `courses.ts`:
 Dois cursos da espiral no mesmo arquétipo → usar `variant` para não repetir igual (ex.: nuvem com raio, nuvem com servidor).
 
 ## §6 Iluminação
-Environment só com `<Lightformer>` (sem HDR externo): softbox grande no topo, key quente `#FFF1E0` (`--color-light-key`) à esquerda, rim frio `#DCE8FF` (`--color-light-rim`) atrás-direita, uma "sala" de papel bem fraca em volta (rebatida, para nenhuma face ficar preta) + 1 directional fraca. Sem sombra em tempo real. Tone mapping padrão do R3F.
+Uma "sala" procedural (sem HDR externo): softbox grande no topo, key quente `#FFF1E0` (`--color-light-key`) à esquerda, rim frio `#DCE8FF` (`--color-light-rim`) atrás-direita e papel bem fraco em volta (rebatido, para nenhuma face ficar preta), + 1 directional fraca. A sala é desenhada **uma vez** num cubo de 16px e guardada como `LightProbe` (harmônicos esféricos: a luz difusa dela). Sem mapa de ambiente: o pré-filtro (PMREM) custava ~0,6 s de thread principal no celular do Lighthouse, para reflexos que a argila (rugosidade 0,82) quase não mostra — diferença medida no `/lab`: ≤ 2,3/255 por objeto. Sem sombra em tempo real, sem pós-processamento (N8AO testado e descartado na etapa 08). Tone mapping padrão do R3F.
 Meta: argila fosca com volume legível, nada estourado contra o papel claro.
 
 ## §7 Motion
@@ -162,10 +162,10 @@ Meta: argila fosca com volume legível, nada estourado contra o papel claro.
 - **Ajustes** (popover acima da barra): Movimento ambiente (sway da espiral + idle dos objetos; hover e ativo continuam) · Resetar posições (espiral e giros voltam a 0, animado) · Ver sem 3D. Lembrados em localStorage.
 - **Índice (menu)** (popover acima da barra): lista Nº + nome, atual marcada com ■ signal; clique rola até a peça; ↑/↓/Home/End.
 - **Sem 3D** (Ajustes, ou automático sem WebGL): o canvas é desmontado e `#cursos` vira hero + grade de cartões (Nº, ícone Phosphor do arquétipo, nome, instituição · ano, categoria) que abrem o mesmo overlay, com véu de papel no lugar do palco. "Ver em 3D →" no topo da grade.
-- **Loader**: "CATALOGANDO O ARQUIVO 064" (contador mono). Some quando fontes + primeiro frame estiverem prontos — sem tempo fake.
+- **Loader**: "CATALOGANDO O ARQUIVO 064" (■ signal + rótulo mono + contador de 3 dígitos), papel com o grid, no centro. O contador é progresso real em 3 marcos — JS rodou · fontes prontas · cena 3D acesa e desenhada (ou modo sem 3D) — e anda até o marco em 320ms; some com fade de 520ms. Uma vez por carregamento, só na home, `aria-hidden`; sem JS não aparece. Sem tempo fake.
 
 ## §9 Acessibilidade
-Canvas `aria-hidden`; tudo que o 3D mostra existe em HTML (índice + modo sem 3D). Foco: outline 2px signal, offset 3px. Teclado: ↑/↓ ou ←/→ navegam peças (com o palco fixo na tela e o foco fora de campo, menu ou diálogo; nas pontas o scroll nativo sai da seção), Enter abre a ativa, Esc fecha. Skip link "Pular para o índice". Contraste AA em todo texto.
+Canvas `aria-hidden`; tudo que o 3D mostra existe em HTML (índice + modo sem 3D). Foco: outline 2px signal, offset 3px, com borda de 1px ink por fora (`box-shadow`: faixa paper no vão + ink) — signal sobre paper dá 2,7:1, a borda garante o 3:1 do WCAG 1.4.11; dentro dos popovers e nos segmentos do contato, anel ink. Teclado: ↑/↓ ou ←/→ navegam peças (com o palco fixo na tela e o foco fora de campo, menu ou diálogo; nas pontas o scroll nativo sai da seção), Enter abre a ativa, Esc fecha. Skip link "Pular para o índice". Contraste AA em todo texto.
 
 ## §10 Não fazer
 Fundo escuro/espacial, vidro, neon, gradiente roxo "de IA", pílulas, emoji na UI, texto em signal, qualquer código/texto/imagem/logo da referência.

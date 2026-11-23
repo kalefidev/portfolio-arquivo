@@ -3,9 +3,9 @@
 > O Code lê isto no começo de toda sessão e atualiza no fim de toda etapa. Curto e factual.
 
 ## Estado atual
-- Etapa atual: 08 — Lançamento
-- Última tag: etapa-07
-- Bloqueios / pendências do Kaique: lista real do `docs/CURSOS.md` → `/ajuste` (courses.ts + arquétipos que faltarem); revisar `docs/CONTEUDO.md`
+- Etapa atual: 08 concluída — v1.0 pronta para publicar (falta o deploy, que é do Kaique: ver "Deploy" abaixo)
+- Última tag: etapa-08 (= v1.0)
+- Bloqueios / pendências do Kaique: deploy (GitHub + Vercel + DNS); número do WhatsApp; lista real do `docs/CURSOS.md` → `/ajuste`; revisar `docs/CONTEUDO.md`, `site.seo.description` e os textos do 404; QA no Android real
 
 ## Etapas
 - [x] 01 Fundação
@@ -15,7 +15,7 @@
 - [x] 05 Interações, overlay e modos
 - [x] 06 Objetos 3D (parte 2) (parcial: lista real pendente)
 - [x] 07 Seções + saída da espiral
-- [ ] 08 Lançamento
+- [x] 08 Lançamento
 
 ## Parâmetros calibrados da espiral
 <!-- cole aqui o JSON do botão "Copiar config" do /?debug e rode /ajuste para aplicar -->
@@ -154,6 +154,42 @@ Pendências:
 - Conferir no celular real o encaixe 3D → HTML (barra do navegador mexe na altura). Se ficar frágil: eixo some + linha por reveal (aviso).
 - Etapa 08: Popover API / `@starting-style` em navegadores antigos (da 05); `<dialog>` de contato herda o mesmo risco.
 Como testar: `npm run dev` → `http://localhost:3000`. Rolar até o fim da espiral: peças sobem uma a uma, o eixo deita no meio da tela e espera; continuar rolando até a linha de "Feito em Brasília" chegar nele (crossfade) e voltar (desfaz). Nav do header (CURSOS / PROJETOS / SOBRE / CONTATO) e skip link → índice. Índice: filtro, clicar num destaque (rola até a peça e abre). Projetos: hover mostra a prévia; chip "J.A.R.V.I.S" no overlay do curso n8n fecha e rola até a linha; "Nº 06 · Automação com n8n" volta à peça. Contato: "Chamar no WhatsApp" abre o diálogo (Esc fecha, campos obrigatórios, aviso de WhatsApp não configurado). Reduced motion (DevTools → Rendering): saída simples, sem reveals. AJUSTES → Ver sem 3D: header com fundo, linha visível. `npm run test` (24 testes). Screenshots em `artifacts/etapa-07-*.png` (não versionados).
+
+### Etapa 08 — 2026-11-23
+Feito: **Loader** (`layout/Loader.tsx`, só na home): papel + grid, "■ CATALOGANDO O ARQUIVO 000"; contador = progresso real (JS · `document.fonts.ready` · cena acesa e desenhada ou modo sem 3D), some com fade; `--z-loader`; `<noscript>` esconde. `sceneReady` no store. **SEO**: `site.seo` + `site.domain` = `site.kaiquecalefi.online`; `metadataBase`, title/description, Open Graph, Twitter em `layout.tsx`; canonical + JSON-LD `Person` (com `<` escapado) em `page.tsx`; `opengraph-image.tsx` (1200×630, gerado no build, Archivo/Plex Mono via Google Fonts com `text=`; sem rede cai na fonte padrão); `robots.ts`, `sitemap.ts` (`force-static`); `icon.svg` (■ signal) no lugar do `favicon.ico`. **404** (`app/not-found.tsx`, textos em `site.notFound`; `Wordmark` ganhou `href`). **Erros**: `SceneBoundary` em `SceneLoader` (chunk 3D ou contexto WebGL que falha → modo sem 3D, não salvo). **A11y**: anel de foco com borda ink; placeholder do contato `ink-2`; ÍNDICE/AJUSTES escondidos sem Popover API (`.needs-popover`). **Deploy**: `vercel.json` só com headers (nosniff, Referrer-Policy, X-Frame-Options DENY, Permissions-Policy).
+Lighthouse (build de produção, `next start -p 3002`, `npx lighthouse@12`, sem entrar no package.json):
+- Antes: desktop 86 / 100 / 100 / 100 (TBT 330 ms); mobile 50–67 (TBT 1,7–2,1 s, LCP simulado 3,2–5,7 s).
+- Depois: **desktop 97 / 100 / 100 / 100** (2 rodadas iguais: LCP 0,7 s, TBT 140 ms, CLS 0); **mobile 69 / 73 / 74** em performance (LCP 3,0 s, TBT 830–940 ms, CLS 0) e 100 em a11y, boas práticas e SEO. O 404 não entra no Lighthouse (ele recusa páginas com status 404); conferido à mão e no Playwright.
+Decisões:
+- **Luz sem mapa de ambiente** (DESIGN §6): o `<Environment>` do drei (PMREM: 3 shaders + convolução) era a maior tarefa do carregamento (~950 ms simulados no mobile). Agora as mesmas 4 lightformers são desenhadas uma vez num cubo de 16px e viram um `LightProbe` (harmônicos esféricos, leitura assíncrona). A sonda entra vazia na cena desde o 1º frame (o shader compila uma vez só) e recebe os coeficientes depois; `<Lights>` marca `sceneReady` depois do frame aceso. Diferença no `/lab`: ≤ 2,3/255 por objeto. Some o chunk de loaders HDR/EXR do drei (123 KB). Desktop 86 → 97.
+- **WebGL só depois do primeiro paint** (`SceneLoader`): `PerformanceObserver` de `paint` (FCP), com teto de 2 s. Quando o processo de GPU ainda está subindo, criar um contexto (o `hasWebGL()` e depois o canvas) travava ~200 ms e atrasava o FCP em até 1 s, e o Lighthouse mobile oscilava entre 50 e 67. Agora fica entre 69 e 74.
+- **Reveals esperam `document.fonts.ready`**: dividem os títulos uma vez, já com a fonte final (antes o `autoSplit` dividia tudo de novo quando a fonte chegava).
+- **N8AO testado e descartado** (pedido da etapa): tempo de GPU por frame medido com `EXT_disjoint_timer_query_webgl2` (GTX 1060, 1440×900, DPR 1 e 1,75). Mediana de 0,3–0,4 ms sem AO; com N8AO (halfRes) ~10 ms, inclusive na qualidade `performance` sem MSAA. Além disso o composer tira o tone mapping ACES (argila mais saturada) e o AO quase não aparece. `@react-three/postprocessing` e `postprocessing` desinstalados.
+- **Anel de foco** (DESIGN §9): signal sobre paper dá 2,7:1 (< 3:1 do WCAG 1.4.11). Mantive o anel signal com vão de 3px e somei 1px de ink por fora (`box-shadow`: faixa paper + ink). Linhas dos popovers e segmentos do contato: anel ink. Obs.: o `transition-colors` do Tailwind também anima `outline-color` (160ms de ink → signal ao focar).
+- **Sem polyfill de Popover**: sem a API (navegadores antes de 2024) os botões ÍNDICE/AJUSTES somem (`@supports not selector(:popover-open)`); o índice completo continua em `#indice`. Sem `@starting-style` só perde a animação. `<dialog>` tem suporte geral desde 2022.
+- Testados e sem ganho, revertidos: ambiente a 32px e `checkShaderErrors = false`.
+- `site.seo.description` e os textos do 404 são proposta minha: revisar.
+Pendências:
+- Kaique: deploy (passo a passo abaixo), QA no Android/Safari (checklist abaixo), WhatsApp, revisar textos novos. Seguem da 07: h2 de Projetos, lista real de cursos, foto/bio/redes.
+- O aviso `THREE.Clock: This module has been deprecated` segue no console: vem de dentro do R3F 9.8.2, que já é a última versão. É aviso, não erro (Lighthouse: boas práticas 100).
+- Lighthouse mobile oscila 69–74 (mediana 73). A rodada de 69 teve Speed Index alto porque o loader ficou mais tempo enquanto o GPU do Chrome headless subia. Se a nota real (PageSpeed Insights) ficar abaixo de 70: o loader passa a cobrir só a área do 3D e o texto do hero aparece na hora (decisão de design: perguntar antes).
+- `npm audit`: 0 vulnerabilidades no que vai para o site; 7 moderadas só em dev (`minimatch` dentro do `typescript-eslint`).
+Como testar: `npm run build && npx next start -p 3002` → `http://localhost:3002` (a 3000 é de outro projeto; o dev segue na 3001). Recarregar: o loader conta 000 → 100 e some. Tab mostra o anel signal com borda escura. `/qualquer-coisa` → 404. DevTools → Rendering → reduced motion. Sem WebGL: `chrome://flags` → WebGL desligado (ou AJUSTES → Ver sem 3D). `/robots.txt`, `/sitemap.xml`, `/opengraph-image`, `/icon.svg`. Screenshots em `artifacts/etapa-08-*.png` e relatórios do Lighthouse em `artifacts/lh-final-*.json` (não versionados).
+
+## Deploy (Kaique — sem segredos, nenhuma variável de ambiente)
+1. **GitHub**: criar um repositório vazio (sem README), por exemplo `portfolio-arquivo`. Na pasta do projeto: `git remote add origin https://github.com/<seu-usuario>/portfolio-arquivo.git` e `git push -u origin main --tags`.
+2. **Vercel**: vercel.com → Add New → Project → importar o repositório. O framework (Next.js) é detectado; não precisa de variável de ambiente → Deploy. O `/lab` fica 404 em produção (só abre com `NEXT_PUBLIC_LAB=1`).
+3. **Domínio**: Project → Settings → Domains → adicionar `site.kaiquecalefi.online`. No painel de DNS do domínio, criar (ou trocar, se o `site` já aponta para o link atual da bio) o registro que a Vercel mostrar (CNAME `site` → valor indicado). Esperar "Valid Configuration" e o certificado SSL.
+4. **Conferir no ar**: `https://site.kaiquecalefi.online/robots.txt`, `/sitemap.xml`, prévia do link colando a URL no WhatsApp/LinkedIn (imagem OG), e PageSpeed Insights (pagespeed.web.dev) na URL real.
+5. Domínio diferente no futuro: troque só `site.domain` em `src/content/site.ts` (canonical, sitemap, robots, OG e JSON-LD saem dele).
+
+## QA final
+- [x] Chrome desktop 1440×900 (Playwright, build de produção): loader, espiral, overlay só no teclado (Enter / Tab / Esc, foco volta), ÍNDICE (setas, Esc, foco volta), contato (Esc, foco volta), skip link, 404, sem WebGL (grade estática), chunk 3D falhando (grade estática), sem JS (sem loader), reduced motion. Console sem erros.
+- [x] 390×844 emulado (toque, DPR 2): loader e espiral.
+- [ ] Android real: `npm run build && npx next start -H 0.0.0.0 -p 3002` → no celular, no mesmo Wi-Fi, `http://<IP-do-PC>:3002` (liberar o Node no firewall do Windows se pedir). Roteiro: loader some; rolar a espiral devagar e rápido; tocar numa peça (bottom sheet) e fechar; arrastar a peça; saída da espiral até a linha de Brasília com a barra do navegador aparecendo e sumindo; índice; contato.
+- [ ] Safari / iPhone (se der): mesmo roteiro; conferir se o favicon (SVG) aparece.
+- [ ] WhatsApp de ponta a ponta quando o número entrar em `site.ts`.
+- [ ] Depois do deploy: PageSpeed Insights mobile e desktop na URL real.
 
 <!-- modelo:
 ### Etapa NN — AAAA-MM-DD

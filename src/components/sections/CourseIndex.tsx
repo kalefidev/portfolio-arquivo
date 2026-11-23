@@ -22,7 +22,7 @@ export default function CourseIndex() {
   const [filter, setFilter] = useState<Category | null>(null)
 
   return (
-    <section id="indice" tabIndex={-1} className="scroll-mt-16 px-gutter py-section outline-none">
+    <section id="indice" tabIndex={-1} className="scroll-mt-16 px-gutter py-section shadow-none outline-none">
       <SectionHead eyebrow={eyebrow.replace('{N}', pieceNo(archive.length - 1))} title={h2} sub={sub} />
 
       <div role="group" aria-label={filterLabel} className="mt-12 flex flex-wrap gap-2">

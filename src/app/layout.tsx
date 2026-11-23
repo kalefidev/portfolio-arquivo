@@ -17,9 +17,21 @@ const plexMono = IBM_Plex_Mono({
   weight: ["400", "500"],
 });
 
+// Absolute URLs (canonical, Open Graph image) resolve against the domain in site.ts.
+// The canonical itself lives in page.tsx: the 404 must not claim to be the home page.
 export const metadata: Metadata = {
-  title: `${site.name} — ${site.role}`,
-  description: site.hero.sub,
+  metadataBase: new URL(`https://${site.domain}`),
+  title: { default: site.seo.title, template: `%s — ${site.name}` },
+  description: site.seo.description,
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: site.name,
+    title: site.seo.title,
+    description: site.seo.description,
+    url: "/",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

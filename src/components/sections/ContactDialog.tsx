@@ -9,7 +9,7 @@ import { contactMessage, whatsappReady, whatsappUrl } from '@/lib/whatsapp'
 const { title, fields, types, submit, close, notReady } = site.contact.dialog
 
 const field =
-  'mt-2 block w-full border border-line bg-paper px-3 py-2 text-ink placeholder:text-ink-3 focus-visible:border-ink'
+  'mt-2 block w-full border border-line bg-paper px-3 py-2 text-ink placeholder:text-ink-2 focus-visible:border-ink'
 
 /** Contact form in a modal <dialog> (the browser gives the focus trap and Esc). No backend: sending
  *  opens wa.me with the message built from the fields. While the number in site.ts is a TODO the
@@ -82,7 +82,7 @@ export default function ContactDialog({ open, onClose }: { open: boolean; onClos
             {types.map((type, index) => (
               <label
                 key={type}
-                className="label flex h-10 cursor-pointer items-center justify-center bg-paper-2 transition-colors duration-(--duration-micro) hover:bg-paper has-checked:bg-ink has-checked:text-paper has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-signal"
+                className="label flex h-10 cursor-pointer items-center justify-center bg-paper-2 transition-colors duration-(--duration-micro) hover:bg-paper has-checked:bg-ink has-checked:text-paper has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ink"
               >
                 <input type="radio" name="type" value={type} defaultChecked={index === 0} className="sr-only" />
                 {type}

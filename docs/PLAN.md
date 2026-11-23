@@ -69,7 +69,7 @@ public/images/           foto, prévias de projetos
 ## Decisões em aberto (Kaique)
 - Lista de cursos em `docs/CURSOS.md` — necessária até a etapa 06. Recomendado 8–14 na espiral; o resto só no índice.
 - Quais projetos podem aparecer (projeto de cliente pede autorização).
-- Domínio: substituir `site.kaiquecalefi.online` (link atual da bio) ou usar outro?
+- ~~Domínio~~ → `site.kaiquecalefi.online` (decidido na etapa 08; só `site.domain` em `site.ts`).
 - WhatsApp, GitHub, LinkedIn, Instagram, foto.
 
 ## Orçamento de performance

@@ -29,7 +29,7 @@ export default function IndexMenu({ className }: { className: string }) {
 
   return (
     <>
-      <button type="button" popoverTarget={ID} className={className}>
+      <button type="button" popoverTarget={ID} className={`needs-popover ${className}`}>
         <Icon svg={list} />
         {buttons.index}
       </button>
@@ -55,7 +55,7 @@ export default function IndexMenu({ className }: { className: string }) {
                   popoverTarget={ID}
                   popoverTargetAction="hide"
                   aria-current={current || undefined}
-                  className="flex min-h-11 w-full items-center gap-4 px-4 py-2 text-left -outline-offset-2 transition-colors duration-(--duration-micro) hover:bg-paper"
+                  className="flex min-h-11 w-full items-center gap-4 px-4 py-2 text-left -outline-offset-2 focus-visible:shadow-none focus-visible:outline-ink transition-colors duration-(--duration-micro) hover:bg-paper"
                   onClick={() => scrollToCourse(index)}
                 >
                   <span className="label text-ink-2 tabular-nums">Nº {pieceNo(index)}</span>

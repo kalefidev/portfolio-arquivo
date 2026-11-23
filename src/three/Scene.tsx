@@ -84,6 +84,7 @@ export default function Scene() {
       >
         <color attach="background" args={[paper]} />
         <fog attach="fog" args={[paper, preset.fogNear, preset.fogFar]} />
+        {/* also tells the loader when the scene is lit and drawn (`sceneReady`) */}
         <Lights />
         <Spiral />
         {debug && (
