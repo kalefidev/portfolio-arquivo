@@ -3,7 +3,7 @@
 > O Code lê isto no começo de toda sessão e atualiza no fim de toda etapa. Curto e factual.
 
 ## Estado atual
-- Etapa atual: 08 concluída — v1.0 pronta para publicar (falta o deploy, que é do Kaique: ver "Deploy" abaixo)
+- Etapa atual: 08 concluída + passe final de UI/UX (2026-11-23, ver "Ajustes") — v1.0 pronta para publicar (falta o deploy, que é do Kaique: ver "Deploy" abaixo)
 - Última tag: etapa-08 (= v1.0)
 - Bloqueios / pendências do Kaique: deploy (GitHub + Vercel + DNS); número do WhatsApp; lista real do `docs/CURSOS.md` → `/ajuste`; revisar `docs/CONTEUDO.md`, `site.seo.description` e os textos do 404; QA no Android real
 
@@ -186,7 +186,7 @@ Como testar: `npm run build && npx next start -p 3002` → `http://localhost:300
 ## QA final
 - [x] Chrome desktop 1440×900 (Playwright, build de produção): loader, espiral, overlay só no teclado (Enter / Tab / Esc, foco volta), ÍNDICE (setas, Esc, foco volta), contato (Esc, foco volta), skip link, 404, sem WebGL (grade estática), chunk 3D falhando (grade estática), sem JS (sem loader), reduced motion. Console sem erros.
 - [x] 390×844 emulado (toque, DPR 2): loader e espiral.
-- [ ] Android real: `npm run build && npx next start -H 0.0.0.0 -p 3002` → no celular, no mesmo Wi-Fi, `http://<IP-do-PC>:3002` (liberar o Node no firewall do Windows se pedir). Roteiro: loader some; rolar a espiral devagar e rápido; tocar numa peça (bottom sheet) e fechar; arrastar a peça; saída da espiral até a linha de Brasília com a barra do navegador aparecendo e sumindo; índice; contato.
+- [ ] Android real: `npm run build && npx next start -H 0.0.0.0 -p 3002` → no celular, no mesmo Wi-Fi, `http://<IP-do-PC>:3002` (liberar o Node no firewall do Windows se pedir). Roteiro: loader some; rolar a espiral devagar e rápido (não pode encaixar sozinha: o encaixe é só de mouse); tocar no painel (abre a peça **ativa**) e numa peça (bottom sheet) e fechar — também pelo **botão Voltar** do Android, que deve fechar a peça e não sair do site (o Chrome fecha `<dialog>` pelo CloseWatcher; se sair, avisar); arrastar a peça; dicas "Deslize… · Toque…" no hero e sem "Esc" no Fechar; saída da espiral até a linha de Brasília com a barra do navegador aparecendo e sumindo; índice (abrir uma peça e fechar volta para o índice); contato.
 - [ ] Safari / iPhone (se der): mesmo roteiro; conferir se o favicon (SVG) aparece.
 - [ ] WhatsApp de ponta a ponta quando o número entrar em `site.ts`.
 - [ ] Depois do deploy: PageSpeed Insights mobile e desktop na URL real.
@@ -206,3 +206,35 @@ Como testar: …
 - 2026-11-23 — resize mantém a posição na espiral: `SpiralSection` guarda o estado (progress/hero/exit) no `refreshInit` e quando a seção muda de altura, e depois do `ScrollTrigger.refresh()` pula de volta sem animação (`progressToScroll` em `math.ts`, inverso de `scrollToProgress`, + teste). Só de dentro da seção: acima ou abaixo dela a página fica como está. Conferido: 1440 → 390 → 1440 na peça 05 (4.000 nos três) e 390×844 ↔ 844×390 em 2.202 (desvio ≤ 0.002). Dev fixo em `next dev -p 3001` (a 3000 é de outro projeto). `npm run test`: 27 testes — `fix(resize)`
 
 - 2026-11-23 — Projetos: saiu a prévia flutuante do hover (cartão com iniciais, mais alto que a linha, vazava sobre as vizinhas e parecia placeholder sem imagem); hover = fundo paper-2 + nome anda 8px. `projectTone` removido. DESIGN §8 atualizado — `fix(projects)`
+
+- 2026-11-23 — passe final pós-08, **defeitos** (auditados no Playwright antes de mexer):
+  - o toque no painel do mobile abria a peça de trás (tocar na 01 abria a 02): o ↗ se estica sobre o painel (o painel inteiro abre a peça ativa), hero e barra têm `data-ui` (excluído em `reaches3d`) e o header segura o ponteiro;
+  - fechar uma peça aberta pelo índice ou por um projeto deixava a página na espiral, com o foco num botão fora da tela: agora volta para onde estava (o chip "Projetos com isso" continua levando ao projeto). No modo sem 3D, `scrollToCourse` passou a usar `scrollToY` para o Lenis não ficar com a posição velha;
+  - retrato baixo (iPhone no Safari ≈ 390×664, 375×600) batia o H1 e o painel nas cantoneiras e no anel: o `short` vale em retrato até 740px (sem eyebrow, texto menor, barra de 1 linha), e o bloco de baixo do hero desceu (`pb-24`);
+  - peça +2 atrás do "03 / 06" e "Nº 02" atrás do texto do painel: faixa de papel sólido de 4rem no topo e na base + véu sólido atrás do painel no retrato (`.spiral-fade`);
+  - o eixo 3D que espera riscava "DE ÁGUAS CLARAS…": `Reach` começa na linha e a frase virou a legenda dela (`figure`/`figcaption`);
+  - dicas de mouse em tablet/celular deitado (o arraste é só de mouse): dicas por tipo de ponteiro;
+  - linhas de Projetos com hover sem link;
+  - link do wordmark com 487px (header) e a largura toda (footer);
+  - loader sem saída se a cena nunca marcasse pronta: teto de 8s;
+  - mensagem "Quero um(a) outro": "Assunto: {tipo}";
+  - faixa de 15px ao lado do overlay no Windows: fundo do html paper-2 com a peça aberta.
+
+  — `fix(ux)`
+- 2026-11-23 — passe final pós-08, **interações**:
+  - encaixe suave na peça mais próxima depois que o scroll para (mouse/trackpad; fora do hero e da saída; sem reduced motion; `SNAP` em `config/spiral.ts`);
+  - em retrato as dicas ficam só no hero; "Esc" escondido no toque;
+  - pressão em todo controle (`active:` = fundo do hover, e escala 0.97 nos botões soltos), porque no toque não havia resposta nenhuma;
+  - ←/→ no overlay;
+  - foco inicial no próprio diálogo (peça, contato e menu): acabou o anel no "Fechar" a cada abertura (pendência da etapa 05);
+  - `SecondaryCta` único (hero com alvo de 40px, redes, certificado);
+  - `text-wrap: pretty/balance`;
+  - scrollbar e tap highlight na paleta.
+
+  Verificado:
+  - typecheck, lint, 27 testes e build;
+  - Playwright em 1440×900, 1366×768, 1920×1080, 390×844, 390×664, 375×600, 360×720, 844×390 e contexto de toque;
+  - detector do Impeccable: só os 2 alertas fixados pelo DESIGN (papel creme, eyebrow do hero no desktop);
+  - Lighthouse não foi refeito.
+
+  — `fix(ux)`
