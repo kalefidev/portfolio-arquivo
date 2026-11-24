@@ -83,8 +83,13 @@ export default function CourseOverlay() {
   // overlay, and when it closes everything is already in place.
   useEffect(() => {
     if (!focused) return
-    if (focused.featured) scrollToCourse(featured.indexOf(focused), { immediate: true })
-    history.replaceState(null, '', `#${pieceId(focused.slug)}`)
+    // One frame later than showModal(): the dialog's style recalc and this jump (which re-renders the
+    // panel under the overlay) in the same frame were one long hitch when a piece opened.
+    const frame = requestAnimationFrame(() => {
+      if (focused.featured) scrollToCourse(featured.indexOf(focused), { immediate: true })
+      history.replaceState(null, '', `#${pieceId(focused.slug)}`)
+    })
+    return () => cancelAnimationFrame(frame)
   }, [focused])
 
   const close = () => dialog.current?.close()

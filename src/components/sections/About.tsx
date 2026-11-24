@@ -3,7 +3,7 @@ import SecondaryCta from '@/components/ui/SecondaryCta'
 import { pieceNo } from '@/content/courses'
 import { site } from '@/content/site'
 
-const { eyebrow, people, photoPlaceholder, figure } = site.about
+const { eyebrow, people, photoPlaceholder } = site.about
 
 const isTodo = (value: string) => value.startsWith('TODO')
 
@@ -20,7 +20,7 @@ export default function About() {
         <span aria-hidden className="h-px flex-1 bg-line" />
       </p>
 
-      {people.map((person, index) => (
+      {people.map((person) => (
         <article
           key={person.name}
           data-reveal="stagger"
@@ -40,7 +40,6 @@ export default function About() {
               <span aria-hidden className={`${corner} -bottom-px -left-px border-b-2 border-l-2`} />
               <span aria-hidden className={`${corner} -right-px -bottom-px border-r-2 border-b-2`} />
             </div>
-            <figcaption className="label mt-3 text-ink-2">{figure.replace('{n}', pieceNo(index))}</figcaption>
           </figure>
 
           <div className="wide:col-span-7 wide:col-start-6">

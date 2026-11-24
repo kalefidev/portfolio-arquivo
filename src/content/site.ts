@@ -112,7 +112,6 @@ export const site = {
   about: {
     eyebrow: 'QUEM CONSTRÓI · 03',
     photoPlaceholder: 'FOTO',
-    figure: 'FIG. {n}',
     // one entry per person; a link whose href starts with "TODO" is shown as plain text
     people: [
       {

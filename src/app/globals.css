@@ -320,6 +320,8 @@ dialog.piece[open] .piece-panel {
    reduced motion, where there is no Lenis. */
 .fades-in-focus {
   transition: opacity var(--duration-ui);
+  /* own layer from the start: made on the frame a piece opens, rasterising these full-screen blocks was part of the hitch */
+  will-change: opacity;
 }
 
 html:has(dialog.piece[open]) .fades-in-focus {

@@ -22,7 +22,6 @@ export const projects: Project[] = [
     description:
       'CRM com hierarquia de permissões e login',
     status: 'no-ar',
-    url: 'https://neovian-os-kaiquecalefi-8397s-projects.vercel.app',
     stack: [],
     courses: ['sql-e-banco-de-dados'],
     isClientWork: true,
@@ -44,7 +43,7 @@ export const projects: Project[] = [
     kind: 'Catálogo para devs',
     description:
       '300 ferramentas de programação em 8 áreas, com métricas reais do GitHub e do npm, busca, comparação e um mapa em pixel art pra explorar. Em português e inglês.',
-    status: 'no-ar',
+    status: 'em-desenvolvimento',
     url: 'https://biblioteca.kaiquecalefi.online',
     stack: [],
     isClientWork: false,
@@ -117,15 +116,6 @@ export const projects: Project[] = [
     status: 'no-ar',
     stack: [],
     courses: ['automacao-n8n'],
-    isClientWork: false,
-  },
-  {
-    slug: 'biblioteca-de-conteudos',
-    title: 'Biblioteca de conteúdos',
-    kind: 'Biblioteca via API',
-    description: 'Biblioteca de conteúdos própria, acessada via API.',
-    status: 'em-desenvolvimento',
-    stack: [],
     isClientWork: false,
   },
 ]
