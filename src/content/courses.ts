@@ -1,67 +1,77 @@
 import type { Category, Course } from '@/types'
 
-// Source: docs/CURSOS.md (only 2 draft rows so far). Order = order in the spiral.
-// Rows marked EXEMPLO are placeholders — the real list comes in an /ajuste (archetypes it needs
-// that don't exist yet get built then).
+// Source: docs/CURSOS.md + lista do Kaique (2026-11-24). Order = order in the spiral.
 export const courses: Course[] = [
   {
     slug: 'aws-cloud',
-    title: 'AWS Cloud', // TODO: confirmar nome exato
-    institution: 'TODO: instituição',
+    title: 'AWS Cloud Practitioner (Domains 1 e 2)',
+    institution: 'Alura',
+    year: 2026,
+    hours: 8,
     category: 'cloud',
     archetype: 'cloud',
-    status: 'concluido',
+    status: 'em-andamento',
     featured: true,
   },
   {
     slug: 'ciberseguranca',
-    title: 'Cyber / Segurança', // TODO: confirmar nome exato
-    institution: 'TODO: instituição',
+    title: 'Firewall ASA: configuração de segurança',
+    institution: 'Alura',
+    year: 2026,
+    hours: 10,
     category: 'security',
     archetype: 'shield',
-    status: 'concluido',
+    status: 'em-andamento',
     featured: true,
   },
-  // EXEMPLO — trocar
   {
     slug: 'logica-de-programacao',
-    title: 'Lógica de Programação',
+    title: 'Lógica de programação: mergulhe em programação com JavaScript',
     institution: 'Alura',
+    year: 2026,
+    hours: 1,
     category: 'fundamentals',
     archetype: 'brackets',
     status: 'concluido',
     featured: true,
   },
-  // EXEMPLO — trocar
   {
     slug: 'html-e-css',
     title: 'HTML e CSS',
     institution: 'Alura',
+    year: 2026,
     category: 'frontend',
     archetype: 'browser',
-    status: 'concluido',
+    status: 'em-andamento',
     featured: true,
   },
-  // EXEMPLO — trocar
   {
     slug: 'sql-e-banco-de-dados',
     title: 'SQL e Banco de Dados',
     institution: 'Alura',
     category: 'data',
     archetype: 'database',
-    status: 'concluido',
+    status: 'em-andamento',
     featured: true,
   },
-  // EXEMPLO — trocar
   {
     slug: 'automacao-n8n',
     title: 'Automação com n8n',
-    institution: 'RicNeves',
+    institution: 'Rick Neves',
     category: 'automation',
     archetype: 'gears',
     status: 'concluido',
     featured: true,
-    projects: ['jarvis'],
+  },
+  {
+    slug: 'trilha-full-stack-typescript',
+    title: 'Trilha Full Stack TypeScript',
+    institution: 'Alura',
+    category: 'backend',
+    archetype: 'icon',
+    icon: 'terminal-window',
+    status: 'em-andamento',
+    featured: true,
   },
 ]
 

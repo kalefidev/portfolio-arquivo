@@ -6,13 +6,13 @@ export const site = {
   wordmark: 'kaique calefi', // followed by a ■ in signal color
   role: 'Desenvolvedor · Sites, automações e sistemas',
   domain: 'site.kaiquecalefi.online', // canonical, sitemap, robots, Open Graph
-  email: 'kaiquecalefi.dev@gmail.com', // confirmar
+  email: 'kaiquecalefi.dev@gmail.com',
   whatsapp: '5561994028229', // 55 + DDD + número, só dígitos
 
   seo: {
     title: 'Kaique Calefi — Desenvolvedor de sites, automações e sistemas',
     description:
-      'Desenvolvedor em Brasília: sites, automações de atendimento no WhatsApp e sistemas sob medida para pequenos negócios. Veja os projetos e o que estudei.',
+      'Desenvolvedor em Brasília: sites, automações e sistemas para empresas ganharem mais tempo e mais visibilidade. Veja os projetos e o que estudei.',
     ogAlt: 'Kaique Calefi — Estudo, construo e entrego. Sites, automações e sistemas.',
     locality: { city: 'Brasília', region: 'DF', country: 'BR' },
   },
@@ -91,7 +91,7 @@ export const site = {
 
   projects: {
     eyebrow: 'PROJETOS · 01',
-    h2: 'O que saiu do papel.', // TODO: revisar o título
+    h2: 'O que saiu do papel.',
     sub: 'Cada projeto aponta de volta para os cursos que o tornaram possível.',
     visit: 'Ver {title}',
     openCourse: 'Abrir a peça {n}: {title}',
@@ -120,11 +120,11 @@ export const site = {
         role: 'Desenvolvedor · Sites, automações e sistemas',
         photo: 'TODO: /images/kaique.webp',
         bullets: ['Sites e landing pages', 'Automação de atendimento (WhatsApp)', 'Sistemas sob medida'],
-        bio: 'TODO: bio — 3 a 5 linhas suas. Ponto de partida: "Aprendo rápido e vou atrás do que não sei. Hoje construo sites, automações e sistemas para negócios do DF e para projetos remotos — e cada curso desta página virou parte disso."',
+        bio: 'Aprendo rápido e vou atrás do que não sei. Hoje não construo somente sites e sistemas bonitos, mas soluções que fazem seu negócio ganhar mais tempo.',
         links: [
           { label: 'GitHub', href: 'https://github.com/kalefidev' },
           { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kaiquecalefi/' },
-          { label: 'Instagram', href: 'TODO: Instagram' },
+          { label: 'Instagram', href: 'https://www.instagram.com/kalefi.dev' },
         ],
       },
     ],
