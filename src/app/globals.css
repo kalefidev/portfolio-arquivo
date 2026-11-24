@@ -61,7 +61,7 @@
 
   /* layout */
   --spacing-gutter: clamp(16px, 4vw, 56px);
-  --spacing-section: clamp(72px, 9vh, 120px);
+  --spacing-section: clamp(96px, 11vh, 144px);
   --spacing-bar: 5.5rem; /* height of the spiral's bottom bar (portrait); the panel and popovers sit on it */
   --spacing-bar-wide: 4rem; /* …and on `wide` */
 

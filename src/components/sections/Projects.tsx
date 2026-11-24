@@ -51,7 +51,7 @@ export default function Projects() {
           <li
             key={project.slug}
             id={projectId(project.slug)}
-            className={`group scroll-mt-20 border-b border-line ${project.url ? linkedRow : ''}`}
+            className={`group relative scroll-mt-20 border-b border-line ${project.url ? linkedRow : ''}`}
             {...(project.image && previewHandlers(project.slug))}
           >
             <div className="grid grid-cols-[3rem_minmax(0,1fr)_1.5rem] items-center gap-x-4 gap-y-3 px-2 py-4 md:grid-cols-[4rem_minmax(0,1fr)_13rem_11rem_minmax(0,1fr)_1.5rem]">
@@ -71,7 +71,7 @@ export default function Projects() {
                     <button
                       type="button"
                       aria-label={openCourse.replace('{n}', pieceNo(archive.indexOf(course))).replace('{title}', course.title)}
-                      className="label text-left text-ink-2 underline decoration-line underline-offset-4 transition-colors duration-(--duration-micro) hover:text-ink hover:decoration-ink active:text-ink active:decoration-ink"
+                      className="label relative z-10 cursor-pointer text-left text-ink-2 underline decoration-line underline-offset-4 transition-colors duration-(--duration-micro) hover:text-ink hover:decoration-ink active:text-ink active:decoration-ink"
                       onClick={() => useStore.getState().setFocus(course.slug)}
                     >
                       Nº {pieceNo(archive.indexOf(course))} · {course.title}
@@ -86,7 +86,7 @@ export default function Projects() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={visit.replace('{title}', project.title)}
-                  className="col-start-3 row-start-1 justify-self-end text-h3 md:col-start-auto md:row-start-auto"
+                  className="col-start-3 row-start-1 justify-self-end text-h3 after:absolute after:inset-0 md:col-start-auto md:row-start-auto"
                 >
                   ↗
                 </a>

@@ -33,7 +33,7 @@ Quebra: `text-wrap: pretty` nos parágrafos (nenhuma palavra sozinha na última 
 
 ### Forma, linha, espaço
 - Raio 0–2px (nada de pílula). Bordas 1px `--color-line`. Nenhuma sombra na UI. Superfícies do navegador também na paleta: seleção signal com texto ink, barra de rolagem ink-3 sobre trilho transparente, sem o flash cinza de toque (`-webkit-tap-highlight-color`).
-- Grid de 12 colunas; margem lateral `clamp(16px, 4vw, 56px)`; respiro de seção `--spacing-section` = `clamp(72px, 9vh, 120px)`, só em cima (`pt-section`): o padding de baixo de uma seção somava com o de cima da seguinte. Margem cabeçalho→conteúdo `mt-8`.
+- Grid de 12 colunas; margem lateral `clamp(16px, 4vw, 56px)`; respiro de seção `--spacing-section` = `clamp(96px, 11vh, 144px)`, só em cima (`pt-section`): o padding de baixo de uma seção somava com o de cima da seguinte. Margem cabeçalho→conteúdo `mt-8`.
 - Textura: pontos técnicos a cada 64px (1px de ink ~14%, um em cada interseção de uma grade invisível) + grão SVG ~4%, num overlay fixo com `pointer-events: none`, **por cima** do canvas e abaixo da UI.
 - Ícones de UI: setas tipográficas (↗ → ↓) e Phosphor (peso regular) quando precisar.
 

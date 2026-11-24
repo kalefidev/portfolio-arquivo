@@ -24,10 +24,10 @@ export default function About() {
         <article
           key={person.name}
           data-reveal="stagger"
-          className="mt-8 grid gap-10 wide:grid-cols-12 wide:gap-x-6"
+          className="mt-8 grid gap-10 wide:grid-cols-12 wide:items-center wide:gap-x-6"
         >
-          <figure className="flex wide:col-span-5 wide:self-stretch">
-            <div className="relative aspect-[4/5] w-full border wide:aspect-auto border-line bg-paper-2">
+          <figure className="wide:col-span-4">
+            <div className="relative aspect-[4/5] w-full border border-line bg-paper-2">
               {isTodo(person.photo) ? (
                 <span className="label absolute inset-0 flex items-center justify-center text-ink-2">
                   {photoPlaceholder}
@@ -42,7 +42,7 @@ export default function About() {
             </div>
           </figure>
 
-          <div className="wide:col-span-6 wide:col-start-7">
+          <div className="wide:col-span-7 wide:col-start-6">
             <h2 className="text-h2">{person.name}</h2>
             <p className="label mt-4 text-ink-2">{person.role}</p>
 
