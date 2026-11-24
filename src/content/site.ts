@@ -118,7 +118,7 @@ export const site = {
       {
         name: 'Kaique Calefi',
         role: 'Desenvolvedor · Sites, automações e sistemas',
-        photo: 'TODO: /images/kaique.webp',
+        photo: '/images/kaique.jpg',
         bullets: ['Sites e landing pages', 'Automação de atendimento (WhatsApp)', 'Sistemas sob medida'],
         bio: 'Aprendo rápido e vou atrás do que não sei. Hoje não construo somente sites e sistemas bonitos, mas soluções que fazem seu negócio ganhar mais tempo.',
         links: [

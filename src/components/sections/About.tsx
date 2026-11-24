@@ -27,13 +27,13 @@ export default function About() {
           className="mt-10 grid gap-10 wide:grid-cols-12 wide:gap-x-6"
         >
           <figure className="wide:col-span-4">
-            <div className="relative aspect-[4/5] w-full max-w-sm border border-line bg-paper-2">
+            <div className="relative aspect-[4/5] w-full max-w-64 border border-line bg-paper-2">
               {isTodo(person.photo) ? (
                 <span className="label absolute inset-0 flex items-center justify-center text-ink-2">
                   {photoPlaceholder}
                 </span>
               ) : (
-                <Image src={person.photo} alt={person.name} fill unoptimized sizes="(min-width: 1024px) 30vw, 90vw" className="object-cover" />
+                <Image src={person.photo} alt={person.name} fill unoptimized sizes="256px" className="object-cover object-top" />
               )}
               <span aria-hidden className={`${corner} -top-px -left-px border-t-2 border-l-2`} />
               <span aria-hidden className={`${corner} -top-px -right-px border-t-2 border-r-2`} />
