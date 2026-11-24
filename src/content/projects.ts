@@ -103,7 +103,7 @@ export const projects: Project[] = [
     kind: 'Automação (n8n + IA)',
     description:
       'Prospecção no WhatsApp com IA: leads do Google Maps conferidos antes de entrar na fila, disparo com limite diário, a IA conversa e eu assumo pelo Telegram quando o lead esquenta.',
-    status: 'conceito',
+    status: 'no-ar',
     stack: [],
     courses: ['automacao-n8n'],
     isClientWork: false,
@@ -114,9 +114,18 @@ export const projects: Project[] = [
     kind: 'Bot de WhatsApp',
     description:
       'Menu de exames, coleta de dados, consulta de horários em tempo real e confirmação automática no Google Calendar, sem aumentar a equipe.',
-    status: 'conceito',
+    status: 'no-ar',
     stack: [],
     courses: ['automacao-n8n'],
+    isClientWork: false,
+  },
+  {
+    slug: 'biblioteca-de-conteudos',
+    title: 'Biblioteca de conteúdos',
+    kind: 'Biblioteca via API',
+    description: 'Biblioteca de conteúdos própria, acessada via API.',
+    status: 'em-desenvolvimento',
+    stack: [],
     isClientWork: false,
   },
 ]
