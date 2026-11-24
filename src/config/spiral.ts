@@ -122,7 +122,7 @@ export const AXIS = {
 /** Focus mode (a piece open in the overlay): the piece travels to the stage, the others sink into the fog. */
 export const FOCUS_MODE = {
   recede: 8, // world units the other pieces go back: past `fogFar`, so they are paper
-  lambda: 5, // damping of the trip to the stage and back
+  lambda: 9, // damping of the trip to the stage and back (applied twice in series: slower than one pass of the same value)
 }
 
 /** Mouse drag: on empty space it turns the helix, on a piece it turns the piece. */

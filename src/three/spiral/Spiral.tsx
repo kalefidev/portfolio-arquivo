@@ -31,6 +31,7 @@ export interface SpiralFrame {
   viewHeight: number // world units of screen height at z = 0: how far a piece rises on the way out
   focus: number // 0 … 1, damped: 1 while a piece is open in the overlay (the rest of the spiral steps back)
   staged: number[] // per piece, 0 … 1, damped: how far it has travelled to the stage
+  lead: { focus: number; staged: number[] } // first stage of the two in series behind `focus` / `staged`
   stage: { x: number; y: number } // where the stage is, in world units at z = 0
   extra: { dragOffset: number; ambientSway: number }
 }
@@ -58,6 +59,7 @@ export default function Spiral() {
       viewHeight: 0,
       focus: 0,
       staged: courses.map(() => 0),
+      lead: { focus: 0, staged: courses.map(() => 0) },
       stage: { x: 0, y: 0 },
       extra: { dragOffset: 0, ambientSway: 0 },
     }
@@ -102,9 +104,13 @@ export default function Spiral() {
     // Focus mode. Each piece has its own way to the stage, so "next" in the overlay swaps two
     // pieces in flight instead of popping one in.
     const focusLambda = reducedMotion ? REDUCED_DAMPING : FOCUS_MODE.lambda
-    f.focus = damp(f.focus, focusSlug ? 1 : 0, focusLambda, dt)
+    // Two dampings in series (the second follows the first): a plain one starts at full speed and
+    // crawls to the end, which read as a knock; this one eases in and out, still with no overshoot.
+    f.lead.focus = damp(f.lead.focus, focusSlug ? 1 : 0, focusLambda, dt)
+    f.focus = damp(f.focus, f.lead.focus, focusLambda, dt)
     for (let i = 0; i < courses.length; i++) {
-      f.staged[i] = damp(f.staged[i], courses[i].slug === focusSlug ? 1 : 0, focusLambda, dt)
+      f.lead.staged[i] = damp(f.lead.staged[i], courses[i].slug === focusSlug ? 1 : 0, focusLambda, dt)
+      f.staged[i] = damp(f.staged[i], f.lead.staged[i], focusLambda, dt)
     }
 
     // The clock restarts at 0 when the loop resumes, and sin(0) = 0: stills are drawn without sway.
