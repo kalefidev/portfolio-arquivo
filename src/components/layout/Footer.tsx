@@ -6,10 +6,10 @@ const { copyright, backToTop } = site.footer
 /** End of the page: big wordmark, e-mail, © and back to the top. */
 export default function Footer() {
   return (
-    <footer className="border-t border-line px-gutter pt-16 pb-8">
+    <footer className="border-t border-line px-gutter pt-12 pb-8">
       <Wordmark className="block text-wordmark" />
 
-      <div className="label mt-16 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-ink-2">
+      <div className="label mt-10 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-ink-2">
         <a href={`mailto:${site.email}`} className="transition-colors duration-(--duration-micro) hover:text-ink">
           {site.email}
         </a>

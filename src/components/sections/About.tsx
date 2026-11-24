@@ -14,7 +14,7 @@ const corner = 'absolute size-4 border-signal'
  *  still a TODO is shown as plain text, never as a broken <a>. */
 export default function About() {
   return (
-    <section id="sobre" className="scroll-mt-16 px-gutter py-section">
+    <section id="sobre" className="scroll-mt-16 px-gutter pt-section">
       <p className="label flex items-center gap-3 text-ink-2 tabular-nums">
         {eyebrow}
         <span aria-hidden className="h-px flex-1 bg-line" />
@@ -24,16 +24,16 @@ export default function About() {
         <article
           key={person.name}
           data-reveal="stagger"
-          className="mt-10 grid gap-10 wide:grid-cols-12 wide:gap-x-6"
+          className="mt-8 grid gap-10 wide:grid-cols-12 wide:gap-x-6"
         >
-          <figure className="wide:col-span-4">
-            <div className="relative aspect-[4/5] w-full max-w-64 border border-line bg-paper-2">
+          <figure className="flex wide:col-span-5 wide:self-stretch">
+            <div className="relative aspect-[4/5] w-full border wide:aspect-auto border-line bg-paper-2">
               {isTodo(person.photo) ? (
                 <span className="label absolute inset-0 flex items-center justify-center text-ink-2">
                   {photoPlaceholder}
                 </span>
               ) : (
-                <Image src={person.photo} alt={person.name} fill unoptimized sizes="256px" className="object-cover object-top" />
+                <Image src={person.photo} alt={person.name} fill unoptimized sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-[50%_30%]" />
               )}
               <span aria-hidden className={`${corner} -top-px -left-px border-t-2 border-l-2`} />
               <span aria-hidden className={`${corner} -top-px -right-px border-t-2 border-r-2`} />
@@ -42,7 +42,7 @@ export default function About() {
             </div>
           </figure>
 
-          <div className="wide:col-span-7 wide:col-start-6">
+          <div className="wide:col-span-6 wide:col-start-7">
             <h2 className="text-h2">{person.name}</h2>
             <p className="label mt-4 text-ink-2">{person.role}</p>
 

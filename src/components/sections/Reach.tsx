@@ -52,7 +52,7 @@ export default function Reach() {
   return (
     <section className="pb-section">
       <figure>
-        <div ref={rule} className="relative h-32">
+        <div ref={rule} className="relative h-20">
           <div id={EXIT.lineId} className="absolute inset-x-0 top-1/2 h-px bg-ink/30" />
           <ol className="absolute inset-x-gutter inset-y-0">
             {points.map((label, index) => {
@@ -83,7 +83,7 @@ export default function Reach() {
         <figcaption className="label mt-2 px-gutter text-ink-2">{eyebrow}</figcaption>
       </figure>
 
-      <div className="mt-16 px-gutter wide:grid wide:grid-cols-12 wide:gap-x-6">
+      <div className="mt-10 px-gutter wide:grid wide:grid-cols-12 wide:gap-x-6">
         <h2 data-reveal="lines" className="max-w-[18ch] text-h2 wide:col-span-7">
           {h2}
         </h2>

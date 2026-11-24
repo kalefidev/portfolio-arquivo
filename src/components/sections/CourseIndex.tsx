@@ -22,7 +22,7 @@ export default function CourseIndex() {
   const [filter, setFilter] = useState<Category | null>(null)
 
   return (
-    <section id="indice" tabIndex={-1} className="scroll-mt-16 px-gutter py-section shadow-none outline-none">
+    <section id="indice" tabIndex={-1} className="scroll-mt-16 px-gutter pb-section shadow-none outline-none">
       <SectionHead eyebrow={eyebrow.replace('{N}', pieceNo(archive.length - 1))} title={h2} sub={sub} />
 
       <div role="group" aria-label={filterLabel} className="mt-12 flex flex-wrap gap-2">
@@ -49,7 +49,7 @@ export default function CourseIndex() {
               <button
                 type="button"
                 aria-label={open.replace('{title}', course.title)}
-                className="group grid w-full grid-cols-[3rem_minmax(0,1fr)_1.5rem] items-center gap-x-4 gap-y-2 px-2 py-5 text-left transition-colors duration-(--duration-micro) hover:bg-paper-2 active:bg-paper-2 md:grid-cols-[4rem_minmax(0,1fr)_14rem_4rem_10rem_1.5rem]"
+                className="group grid w-full grid-cols-[3rem_minmax(0,1fr)_1.5rem] items-center gap-x-4 gap-y-2 px-2 py-4 text-left transition-colors duration-(--duration-micro) hover:bg-paper-2 active:bg-paper-2 md:grid-cols-[4rem_minmax(0,1fr)_14rem_4rem_10rem_1.5rem]"
                 onClick={() => useStore.getState().setFocus(course.slug)}
               >
                 <span className="label text-ink-2 tabular-nums">Nº {pieceNo(index)}</span>

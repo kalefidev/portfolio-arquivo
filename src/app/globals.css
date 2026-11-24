@@ -45,8 +45,8 @@
   /* type scale */
   --text-display: clamp(2.75rem, min(6.2vw, 12vh), 6.5rem);
   --text-display--line-height: 0.92;
-  --text-h2: clamp(2rem, 4vw, 3.75rem);
-  --text-h2--line-height: 0.95;
+  --text-h2: clamp(2rem, 4.4vw, 4.5rem);
+  --text-h2--line-height: 1;
   --text-h3: 1.5rem;
   --text-h3--line-height: 1.1;
   --text-body: 1.0625rem;
@@ -57,11 +57,11 @@
   --text-label--line-height: 1.4;
   --text-wordmark: clamp(2.5rem, 9vw, 8rem); /* the big wordmark of the footer */
   --text-wordmark--line-height: 1;
-  --tracking-title: -0.02em; /* every title: h1–h3 and the ones set in a span / link */
+  --tracking-title: -0.04em; /* every title: h1–h3 and the ones set in a span / link */
 
   /* layout */
   --spacing-gutter: clamp(16px, 4vw, 56px);
-  --spacing-section: clamp(96px, 14vh, 180px);
+  --spacing-section: clamp(72px, 9vh, 120px);
   --spacing-bar: 5.5rem; /* height of the spiral's bottom bar (portrait); the panel and popovers sit on it */
   --spacing-bar-wide: 4rem; /* …and on `wide` */
 

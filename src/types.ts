@@ -56,6 +56,7 @@ export interface Project {
   status: 'no-ar' | 'em-desenvolvimento' | 'conceito'
   year?: number
   url?: string
+  image?: string // print for the hover preview, in public/images/projects
   repo?: string
   stack: string[]
   courses?: string[] // slugs from courses.ts

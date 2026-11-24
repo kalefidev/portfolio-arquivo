@@ -13,10 +13,10 @@ export default function Contact() {
   const [open, setOpen] = useState(false)
 
   return (
-    <section id="contato" className="scroll-mt-16 px-gutter py-section">
+    <section id="contato" className="scroll-mt-16 px-gutter pt-section pb-12">
       <SectionHead eyebrow={eyebrow} title={h2} sub={sub} />
 
-      <div data-reveal="stagger" className="mt-12 flex flex-col items-start gap-8 md:flex-row md:items-center md:gap-12">
+      <div data-reveal="stagger" className="mt-8 flex flex-col items-start gap-8 md:flex-row md:items-center md:gap-12">
         <PrimaryCta onClick={() => setOpen(true)}>{ctas.whatsapp}</PrimaryCta>
         <p className="label flex flex-col gap-1 text-ink-2">
           {ctas.email}
