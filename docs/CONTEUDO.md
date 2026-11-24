@@ -29,11 +29,11 @@ Linhas com `TODO` viram texto visível `TODO:` no site até você preencher.
 - Loader: CATALOGANDO O ARQUIVO
 - Overlay: O que aprendi · Projetos com isso · Ver certificado ↗ · Anterior · Próxima · Fechar
 
-## Feito em Brasília
-- Eyebrow: DE ÁGUAS CLARAS PARA ONDE PRECISAR
-- H2: Feito em Brasília. Entregue em qualquer lugar.
-- Pontos: Águas Claras · Brasília · Brasil · Remoto
-- Texto: Atendo negócios daqui olho no olho e projetos remotos com o mesmo cuidado. Tem uma ideia? A gente tira do papel.
+## Do arquivo para o seu negócio
+- Eyebrow: DO ARQUIVO PARA O SEU NEGÓCIO
+- H2: Do que estudei para o seu negócio.
+- Pontos: Estudo · Construo · Entrego · Seu negócio (destaque no último, legenda "você está aqui")
+- Texto: Cada peça da espiral virou ferramenta de trabalho. O próximo passo é colocar isso para rodar no seu negócio, perto ou remoto. Tem uma ideia? A gente tira do papel.
 - CTAs: Começar um projeto ↗ · Ver projetos →
 
 ## Índice completo

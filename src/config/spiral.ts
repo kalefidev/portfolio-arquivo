@@ -82,6 +82,9 @@ export const pickPreset = (aspect: number): SpiralPreset =>
  *  is still centred then: its panel gets the rest of the zone plus its own half step. */
 export const HERO_UNTIL = 0.4
 
+/** heroProgress where the hero starts to leave (opacity + lift follow the scroll up to `HERO_UNTIL`). */
+export const HERO_FADE_FROM = 0.15
+
 /** Label of each piece (DESIGN.md §3). */
 export const CALLOUT = {
   anchor: 0.62, // local x / y where the leader line starts: just off the object, up and to the side

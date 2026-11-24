@@ -58,7 +58,7 @@ export const site = {
     indexLabel: 'Índice das peças',
     settingsLabel: 'Ajustes',
     settings: { ambient: 'Movimento ambiente', reset: 'Resetar posições', static: 'Ver sem 3D' },
-    static: { eyebrow: 'O ARQUIVO · {N} PEÇAS', back: 'Ver em 3D' },
+    static: { eyebrow: 'O ARQUIVO · {N} PEÇAS', back: 'Ver em 3D', noWebgl: 'Este navegador não liga o 3D.' },
     loader: 'CATALOGANDO O ARQUIVO',
     overlay: {
       learned: 'O que aprendi',
@@ -71,12 +71,12 @@ export const site = {
     },
   },
 
-  brasilia: {
-    eyebrow: 'DE ÁGUAS CLARAS PARA ONDE PRECISAR',
-    h2: 'Feito em Brasília. Entregue em qualquer lugar.',
-    points: ['Águas Claras', 'Brasília', 'Brasil', 'Remoto'],
-    text: 'Atendo negócios daqui olho no olho e projetos remotos com o mesmo cuidado. Tem uma ideia? A gente tira do papel.',
-    here: 'você está aqui', // under the first point
+  reach: {
+    eyebrow: 'DO ARQUIVO PARA O SEU NEGÓCIO',
+    h2: 'Do que estudei para o seu negócio.',
+    points: ['Estudo', 'Construo', 'Entrego', 'Seu negócio'],
+    text: 'Cada peça da espiral virou ferramenta de trabalho. O próximo passo é colocar isso para rodar no seu negócio, perto ou remoto. Tem uma ideia? A gente tira do papel.',
+    here: 'você está aqui', // under the last point: whoever visits is the business
     ctas: { primary: 'Começar um projeto', secondary: 'Ver projetos →' }, // the ↗ of the primary comes from <PrimaryCta>
   },
 

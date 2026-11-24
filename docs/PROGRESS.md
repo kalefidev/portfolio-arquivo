@@ -28,7 +28,8 @@
 | Lógica de Programação (EXEMPLO) | brackets | — |
 | HTML e CSS (EXEMPLO) | browser | — |
 | SQL e Banco de Dados (EXEMPLO) | database | — |
-| Automação com n8n (EXEMPLO) | gears | — |
+| Automação com n8n (2024) | gears | — |
+| Trilha Full Stack TypeScript (fora da espiral, só no índice) | icon `terminal-window` | — |
 
 ## Log
 ### Etapa 01 — 2026-11-09
@@ -239,3 +240,4 @@ Como testar: …
 
   — `fix(ux)`
 - 2026-11-23 — WhatsApp (5561994028229), GitHub e LinkedIn em `site.ts`: os CTAs do header e de Brasília abrem o `wa.me`, o formulário de contato envia e as redes viram links (e entram no `sameAs` do JSON-LD); redes do Sobre alinhadas pelo centro (o "Instagram · TODO" ficava mais alto que os links novos) — `tweak`
+- 2026-11-24 — Ajustes pós-deploy: (1) o hero sai acompanhando o scroll (`heroProgress` no store, `HERO_FADE_FROM`→`HERO_UNTIL`, style escrito por `subscribe`, sem re-render) e o painel da peça 01 entra depois (delay = `--duration-ui`); reduced motion mantém o fade por tempo; (2) Full Stack TypeScript saiu da espiral (`featured: false`, segue no índice): 6 peças; (3) a linha que sai da espiral virou "Estudo · Construo · Entrego · Seu negócio" (`site.reach`, destaque no último ponto, `STOPS` iguais); `seo.locality` e a meta description seguem com Brasília (SEO local, não aparece na tela); (4–5) SQL 2026, n8n 2024; (6) 10 projetos (Prospector e Clínica como `conceito`, sem link; o link do Ferro & Fio antigo dava 404, a barbearia usa `base-barbearias.vercel.app`); (7) no modo sem 3D, "Ver em 3D →" também no hero (ou o motivo, sem WebGL); (8) fundo com pontos a cada 64px no lugar da grade — `fix(ux)`

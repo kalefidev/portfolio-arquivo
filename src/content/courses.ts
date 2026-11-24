@@ -49,6 +49,7 @@ export const courses: Course[] = [
     slug: 'sql-e-banco-de-dados',
     title: 'SQL e Banco de Dados',
     institution: 'Alura',
+    year: 2026,
     category: 'data',
     archetype: 'database',
     status: 'em-andamento',
@@ -58,6 +59,7 @@ export const courses: Course[] = [
     slug: 'automacao-n8n',
     title: 'Automação com n8n',
     institution: 'Rick Neves',
+    year: 2024,
     category: 'automation',
     archetype: 'gears',
     status: 'concluido',
@@ -71,7 +73,7 @@ export const courses: Course[] = [
     archetype: 'icon',
     icon: 'terminal-window',
     status: 'em-andamento',
-    featured: true,
+    featured: false,
   },
 ]
 

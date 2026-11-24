@@ -11,17 +11,17 @@ import { useStore } from '@/lib/store'
 import { prefersReducedMotion } from '@/lib/viewport'
 import { whatsappUrl } from '@/lib/whatsapp'
 
-const { eyebrow, h2, points, here, text, ctas } = site.brasilia
+const { eyebrow, h2, points, here, text, ctas } = site.reach
 
-// Where each point sits along the line, in % of its length: spaced like the real distances.
-const STOPS = [0, 18, 52, 100]
+// Where each point sits along the line, in % of its length.
+const STOPS = [0, 33, 67, 100]
 
-/** "Feito em Brasília…": a line edge to edge with four points, its caption, then the text and the two
+/** "Do arquivo para o seu negócio": a line edge to edge with four points, its caption, then the text and the two
  *  CTAs. The line is where the axis of the spiral ends up: the 3D axis lies down and waits at
  *  `EXIT.restY` of the screen; when this line gets there it takes over (the 3D side lives in `Axis`,
  *  reading the position of `#linha`). Here the HTML side fades in over the same stretch, scrubbed.
  *  Nothing sits above the line: whatever scrolled up ahead of it would cross the waiting axis — so the
- *  section starts on the line, and "DE ÁGUAS CLARAS PARA ONDE PRECISAR" is its caption, below it.
+ *  section starts on the line, and the eyebrow is its caption, below it.
  *  Reduced motion and "ver sem 3D": the line is simply there. */
 export default function Reach() {
   const rule = useRef<HTMLDivElement>(null)
@@ -63,7 +63,7 @@ export default function Reach() {
                   <span
                     aria-hidden
                     className={`absolute size-2.5 -translate-1/2 border ${
-                      first ? 'border-signal bg-signal' : 'border-ink bg-paper'
+                      last ? 'border-signal bg-signal' : 'border-ink bg-paper'
                     }`}
                   />
                   <span
@@ -72,7 +72,7 @@ export default function Reach() {
                     }`}
                   >
                     {label}
-                    {first && <span className="block text-ink-2">{here}</span>}
+                    {last && <span className="block text-ink-2">{here}</span>}
                   </span>
                 </li>
               )

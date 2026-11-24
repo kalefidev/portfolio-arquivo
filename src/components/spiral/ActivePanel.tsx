@@ -46,7 +46,8 @@ export default function ActivePanel() {
       },
     })
     if (shown === NONE) {
-      // nothing to take out: the (empty) timeline completes on the next tick
+      // nothing to take out: just wait for the hero to finish leaving (the container's delay), so the title enters visible
+      if (useStore.getState().pastHero) timeline.to({}, { duration })
     } else if (split.current) {
       timeline
         .to(split.current.lines, { yPercent: -MASK_TRAVEL, duration, ease: 'expo.in', stagger: LINE_STAGGER / 2, overwrite: true })
@@ -103,8 +104,9 @@ export default function ActivePanel() {
   return (
     <div
       inert={!visible}
+      // enters after the hero has left (its delay = the hero's fade); leaves at once
       className={`absolute inset-x-gutter bottom-bar h-36 transition-opacity duration-(--duration-ui) wide:top-[34%] wide:bottom-auto wide:h-auto ${
-        visible ? '' : 'opacity-0'
+        visible ? 'delay-(--duration-ui)' : 'opacity-0'
       }`}
     >
       {/* `relative`: the ↗ stretches over the whole panel (its ::after) — the panel opens the active

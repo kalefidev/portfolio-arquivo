@@ -9,6 +9,7 @@ interface SpiralState {
   progress: number
   activeIndex: number // round(progress)
   exitProgress: number // 0 … 1 through the exit zone after the last piece
+  heroProgress: number // 0 … 1 through the hero zone. Continuous, like `progress`: read it with `subscribe`, never in a component
   pastHero: boolean // the hero has given way to the active-piece panel (discrete: fine to subscribe)
   pastSpiral: boolean // the exit is far enough along for the spiral UI to be gone (discrete too)
   hoveredSlug: string | null
@@ -39,6 +40,7 @@ export const useStore = create<SpiralState>((set, get) => {
     progress: 0,
     activeIndex: 0,
     exitProgress: 0,
+    heroProgress: 0,
     pastHero: false,
     pastSpiral: false,
     hoveredSlug: null,
@@ -55,8 +57,8 @@ export const useStore = create<SpiralState>((set, get) => {
       const now = get()
       set(
         activeIndex === now.activeIndex && pastHero === now.pastHero && pastSpiral === now.pastSpiral
-          ? { progress, exitProgress }
-          : { progress, exitProgress, activeIndex, pastHero, pastSpiral },
+          ? { progress, exitProgress, heroProgress }
+          : { progress, exitProgress, heroProgress, activeIndex, pastHero, pastSpiral },
       )
     },
     setHovered: (hoveredSlug) => set({ hoveredSlug }),
