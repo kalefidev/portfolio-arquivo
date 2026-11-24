@@ -244,7 +244,7 @@ dialog.piece {
   height: 100dvh;
   max-height: none;
   margin: 0;
-  overflow: hidden; /* the panel slides in from outside the dialog */
+  overflow: clip; /* the panel slides in from outside the dialog. Not `hidden`: Firefox scrolls a hidden box to bring the off-screen panel into view, and the whole overlay shifted and slid back */
   background: transparent;
   color: var(--color-ink);
   /* stays rendered (and in the top layer) until the panel is out */
