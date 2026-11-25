@@ -45,3 +45,10 @@ next-env.d.ts
 
 .vercel
 .env*
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+COMECE-AQUI.md
+.claude/
+docs/prompts/
+.playwright-mcp/
