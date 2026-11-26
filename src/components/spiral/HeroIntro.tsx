@@ -41,14 +41,14 @@ export default function HeroIntro() {
     <div
       ref={root}
       inert={gone}
-      className={`absolute inset-0 flex flex-col justify-between px-gutter pt-24 pb-24 motion-reduce:transition-[opacity] motion-reduce:duration-(--duration-ui) wide:justify-center wide:gap-6 wide:py-0 short:gap-3 ${
+      className={`absolute inset-0 flex flex-col justify-center gap-8 px-gutter pt-24 pb-28 motion-reduce:transition-[opacity] motion-reduce:duration-(--duration-ui) short:gap-6 wide:gap-6 wide:py-0 wide:short:gap-3 ${
         gone ? 'motion-reduce:opacity-0 motion-reduce:ease-exit' : 'motion-reduce:ease-enter'
       }`}
     >
       {/* `data-ui`: the text takes the pointer, so a tap on it never opens the piece behind */}
       <div data-ui className="pointer-events-auto flex flex-col gap-4 wide:w-5/12 wide:gap-6">
         <p className="label text-ink-2 short:hidden">{eyebrow}</p>
-        <h1 className="max-w-[14ch] text-display">{h1}</h1>
+        <h1 className="max-w-[14ch] text-hero wide:text-display">{h1}</h1>
       </div>
       <div data-ui className="pointer-events-auto flex flex-col items-start gap-5 wide:w-5/12 wide:gap-6 short:gap-3">
         <p className="max-w-[48ch] text-ink-2 short:text-small">{sub}</p>

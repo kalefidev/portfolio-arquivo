@@ -45,6 +45,8 @@
   /* type scale */
   --text-display: clamp(2.75rem, min(6.2vw, 12vh), 6.5rem);
   --text-display--line-height: 0.92;
+  --text-hero: clamp(2.75rem, 14vw, 4.25rem); /* the hero title on portrait: no spiral under it, so it can fill the screen. "construo e" still fits at 320px */
+  --text-hero--line-height: 0.92;
   --text-h2: clamp(2rem, 4.4vw, 4.5rem);
   --text-h2--line-height: 1;
   --text-h3: 1.5rem;
@@ -421,4 +423,5 @@ dialog.contact[open] {
     transition: none;
   }
 }
+
 
