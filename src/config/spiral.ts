@@ -66,8 +66,8 @@ const mobile: SpiralPreset = {
   fogFar: 17,
   dpr: 1.5,
   stageX: 0.5,
-  stageY: 0.2, // middle of what the bottom sheet leaves free
-  stageScale: 1.1,
+  stageY: 0.19, // middle of what the bottom sheet leaves free (a little high: the "arraste" hint sits at the bottom of the stage)
+  stageScale: 1.0,
   camera: { fov: 40, z: 11 },
 }
 

@@ -18,6 +18,7 @@ const { panelLabel, open } = site.spiral
 const LINE_STAGGER = 0.06 // s between the lines of the title
 const META_DELAY = 0.2 // s the metadata waits after the title starts
 const NONE = -1
+const LONG_TITLE = 40 // characters: longer titles get a smaller size on portrait, or the panel climbs onto the piece
 
 /** "PEÇA Nº 03 / 12" panel (DESIGN.md §3). There is only ever one title in the DOM: the old one
  *  leaves first, then the piece that is active *by then* enters — so fast scrolling can skip
@@ -105,7 +106,7 @@ export default function ActivePanel() {
     <div
       inert={!visible}
       // enters after the hero has left (its delay = the hero's fade); leaves at once
-      className={`absolute inset-x-gutter bottom-bar h-36 transition-opacity duration-(--duration-ui) wide:top-[34%] wide:bottom-auto wide:h-auto ${
+      className={`absolute inset-x-gutter bottom-bar transition-opacity duration-(--duration-ui) wide:top-[34%] wide:bottom-auto ${
         visible ? 'delay-(--duration-ui)' : 'opacity-0'
       }`}
     >
@@ -122,7 +123,7 @@ export default function ActivePanel() {
           <div key={shown} ref={content} className="min-w-0">
             {course && (
               <>
-                <h2 ref={title} className="text-h3 wide:text-h2">
+                <h2 ref={title} className={`${course.title.length > LONG_TITLE ? 'text-h4' : 'text-h3'} wide:text-h2`}>
                   {course.title}
                 </h2>
                 <div ref={meta} className="mt-2 wide:mt-4">

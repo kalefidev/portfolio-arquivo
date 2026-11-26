@@ -49,6 +49,8 @@
   --text-h2--line-height: 1;
   --text-h3: 1.5rem;
   --text-h3--line-height: 1.1;
+  --text-h4: 1.125rem; /* long course titles in the portrait panel: 3 lines instead of 5 */
+  --text-h4--line-height: 1.1;
   --text-body: 1.0625rem;
   --text-body--line-height: 1.55;
   --text-small: 0.875rem;
@@ -206,7 +208,8 @@
   --top: linear-gradient(to bottom, var(--color-paper) var(--band), transparent calc(var(--band) + var(--edge)));
   background:
     var(--top),
-    linear-gradient(to top, var(--color-paper) 22%, transparent 36%);
+    /* portrait: solid up to the top of the panel (bar + ~3 lines of title + metadata), tied to the bar so short screens don't leave a ghost of the next piece behind the text */
+    linear-gradient(to top, var(--color-paper) calc(var(--spacing-bar) + 9rem), transparent calc(var(--spacing-bar) + 11.5rem));
 }
 
 @media (min-aspect-ratio: 4/5) {
@@ -418,3 +421,4 @@ dialog.contact[open] {
     transition: none;
   }
 }
+
